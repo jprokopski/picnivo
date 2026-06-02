@@ -363,8 +363,8 @@ Create the Supabase cloud project, configure the production connection string as
 
 #### Automated
 
-- [x] 3.1 `dotnet ef migrations bundle` succeeds locally
-- [x] 3.2 Workflow YAML is valid
+- [x] 3.1 `dotnet ef migrations bundle` succeeds locally — 98b726a
+- [x] 3.2 Workflow YAML is valid — 98b726a
 
 #### Manual
 
