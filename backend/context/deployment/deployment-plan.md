@@ -51,8 +51,8 @@ ENTRYPOINT ["dotnet", "Picnivo.API.dll"]
 ```
 
 - [x] Create `backend/Dockerfile`
-- [ ] **Verify local build:** `docker build -t picnivo-api backend/` *(skipped — Docker not installed locally; will verify via Fly.io remote build)*
-- [ ] **Verify local run:** `docker run --rm -p 8080:8080 picnivo-api`, then `curl http://localhost:8080/healthz` *(skipped — no Docker)*
+- [x] **Verify local build:** `docker build -t picnivo backend/`
+- [x] **Verify local run:** `docker run --rm -p 8080:8080 picnivo`, then `curl http://localhost:8080/healthz`
 
 **Key decisions:**
 - **Separate restore layer:** `.csproj` copied first — source-only changes skip NuGet restore
@@ -91,7 +91,7 @@ fly.toml
 **File to create:** `backend/fly.toml`
 
 ```toml
-app = "picnivo-api"
+app = "picnivo"
 primary_region = "waw"
 
 [build]
@@ -136,7 +136,7 @@ primary_region = "waw"
 - **`force_https = true`** — Fly.io proxy handles TLS termination and redirects HTTP->HTTPS at the edge
 - **Health check grace period 10s** — accounts for .NET cold start (3-8s on shared CPU)
 
-**Edge case — app name conflict:** `picnivo-api` is globally unique on Fly.io. If taken, use `picnivo-api-prod` or similar and update this file.
+**Edge case — app name conflict:** `picnivo` is globally unique on Fly.io. If taken, use `picnivo-prod` or similar and update this file.
 
 ---
 
@@ -168,7 +168,7 @@ These are one-time steps requiring interactive auth and billing.
 - [x] **Verify deployment:** `/healthz` returns 200, `/weatherforecast` returns JSON at `https://picnivo.fly.dev/`
 - [x] **Create deploy token for CI:**
   ```bash
-  fly tokens create deploy -x 999999h --app picnivo-api
+  fly tokens create deploy -x 999999h --app picnivo
   ```
   Save this token — it goes into GitHub Secrets in Phase 7.
 
@@ -237,8 +237,8 @@ Add deployment commands and Fly.io conventions to the existing content:
 
 - [x] Add to Commands section:
   - `Deploy (manual): fly deploy` (from `backend/`)
-  - `Logs: fly logs --app picnivo-api`
-  - `SSH: fly ssh console --app picnivo-api`
+  - `Logs: fly logs --app picnivo`
+  - `SSH: fly ssh console --app picnivo`
 - [x] Add to Conventions section:
   - No HTTPS redirection in app code — Fly.io terminates TLS at proxy
   - Health check at `/healthz` — keep it fast, no heavy dependencies
@@ -248,16 +248,16 @@ Add deployment commands and Fly.io conventions to the existing content:
 
 ## Phase 9: End-to-End Verification
 
-- [ ] `dotnet build` from `backend/Picnivo.API/` — succeeds
-- [ ] `dotnet run` + `curl http://localhost:5230/healthz` — returns 200
-- [ ] `docker build -t picnivo-api backend/` — succeeds
-- [ ] `docker run --rm -p 8080:8080 picnivo-api` + `curl http://localhost:8080/healthz` — returns 200
-- [ ] `fly deploy` from `backend/` — succeeds
-- [ ] `curl https://picnivo-api.fly.dev/healthz` — returns 200
-- [ ] `curl https://picnivo-api.fly.dev/weatherforecast` — returns JSON
-- [ ] `fly status --app picnivo-api` — machine running
+- [x] `dotnet build` from `backend/Picnivo.API/` — succeeds
+- [x] `dotnet run` + `curl http://localhost:5230/healthz` — returns 200
+- [x] `docker build -t picnivo backend/` — succeeds
+- [x] `docker run --rm -p 8080:8080 picnivo` + `curl http://localhost:8080/healthz` — returns 200
+- [x] `fly deploy` from `backend/` — succeeds *(verified via running deployment)*
+- [x] `curl https://picnivo.fly.dev/healthz` — returns 200
+- [x] `curl https://picnivo.fly.dev/weatherforecast` — returns JSON
+- [x] `fly status --app picnivo` — machine running (arn, v4, 1 passing check)
 - [ ] Wait ~5min idle, `fly status` — machine stopped (auto-stop working)
-- [ ] `curl https://picnivo-api.fly.dev/healthz` — machine wakes (expect 3-8s cold start)
+- [ ] `curl https://picnivo.fly.dev/healthz` — machine wakes (expect 3-8s cold start)
 - [ ] Push backend change to `main` — GitHub Actions triggers and deploys
 
 ---
