@@ -1,0 +1,9 @@
+**/bin/
+**/obj/
+.git/
+.gitignore
+context/
+**/*.md
+**/*.http
+**/Properties/launchSettings.json
+fly.toml
