@@ -336,23 +336,23 @@ Create the Supabase cloud project, configure the production connection string as
 
 #### Automated
 
-- [x] 1.1 Project builds with new NuGet packages
-- [x] 1.2 Migration files exist in Data/Migrations/ directory
-- [x] 1.3 `dotnet ef migrations list` shows InitialCreate
+- [x] 1.1 Project builds with new NuGet packages — b9f0296
+- [x] 1.2 Migration files exist in Data/Migrations/ directory — b9f0296
+- [x] 1.3 `dotnet ef migrations list` shows InitialCreate — b9f0296
 
 #### Manual
 
-- [x] 1.4 DbContext uses ApplyConfigurationsFromAssembly
-- [x] 1.5 EventConfiguration implements IEntityTypeConfiguration correctly
-- [x] 1.6 WeatherForecast endpoint and record removed
+- [x] 1.4 DbContext uses ApplyConfigurationsFromAssembly — b9f0296
+- [x] 1.5 EventConfiguration implements IEntityTypeConfiguration correctly — b9f0296
+- [x] 1.6 WeatherForecast endpoint and record removed — b9f0296
 
 ### Phase 2: Local Dev Workflow
 
 #### Automated
 
-- [ ] 2.1 Supabase CLI starts Postgres-only on port 54322
-- [ ] 2.2 `dotnet ef database update` applies InitialCreate migration
-- [ ] 2.3 `dotnet build` still passes
+- [x] 2.1 Supabase CLI starts Postgres-only on port 54322
+- [x] 2.2 `dotnet ef database update` applies InitialCreate migration
+- [x] 2.3 `dotnet build` still passes
 
 #### Manual
 
