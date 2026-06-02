@@ -11,8 +11,31 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  migrate:
+    name: Run EF Core Migrations
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - run: dotnet tool restore
+        working-directory: backend
+
+      - run: dotnet ef migrations has-pending-model-changes --project Picnivo.API
+        working-directory: backend
+
+      - run: dotnet ef migrations bundle --project Picnivo.API --output efbundle --self-contained -r linux-x64
+        working-directory: backend
+
+      - run: ./efbundle --connection "${{ secrets.DATABASE_CONNECTION_STRING }}"
+        working-directory: backend
+
   deploy:
     name: Deploy to Fly.io
+    needs: [migrate]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5

@@ -350,21 +350,21 @@ Create the Supabase cloud project, configure the production connection string as
 
 #### Automated
 
-- [x] 2.1 Supabase CLI starts Postgres-only on port 54322
-- [x] 2.2 `dotnet ef database update` applies InitialCreate migration
-- [x] 2.3 `dotnet build` still passes
+- [x] 2.1 Supabase CLI starts Postgres-only on port 54322 — 0e4fbce
+- [x] 2.2 `dotnet ef database update` applies InitialCreate migration — 0e4fbce
+- [x] 2.3 `dotnet build` still passes — 0e4fbce
 
 #### Manual
 
-- [ ] 2.4 Events table exists in local Postgres with expected columns
-- [ ] 2.5 `supabase stop` cleanly shuts down
+- [x] 2.4 Events table exists in local Postgres with expected columns — 0e4fbce
+- [x] 2.5 `supabase stop` cleanly shuts down — 0e4fbce
 
 ### Phase 3: CI/CD Migration Step
 
 #### Automated
 
-- [ ] 3.1 `dotnet ef migrations bundle` succeeds locally
-- [ ] 3.2 Workflow YAML is valid
+- [x] 3.1 `dotnet ef migrations bundle` succeeds locally
+- [x] 3.2 Workflow YAML is valid
 
 #### Manual
 
