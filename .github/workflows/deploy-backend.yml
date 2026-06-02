@@ -24,6 +24,9 @@ jobs:
       - run: dotnet tool restore
         working-directory: backend
 
+      - run: dotnet restore Picnivo.API
+        working-directory: backend
+
       - run: dotnet ef migrations has-pending-model-changes --project Picnivo.API
         working-directory: backend
 
