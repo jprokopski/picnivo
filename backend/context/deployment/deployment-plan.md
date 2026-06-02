@@ -166,7 +166,7 @@ These are one-time steps requiring interactive auth and billing.
 - [x] **Create app without deploying:** `fly apps create picnivo`
 - [x] **First deploy:** `fly deploy` (from `backend/`, region changed from `waw` to `arn` — Warsaw deprecated)
 - [x] **Verify deployment:** `/healthz` returns 200, `/weatherforecast` returns JSON at `https://picnivo.fly.dev/`
-- [ ] **Create deploy token for CI:**
+- [x] **Create deploy token for CI:**
   ```bash
   fly tokens create deploy -x 999999h --app picnivo-api
   ```
@@ -180,8 +180,8 @@ These are one-time steps requiring interactive auth and billing.
 
 **Prerequisites:** GitHub remote must exist and the deploy token from Phase 6 must be stored as a secret.
 
-- [ ] **Create GitHub repo** (if not done): `gh repo create picnivo --private --source=. --push`
-- [ ] **Add secret:** `gh secret set FLY_API_TOKEN --body "<token-from-phase-6>"`
+- [x] **Create GitHub repo:** `gh repo create picnivo --private --source=. --push` → https://github.com/jprokopski/picnivo
+- [x] **Add secret:** `gh secret set FLY_API_TOKEN`
 
 **File to create:** `.github/workflows/deploy-backend.yml`
 
