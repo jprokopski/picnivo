@@ -368,19 +368,19 @@ Create the Supabase cloud project, configure the production connection string as
 
 #### Manual
 
-- [ ] 3.3 Migrate job runs before deploy job in workflow
-- [ ] 3.4 DATABASE_CONNECTION_STRING secret referenced correctly
+- [x] 3.3 Migrate job runs before deploy job in workflow — 98b726a
+- [x] 3.4 DATABASE_CONNECTION_STRING secret referenced correctly — 98b726a
 
 ### Phase 4: Production Wiring + Verification
 
 #### Automated
 
-- [ ] 4.1 GitHub Actions migrate job passes
-- [ ] 4.2 GitHub Actions deploy job passes
-- [ ] 4.3 Health check returns 200 OK
+- [x] 4.1 GitHub Actions migrate job passes — 29d15f1
+- [x] 4.2 GitHub Actions deploy job passes — 29d15f1
+- [x] 4.3 Health check returns 200 OK — 29d15f1
 
 #### Manual
 
-- [ ] 4.4 Fly logs show successful startup with no database errors
-- [ ] 4.5 Events table exists in Supabase production database
-- [ ] 4.6 No regression in app behavior
+- [x] 4.4 Fly logs show successful startup with no database errors — 29d15f1
+- [x] 4.5 Events table exists in Supabase production database — 29d15f1
+- [x] 4.6 No regression in app behavior — 29d15f1
