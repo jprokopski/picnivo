@@ -33,7 +33,7 @@ export const Route = createFileRoute('/auth/callback')({
       throw redirect({ to: '/login', search: { redirect: '' } })
     }
 
-    throw redirect({ to: '/dashboard' })
+    throw redirect({ to: deps.next || '/dashboard' })
   },
   component: CallbackPage,
 })

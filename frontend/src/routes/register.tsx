@@ -34,12 +34,17 @@ function RegisterPage() {
   }
 
   async function handleGoogleSignIn() {
-    const supabase = createSupabaseBrowserClient()
-    const origin = window.location.origin
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: `${origin}/auth/callback` },
-    })
+    try {
+      const supabase = createSupabaseBrowserClient()
+      const origin = window.location.origin
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: `${origin}/auth/callback` },
+      })
+      if (error) setError(error.message)
+    } catch {
+      setError('Failed to start Google sign-in')
+    }
   }
 
   return (

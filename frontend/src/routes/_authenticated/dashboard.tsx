@@ -35,10 +35,6 @@ function DashboardPage() {
             <span className="font-semibold text-(--sea-ink)">Email:</span>{' '}
             {user.email}
           </p>
-          <p>
-            <span className="font-semibold text-(--sea-ink)">User ID:</span>{' '}
-            <code className="text-xs">{user.id}</code>
-          </p>
         </div>
 
         <button
