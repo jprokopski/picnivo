@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 
@@ -8,6 +10,38 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddOpenApi();
 builder.Services.AddDbContext<PicnivoDbContext>(options =>
     options.UseNpgsql(connectionString));
+
+var frontendUrl = builder.Configuration["Frontend:Url"];
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        var origins = new List<string> { "http://localhost:3000" };
+        if (!string.IsNullOrEmpty(frontendUrl))
+            origins.Add(frontendUrl);
+
+        policy.WithOrigins(origins.ToArray())
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Authority = builder.Configuration["Supabase:Authority"];
+        options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
+        options.TokenValidationParameters = new()
+        {
+            ValidAlgorithms = ["ES256"],
+            ValidateAudience = false,
+        };
+        options.MapInboundClaims = false;
+    });
+
+builder.Services.AddAuthorizationBuilder();
 
 var app = builder.Build();
 
@@ -21,6 +55,14 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseCors();
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapGet("/healthz", () => Results.Ok("healthy"));
+
+app.MapGet("/api/me", (ClaimsPrincipal user) =>
+    Results.Ok(new { id = user.FindFirstValue("sub") }))
+    .RequireAuthorization();
 
 app.Run();
