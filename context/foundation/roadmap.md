@@ -3,7 +3,7 @@ project: "Picnivo"
 version: 1
 status: draft
 created: 2026-06-02
-updated: 2026-06-02
+updated: 2026-06-04
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -29,7 +29,7 @@ Organizing small group events (grills, picnics, trips) is broken by coordination
 
 | ID   | Change ID                     | Outcome (user can …)                                                                             | Prerequisites | PRD refs                                                      | Status   |
 | ---- | ----------------------------- | ------------------------------------------------------------------------------------------------ | ------------- | ------------------------------------------------------------- | -------- |
-| F-01 | data-persistence-scaffold     | (foundation) Backend persists and retrieves structured data; schema management in place           | —             | Business Logic, NFR (2s load)                                 | ready    |
+| F-01 | data-persistence-scaffold     | (foundation) Backend persists and retrieves structured data; schema management in place           | —             | Business Logic, NFR (2s load)                                 | done     |
 | F-02 | organizer-auth-scaffold       | (foundation) Organizer registration and login flows exist; protected-vs-public route distinction  | F-01          | FR-001, FR-002, Access Control                                | proposed |
 | S-01 | event-creation-and-sharing    | Create event with title, dates, item list, get shareable link, and see their events               | F-01, F-02    | US-01, FR-001, FR-002, FR-003, FR-004, FR-005, FR-006         | proposed |
 | S-02 | participant-voting-and-claims | Open event link, enter name, vote on dates, claim item, see vote summary, best date, assignments | S-01          | US-02, FR-005, FR-007, FR-008, FR-009, FR-010, FR-011, FR-012 | proposed |
@@ -58,7 +58,7 @@ What's already in place in the codebase as of 2026-06-02 (auto-researched + user
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Sequenced first because every downstream slice needs persistence. Schema design decisions here constrain all later slices — a wrong data model is expensive to refactor.
-- **Status:** ready
+- **Status:** done
 
 ### F-02: Organizer auth scaffold
 
@@ -124,3 +124,5 @@ No open roadmap questions. The PRD has zero unresolved open questions, and no cr
 ## Done
 
 (Empty on first generation. `/10x-archive` appends entries here when a change is archived.)
+
+- **F-01: (foundation) Backend can persist and retrieve structured data; schema management and local-dev workflow are in place.** — Archived 2026-06-04 → `context/archive/2026-06-02-data-persistence-scaffold/`. Lesson: —.

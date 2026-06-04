@@ -1,10 +1,10 @@
 ---
 change_id: data-persistence-scaffold
 title: Set up data persistence layer for the backend
-status: done
+status: archived
 created: 2026-06-02
-updated: 2026-06-03
-archived_at: null
+updated: 2026-06-04
+archived_at: 2026-06-04T19:32:17Z
 ---
 
 ## Notes
