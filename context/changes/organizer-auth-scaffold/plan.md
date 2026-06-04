@@ -549,10 +549,10 @@ The `redirect_uri` defaults to the Supabase callback when empty. Add `GOOGLE_CLI
 
 #### Automated
 
-- [ ] 2.1 TypeScript compiles without errors
-- [ ] 2.2 Build succeeds
-- [ ] 2.3 Lint passes
-- [ ] 2.4 Dev server starts without errors
+- [x] 2.1 TypeScript compiles without errors
+- [x] 2.2 Build succeeds
+- [x] 2.3 Lint passes
+- [x] 2.4 Dev server starts without errors
 
 #### Manual
 
