@@ -573,8 +573,8 @@ The `redirect_uri` defaults to the Supabase callback when empty. Add `GOOGLE_CLI
 - [x] 3.4 Email/password registration with display name works — e77075a
 - [x] 3.5 Logout redirects to login with header update — e77075a
 - [x] 3.6 Email/password login works — e77075a
-- [ ] 3.7 Google OAuth flow completes end-to-end
-- [ ] 3.8 Organizers table has rows for both auth methods
+- [x] 3.7 Google OAuth flow completes end-to-end — 613f212
+- [x] 3.8 Organizers table has rows for both auth methods — 613f212
 - [x] 3.9 Protected route redirects to login when unauthenticated — e77075a
 - [x] 3.10 Public routes work for unauthenticated users — e77075a
 
