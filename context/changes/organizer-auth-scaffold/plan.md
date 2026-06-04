@@ -540,10 +540,10 @@ The `redirect_uri` defaults to the Supabase callback when empty. Add `GOOGLE_CLI
 
 #### Manual
 
-- [ ] 1.5 supabase start brings up GoTrue and Mailpit
-- [ ] 1.6 Test user registration creates organizers row
-- [ ] 1.7 JWT call to /api/me returns user ID
-- [ ] 1.8 Mailpit accessible at localhost:54324
+- [x] 1.5 supabase start brings up GoTrue and Mailpit
+- [x] 1.6 Test user registration creates organizers row
+- [x] 1.7 JWT call to /api/me returns user ID
+- [x] 1.8 Mailpit accessible at localhost:54324
 
 ### Phase 2: Frontend Auth Infrastructure
 
@@ -556,9 +556,9 @@ The `redirect_uri` defaults to the Supabase callback when empty. Add `GOOGLE_CLI
 
 #### Manual
 
-- [ ] 2.5 Frontend loads without console errors
-- [ ] 2.6 Existing routes still work
-- [ ] 2.7 getSessionFn server function call visible in Network tab
+- [x] 2.5 Frontend loads without console errors
+- [x] 2.6 Existing routes still work
+- [x] 2.7 getSessionFn server function call visible in Network tab
 
 ### Phase 3: Auth UI & Route Protection
 
