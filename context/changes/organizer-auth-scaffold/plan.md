@@ -533,10 +533,10 @@ The `redirect_uri` defaults to the Supabase callback when empty. Add `GOOGLE_CLI
 
 #### Automated
 
-- [x] 1.1 Migration applies cleanly
-- [x] 1.2 Backend builds without errors
-- [x] 1.3 Backend starts and /healthz returns 200
-- [x] 1.4 /api/me returns 401 without a token
+- [x] 1.1 Migration applies cleanly — 3b064c2
+- [x] 1.2 Backend builds without errors — 3b064c2
+- [x] 1.3 Backend starts and /healthz returns 200 — 3b064c2
+- [x] 1.4 /api/me returns 401 without a token — 3b064c2
 
 #### Manual
 

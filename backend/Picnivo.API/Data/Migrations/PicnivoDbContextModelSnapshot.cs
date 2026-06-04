@@ -60,7 +60,7 @@ namespace Picnivo.API.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("organizers", (string)null);
+                    b.ToTable("Organizers");
                 });
 #pragma warning restore 612, 618
         }

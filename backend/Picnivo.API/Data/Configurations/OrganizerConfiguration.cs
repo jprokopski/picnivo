@@ -8,8 +8,6 @@ public class OrganizerConfiguration : IEntityTypeConfiguration<Organizer>
 {
     public void Configure(EntityTypeBuilder<Organizer> builder)
     {
-        builder.ToTable("organizers");
-
         builder.HasKey(o => o.Id);
 
         builder.Property(o => o.Id)

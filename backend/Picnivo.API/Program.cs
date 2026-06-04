@@ -36,7 +36,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.TokenValidationParameters = new()
         {
             ValidAlgorithms = ["ES256"],
-            ValidateAudience = false,
+            ValidAudience = "authenticated",
         };
         options.MapInboundClaims = false;
     });
@@ -49,6 +49,11 @@ if (string.IsNullOrEmpty(connectionString))
     throw new InvalidOperationException(
         "Database connection string 'DefaultConnection' is not configured. " +
         "Set ConnectionStrings__DefaultConnection as an environment variable or in appsettings.");
+
+if (string.IsNullOrEmpty(builder.Configuration["Supabase:Authority"]))
+    throw new InvalidOperationException(
+        "Supabase Authority is not configured. " +
+        "Set Supabase__Authority as an environment variable or in appsettings.");
 
 if (app.Environment.IsDevelopment())
 {

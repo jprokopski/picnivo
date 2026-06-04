@@ -12,7 +12,7 @@ using Picnivo.API.Data;
 namespace Picnivo.API.Data.Migrations
 {
     [DbContext(typeof(PicnivoDbContext))]
-    [Migration("20260604124100_AddOrganizer")]
+    [Migration("20260604130058_AddOrganizer")]
     partial class AddOrganizer
     {
         /// <inheritdoc />
@@ -63,7 +63,7 @@ namespace Picnivo.API.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("organizers", (string)null);
+                    b.ToTable("Organizers");
                 });
 #pragma warning restore 612, 618
         }

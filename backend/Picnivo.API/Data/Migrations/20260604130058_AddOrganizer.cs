@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -12,7 +11,7 @@ namespace Picnivo.API.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "organizers",
+                name: "Organizers",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -21,11 +20,11 @@ namespace Picnivo.API.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_organizers", x => x.Id);
+                    table.PrimaryKey("PK_Organizers", x => x.Id);
                 });
 
             migrationBuilder.Sql("""
-                ALTER TABLE organizers
+                ALTER TABLE "Organizers"
                 ADD CONSTRAINT fk_organizers_auth_users
                 FOREIGN KEY ("Id") REFERENCES auth.users(id) ON DELETE CASCADE;
                 """);
@@ -34,7 +33,7 @@ namespace Picnivo.API.Data.Migrations
                 CREATE OR REPLACE FUNCTION public.handle_new_user()
                 RETURNS TRIGGER AS $$
                 BEGIN
-                  INSERT INTO public.organizers ("Id", "DisplayName", "CreatedAt")
+                  INSERT INTO public."Organizers" ("Id", "DisplayName", "CreatedAt")
                   VALUES (
                     NEW.id,
                     COALESCE(NEW.raw_user_meta_data ->> 'display_name', NEW.raw_user_meta_data ->> 'full_name', 'Organizer'),
@@ -42,7 +41,7 @@ namespace Picnivo.API.Data.Migrations
                   );
                   RETURN NEW;
                 END;
-                $$ LANGUAGE plpgsql SECURITY DEFINER;
+                $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
                 """);
 
             migrationBuilder.Sql("""
@@ -57,9 +56,10 @@ namespace Picnivo.API.Data.Migrations
         {
             migrationBuilder.Sql("DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;");
             migrationBuilder.Sql("DROP FUNCTION IF EXISTS public.handle_new_user();");
+            migrationBuilder.Sql("""ALTER TABLE "Organizers" DROP CONSTRAINT IF EXISTS fk_organizers_auth_users;""");
 
             migrationBuilder.DropTable(
-                name: "organizers");
+                name: "Organizers");
         }
     }
 }
