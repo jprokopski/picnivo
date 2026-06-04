@@ -582,15 +582,15 @@ The `redirect_uri` defaults to the Supabase callback when empty. Add `GOOGLE_CLI
 
 #### Automated
 
-- [ ] 4.1 Backend deploys successfully
-- [ ] 4.2 Frontend deploys successfully
-- [ ] 4.3 Production /healthz returns 200
-- [ ] 4.4 Production /api/me returns 401 without token
+- [x] 4.1 Backend deploys successfully
+- [x] 4.2 Frontend deploys successfully
+- [x] 4.3 Production /healthz returns 200
+- [x] 4.4 Production /api/me returns 401 without token
 
 #### Manual
 
-- [ ] 4.5 Production email/password registration works
-- [ ] 4.6 Production login works
-- [ ] 4.7 Production Google OAuth works
-- [ ] 4.8 Production logout and route protection work
-- [ ] 4.9 Production organizers table has test user rows
+- [x] 4.5 Production email/password registration works
+- [x] 4.6 Production login works
+- [x] 4.7 Production Google OAuth works
+- [x] 4.8 Production logout and route protection work
+- [x] 4.9 Production organizers table has test user rows
