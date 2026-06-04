@@ -28,30 +28,11 @@ jobs:
       - run: dotnet restore Picnivo.API
         working-directory: backend
 
-      - run: dotnet ef migrations has-pending-model-changes --project Picnivo.API
-        working-directory: backend
-
-      - name: Check for pending migrations
-        id: check
-        working-directory: backend
-        run: |
-          PENDING=$(dotnet ef migrations list --project Picnivo.API --no-build 2>/dev/null | grep '(Pending)' || true)
-          if [ -z "$PENDING" ]; then
-            echo "pending=false" >> "$GITHUB_OUTPUT"
-            echo "No pending migrations — skipping bundle and apply."
-          else
-            echo "pending=true" >> "$GITHUB_OUTPUT"
-            echo "Pending migrations found:"
-            echo "$PENDING"
-          fi
-
       - name: Bundle migrations
-        if: steps.check.outputs.pending == 'true'
         run: dotnet ef migrations bundle --project Picnivo.API --output efbundle --self-contained -r linux-x64
         working-directory: backend
 
       - name: Apply migrations
-        if: steps.check.outputs.pending == 'true'
         run: ./efbundle --connection "${{ secrets.DATABASE_CONNECTION_STRING }}"
         working-directory: backend
 
