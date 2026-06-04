@@ -1,5 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
+import { Trans } from '@lingui/react/macro'
 import { createSupabaseServerClient } from '../../lib/supabase/server'
 
 const exchangeCodeFn = createServerFn({ method: 'GET' })
@@ -41,7 +42,9 @@ export const Route = createFileRoute('/auth/callback')({
 function CallbackPage() {
   return (
     <main className="flex min-h-[calc(100vh-8rem)] items-center justify-center">
-      <p className="text-(--sea-ink-soft)">Completing sign in...</p>
+      <p className="text-(--sea-ink-soft)">
+        <Trans>Completing sign in...</Trans>
+      </p>
     </main>
   )
 }

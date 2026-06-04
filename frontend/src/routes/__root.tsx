@@ -5,6 +5,8 @@ import {
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
+import { I18nProvider } from '@lingui/react'
+import { i18n } from '../lib/i18n'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
 import { getSessionFn } from '../lib/supabase/session'
@@ -50,6 +52,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body className="font-sans antialiased [overflow-wrap:anywhere] selection:bg-[rgba(79,184,178,0.24)]">
+        <I18nProvider i18n={i18n}>
         <Header />
         {children}
         <Footer />
@@ -64,6 +67,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             },
           ]}
         />
+        </I18nProvider>
         <Scripts />
       </body>
     </html>

@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "skills": {
+    "enhanced-message-context": {
+      "source": "lingui/skills",
+      "sourceType": "github",
+      "skillPath": "enhanced-message-context/SKILL.md",
+      "computedHash": "84d0a3d209e678781fe5aa7152e108cfb91ff7c6b7a1c39e15fccd5d8dcdf4c8"
+    },
+    "lingui-best-practices": {
+      "source": "lingui/skills",
+      "sourceType": "github",
+      "skillPath": "lingui-best-practices/SKILL.md",
+      "computedHash": "2ebeb243fa39ca3b233d7fe618cfaea89f618b619ceea6a33b708faeca7efc94"
+    },
+    "migrate-i18next-to-lingui": {
+      "source": "lingui/skills",
+      "sourceType": "github",
+      "skillPath": "migrate-i18next-to-lingui/SKILL.md",
+      "computedHash": "03894ee375726621ce09296ec6661ddd2662146c48cab01e274e62568a89d812"
+    },
+    "swc-plugin-compatibility": {
+      "source": "lingui/skills",
+      "sourceType": "github",
+      "skillPath": "swc-plugin-compatibility/SKILL.md",
+      "computedHash": "fd5f2ff1ed69c402214baf5ae907fba5c639afb6b5d8568fbe522c77b2dfbafe"
+    }
+  }
+}

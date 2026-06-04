@@ -1,7 +1,8 @@
 import { defineConfig } from 'vite'
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
-import viteReact from '@vitejs/plugin-react'
+import viteReactSwc from '@vitejs/plugin-react-swc'
 import tailwindcss from '@tailwindcss/vite'
+import { lingui } from '@lingui/vite-plugin'
 
 export default defineConfig(async ({ mode }) => {
   const plugins = []
@@ -14,7 +15,14 @@ export default defineConfig(async ({ mode }) => {
     plugins.push(cloudflare({ viteEnvironment: { name: 'ssr' } }))
   }
 
-  plugins.push(tailwindcss(), tanstackStart(), viteReact())
+  plugins.push(
+    tailwindcss(),
+    tanstackStart(),
+    viteReactSwc({
+      plugins: [['@lingui/swc-plugin', {}]],
+    }),
+    lingui(),
+  )
 
   return {
     resolve: { tsconfigPaths: true },

@@ -1,5 +1,7 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
+import { Trans } from '@lingui/react/macro'
+import { useLingui } from '@lingui/react/macro'
 import { signUpFn } from '../lib/auth/functions'
 import { createSupabaseBrowserClient } from '../lib/supabase/client'
 
@@ -8,6 +10,7 @@ export const Route = createFileRoute('/register')({
 })
 
 function RegisterPage() {
+  const { t } = useLingui()
   const navigate = useNavigate()
   const [displayName, setDisplayName] = useState('')
   const [email, setEmail] = useState('')
@@ -43,7 +46,7 @@ function RegisterPage() {
       })
       if (error) setError(error.message)
     } catch {
-      setError('Failed to start Google sign-in')
+      setError(t`Failed to start Google sign-in`)
     }
   }
 
@@ -51,9 +54,11 @@ function RegisterPage() {
     <main className="flex min-h-[calc(100vh-8rem)] items-center justify-center px-4 py-12">
       <div className="island-shell w-full max-w-md rounded-2xl p-8">
         <div className="mb-8 text-center">
-          <p className="island-kicker mb-2">Get started</p>
+          <p className="island-kicker mb-2">
+            <Trans>Get started</Trans>
+          </p>
           <h1 className="display-title text-2xl font-bold">
-            Create an Account
+            <Trans>Create an Account</Trans>
           </h1>
         </div>
 
@@ -69,7 +74,7 @@ function RegisterPage() {
               htmlFor="displayName"
               className="mb-1 block text-sm font-semibold text-(--sea-ink-soft)"
             >
-              Display Name
+              <Trans>Display Name</Trans>
             </label>
             <input
               id="displayName"
@@ -78,7 +83,7 @@ function RegisterPage() {
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
               className="w-full rounded-lg border border-(--line) bg-(--surface-strong) px-3 py-2 text-(--sea-ink) placeholder:text-(--sea-ink-soft) focus:border-(--lagoon) focus:outline-none focus:ring-2 focus:ring-(--lagoon)/25"
-              placeholder="Your name"
+              placeholder={t`Your name`}
             />
           </div>
 
@@ -87,7 +92,7 @@ function RegisterPage() {
               htmlFor="email"
               className="mb-1 block text-sm font-semibold text-(--sea-ink-soft)"
             >
-              Email
+              <Trans>Email</Trans>
             </label>
             <input
               id="email"
@@ -96,7 +101,7 @@ function RegisterPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full rounded-lg border border-(--line) bg-(--surface-strong) px-3 py-2 text-(--sea-ink) placeholder:text-(--sea-ink-soft) focus:border-(--lagoon) focus:outline-none focus:ring-2 focus:ring-(--lagoon)/25"
-              placeholder="you@example.com"
+              placeholder={t`you@example.com`}
             />
           </div>
 
@@ -105,7 +110,7 @@ function RegisterPage() {
               htmlFor="password"
               className="mb-1 block text-sm font-semibold text-(--sea-ink-soft)"
             >
-              Password
+              <Trans>Password</Trans>
             </label>
             <input
               id="password"
@@ -115,7 +120,7 @@ function RegisterPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full rounded-lg border border-(--line) bg-(--surface-strong) px-3 py-2 text-(--sea-ink) placeholder:text-(--sea-ink-soft) focus:border-(--lagoon) focus:outline-none focus:ring-2 focus:ring-(--lagoon)/25"
-              placeholder="At least 6 characters"
+              placeholder={t`At least 6 characters`}
             />
           </div>
 
@@ -124,14 +129,18 @@ function RegisterPage() {
             disabled={loading}
             className="w-full rounded-lg bg-(--lagoon-deep) px-4 py-2.5 font-semibold text-white transition hover:bg-(--lagoon) disabled:opacity-60"
           >
-            {loading ? 'Creating account...' : 'Create Account'}
+            {loading ? (
+              <Trans>Creating account...</Trans>
+            ) : (
+              <Trans>Create Account</Trans>
+            )}
           </button>
         </form>
 
         <div className="my-6 flex items-center gap-3">
           <div className="h-px flex-1 bg-(--line)" />
           <span className="text-xs font-semibold text-(--sea-ink-soft)">
-            OR
+            <Trans>OR</Trans>
           </span>
           <div className="h-px flex-1 bg-(--line)" />
         </div>
@@ -159,14 +168,16 @@ function RegisterPage() {
               fill="#EA4335"
             />
           </svg>
-          Sign up with Google
+          <Trans>Sign up with Google</Trans>
         </button>
 
         <p className="mt-6 text-center text-sm text-(--sea-ink-soft)">
-          Already have an account?{' '}
-          <a href="/login" className="font-semibold">
-            Sign In
-          </a>
+          <Trans>
+            Already have an account?{' '}
+            <a href="/login" className="font-semibold">
+              Sign In
+            </a>
+          </Trans>
         </p>
       </div>
     </main>

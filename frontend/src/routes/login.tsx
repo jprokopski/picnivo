@@ -1,5 +1,7 @@
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 import { useState } from 'react'
+import { Trans } from '@lingui/react/macro'
+import { useLingui } from '@lingui/react/macro'
 import { signInFn } from '../lib/auth/functions'
 import { createSupabaseBrowserClient } from '../lib/supabase/client'
 
@@ -11,6 +13,7 @@ export const Route = createFileRoute('/login')({
 })
 
 function LoginPage() {
+  const { t } = useLingui()
   const navigate = useNavigate()
   const { redirect } = useSearch({ from: '/login' })
   const [email, setEmail] = useState('')
@@ -48,7 +51,7 @@ function LoginPage() {
       })
       if (error) setError(error.message)
     } catch {
-      setError('Failed to start Google sign-in')
+      setError(t`Failed to start Google sign-in`)
     }
   }
 
@@ -56,8 +59,12 @@ function LoginPage() {
     <main className="flex min-h-[calc(100vh-8rem)] items-center justify-center px-4 py-12">
       <div className="island-shell w-full max-w-md rounded-2xl p-8">
         <div className="mb-8 text-center">
-          <p className="island-kicker mb-2">Welcome back</p>
-          <h1 className="display-title text-2xl font-bold">Sign In</h1>
+          <p className="island-kicker mb-2">
+            <Trans>Welcome back</Trans>
+          </p>
+          <h1 className="display-title text-2xl font-bold">
+            <Trans>Sign In</Trans>
+          </h1>
         </div>
 
         {error && (
@@ -72,7 +79,7 @@ function LoginPage() {
               htmlFor="email"
               className="mb-1 block text-sm font-semibold text-(--sea-ink-soft)"
             >
-              Email
+              <Trans>Email</Trans>
             </label>
             <input
               id="email"
@@ -81,7 +88,7 @@ function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full rounded-lg border border-(--line) bg-(--surface-strong) px-3 py-2 text-(--sea-ink) placeholder:text-(--sea-ink-soft) focus:border-(--lagoon) focus:outline-none focus:ring-2 focus:ring-(--lagoon)/25"
-              placeholder="you@example.com"
+              placeholder={t`you@example.com`}
             />
           </div>
 
@@ -90,7 +97,7 @@ function LoginPage() {
               htmlFor="password"
               className="mb-1 block text-sm font-semibold text-(--sea-ink-soft)"
             >
-              Password
+              <Trans>Password</Trans>
             </label>
             <input
               id="password"
@@ -99,7 +106,7 @@ function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full rounded-lg border border-(--line) bg-(--surface-strong) px-3 py-2 text-(--sea-ink) placeholder:text-(--sea-ink-soft) focus:border-(--lagoon) focus:outline-none focus:ring-2 focus:ring-(--lagoon)/25"
-              placeholder="Your password"
+              placeholder={t`Your password`}
             />
           </div>
 
@@ -108,14 +115,14 @@ function LoginPage() {
             disabled={loading}
             className="w-full rounded-lg bg-(--lagoon-deep) px-4 py-2.5 font-semibold text-white transition hover:bg-(--lagoon) disabled:opacity-60"
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? <Trans>Signing in...</Trans> : <Trans>Sign In</Trans>}
           </button>
         </form>
 
         <div className="my-6 flex items-center gap-3">
           <div className="h-px flex-1 bg-(--line)" />
           <span className="text-xs font-semibold text-(--sea-ink-soft)">
-            OR
+            <Trans>OR</Trans>
           </span>
           <div className="h-px flex-1 bg-(--line)" />
         </div>
@@ -143,14 +150,16 @@ function LoginPage() {
               fill="#EA4335"
             />
           </svg>
-          Sign in with Google
+          <Trans>Sign in with Google</Trans>
         </button>
 
         <p className="mt-6 text-center text-sm text-(--sea-ink-soft)">
-          Don't have an account?{' '}
-          <a href="/register" className="font-semibold">
-            Register
-          </a>
+          <Trans>
+            Don't have an account?{' '}
+            <a href="/register" className="font-semibold">
+              Register
+            </a>
+          </Trans>
         </p>
       </div>
     </main>
