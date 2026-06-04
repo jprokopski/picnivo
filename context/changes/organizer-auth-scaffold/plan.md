@@ -564,19 +564,19 @@ The `redirect_uri` defaults to the Supabase callback when empty. Add `GOOGLE_CLI
 
 #### Automated
 
-- [ ] 3.1 TypeScript compiles
-- [ ] 3.2 Build succeeds
-- [ ] 3.3 Lint passes
+- [x] 3.1 TypeScript compiles
+- [x] 3.2 Build succeeds
+- [x] 3.3 Lint passes
 
 #### Manual
 
-- [ ] 3.4 Email/password registration with display name works
-- [ ] 3.5 Logout redirects to login with header update
-- [ ] 3.6 Email/password login works
+- [x] 3.4 Email/password registration with display name works
+- [x] 3.5 Logout redirects to login with header update
+- [x] 3.6 Email/password login works
 - [ ] 3.7 Google OAuth flow completes end-to-end
 - [ ] 3.8 Organizers table has rows for both auth methods
-- [ ] 3.9 Protected route redirects to login when unauthenticated
-- [ ] 3.10 Public routes work for unauthenticated users
+- [x] 3.9 Protected route redirects to login when unauthenticated
+- [x] 3.10 Public routes work for unauthenticated users
 
 ### Phase 4: Production Wiring & Verification
 
