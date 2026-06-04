@@ -42,6 +42,26 @@ namespace Picnivo.API.Data.Migrations
 
                     b.ToTable("Events");
                 });
+
+            modelBuilder.Entity("Picnivo.API.Data.Models.Organizer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Organizers");
+                });
 #pragma warning restore 612, 618
         }
     }

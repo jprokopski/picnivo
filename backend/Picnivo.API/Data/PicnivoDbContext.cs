@@ -11,6 +11,7 @@ public class PicnivoDbContext : DbContext
     }
 
     public DbSet<Event> Events => Set<Event>();
+    public DbSet<Organizer> Organizers => Set<Organizer>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -13,11 +13,20 @@
 
 Local Postgres runs via Supabase CLI on port 54322.
 
-- Start (Postgres-only): `supabase start -x gotrue,realtime,storage-api,imgproxy,kong,postgrest,postgres-meta,studio,edge-runtime,logflare,vector,supavisor,mailpit`
+- Start: `supabase start -x realtime,storage-api,imgproxy,postgrest,postgres-meta,studio,edge-runtime,logflare,vector,supavisor`
 - Stop: `supabase stop`
 - Restore tools: `dotnet tool restore` (one-time after clone)
 - Apply migrations: `dotnet ef database update --project Picnivo.API` (from `backend/`)
 - Add migration: `dotnet ef migrations add <Name> --project Picnivo.API --output-dir Data/Migrations` (from `backend/`)
+
+## Authentication
+
+- Supabase Auth handles identity (email/password + Google OAuth)
+- Backend validates JWTs via JWKS discovery at `Supabase:Authority` — no shared secret needed (ES256 asymmetric signing)
+- Protected endpoints use `.RequireAuthorization()` — the `sub` claim carries the Supabase user ID
+- `organizers` table auto-provisioned via `handle_new_user()` trigger on `auth.users` INSERT
+- Production secrets: `Supabase__Authority`, `Frontend__Url` set via `fly secrets set`
+- Local Google OAuth: set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in `backend/supabase/.env` (gitignored)
 
 ## Conventions
 
