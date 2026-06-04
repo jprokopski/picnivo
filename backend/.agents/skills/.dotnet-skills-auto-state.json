@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "ProjectRoot": "/Users/jpro/code/picnivo/backend",
+  "Skills": [
+    "aspnet-core",
+    "entity-framework-core",
+    "microsoft-extensions",
+    "minimal-api-file-upload",
+    "optimizing-ef-core-queries"
+  ],
+  "UpdatedAt": "2026-06-04T13:12:05.849011+00:00"
+}
