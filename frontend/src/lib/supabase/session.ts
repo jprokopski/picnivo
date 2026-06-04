@@ -6,7 +6,9 @@ export const getSessionFn = createServerFn({ method: 'GET' }).handler(
     const supabase = createSupabaseServerClient()
     const {
       data: { user },
+      error,
     } = await supabase.auth.getUser()
+    if (error) console.error('Supabase auth error:', error.message)
     return user
   },
 )
