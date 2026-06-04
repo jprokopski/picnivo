@@ -540,10 +540,10 @@ The `redirect_uri` defaults to the Supabase callback when empty. Add `GOOGLE_CLI
 
 #### Manual
 
-- [x] 1.5 supabase start brings up GoTrue and Mailpit
-- [x] 1.6 Test user registration creates organizers row
-- [x] 1.7 JWT call to /api/me returns user ID
-- [x] 1.8 Mailpit accessible at localhost:54324
+- [x] 1.5 supabase start brings up GoTrue and Mailpit — 79188ea
+- [x] 1.6 Test user registration creates organizers row — 79188ea
+- [x] 1.7 JWT call to /api/me returns user ID — 79188ea
+- [x] 1.8 Mailpit accessible at localhost:54324 — 79188ea
 
 ### Phase 2: Frontend Auth Infrastructure
 
@@ -556,9 +556,9 @@ The `redirect_uri` defaults to the Supabase callback when empty. Add `GOOGLE_CLI
 
 #### Manual
 
-- [x] 2.5 Frontend loads without console errors
-- [x] 2.6 Existing routes still work
-- [x] 2.7 getSessionFn server function call visible in Network tab
+- [x] 2.5 Frontend loads without console errors — 79188ea
+- [x] 2.6 Existing routes still work — 79188ea
+- [x] 2.7 getSessionFn server function call visible in Network tab — 79188ea
 
 ### Phase 3: Auth UI & Route Protection
 
@@ -582,15 +582,15 @@ The `redirect_uri` defaults to the Supabase callback when empty. Add `GOOGLE_CLI
 
 #### Automated
 
-- [x] 4.1 Backend deploys successfully
-- [x] 4.2 Frontend deploys successfully
-- [x] 4.3 Production /healthz returns 200
-- [x] 4.4 Production /api/me returns 401 without token
+- [x] 4.1 Backend deploys successfully — 016e73c
+- [x] 4.2 Frontend deploys successfully — 016e73c
+- [x] 4.3 Production /healthz returns 200 — 016e73c
+- [x] 4.4 Production /api/me returns 401 without token — 016e73c
 
 #### Manual
 
-- [x] 4.5 Production email/password registration works
-- [x] 4.6 Production login works
-- [x] 4.7 Production Google OAuth works
-- [x] 4.8 Production logout and route protection work
-- [x] 4.9 Production organizers table has test user rows
+- [x] 4.5 Production email/password registration works — 016e73c
+- [x] 4.6 Production login works — 016e73c
+- [x] 4.7 Production Google OAuth works — 016e73c
+- [x] 4.8 Production logout and route protection work — 016e73c
+- [x] 4.9 Production organizers table has test user rows — 016e73c
