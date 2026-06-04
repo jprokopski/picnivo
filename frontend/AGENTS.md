@@ -22,6 +22,15 @@
 - Cloudflare Workers deployment — see `context/foundation/infrastructure.md` for platform rationale
 - Cloudflare env vars: access via `import { env } from 'cloudflare:workers'` inside server functions only (never at module scope). Local dev secrets go in `.dev.vars` (git-ignored). Production secrets set via `wrangler secret put KEY`
 
+## Authentication
+
+- Supabase Auth with `@supabase/ssr` for cookie-based SSR sessions
+- Server client (`src/lib/supabase/server.ts`): per-request factory using `import.meta.env.VITE_*` — called inside server functions and `beforeLoad`, never at module scope
+- Browser client (`src/lib/supabase/client.ts`): singleton for client-side OAuth triggers and `onAuthStateChange`
+- Auth middleware (`src/middleware/auth.ts`): validates session and injects `user` + `supabase` into server function context — use for protected server functions
+- `_authenticated` layout route guards nested routes — redirects to `/login` if `context.user` is null
+- Env vars: `.dev.vars` for server secrets (`SUPABASE_URL`, `SUPABASE_ANON_KEY`), `.env` for client (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`)
+
 <!-- intent-skills:start -->
 # Skill mappings - load `use` with `npx @tanstack/intent@latest load <use>`.
 skills:
