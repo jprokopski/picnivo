@@ -11,6 +11,13 @@ namespace Picnivo.API.Data.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            // NOTE: OrganizerId (NOT NULL, zero-GUID default) gains an FK to Organizers,
+            // and Token (NOT NULL, "" default) gains a UNIQUE index below. These backfill
+            // defaults are only safe on an EMPTY Events table: any pre-existing row would
+            // fail the FK (zero-GUID matches no Organizer) and two+ rows would collide on
+            // the unique Token. This is safe pre-launch (no create endpoint shipped before
+            // S-01), and the constraints fail loud rather than corrupt. Verify Events is
+            // empty in the target environment before applying.
             migrationBuilder.AddColumn<string>(
                 name: "Description",
                 table: "Events",

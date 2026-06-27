@@ -1,7 +1,7 @@
 ---
 change_id: event-creation-and-sharing
 title: Organizer creates event with dates, items, shareable link
-status: implementing
+status: impl_reviewed
 created: 2026-06-28
 updated: 2026-06-28
 roadmap_id: S-01
