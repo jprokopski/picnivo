@@ -513,13 +513,13 @@ One additive EF migration (new Event columns + unique token index + two new tabl
 
 #### Automated
 
-- [x] 3.1 Type checking passes (`pnpm typecheck`)
-- [x] 3.2 Lint passes (`pnpm lint`)
-- [x] 3.3 `createEventSchema` unit tests pass (`pnpm test`)
+- [x] 3.1 Type checking passes (`pnpm typecheck`) — df356f4
+- [x] 3.2 Lint passes (`pnpm lint`) — df356f4
+- [x] 3.3 `createEventSchema` unit tests pass (`pnpm test`) — df356f4
 
 #### Manual
 
-- [x] 3.4 `createEventFn` reaches backend (authed) and event is retrievable via `getEventByTokenFn` (public)
+- [x] 3.4 `createEventFn` reaches backend (authed) and event is retrievable via `getEventByTokenFn` (public) — df356f4
 
 ### Phase 4: shadcn/ui Setup & Theming
 
