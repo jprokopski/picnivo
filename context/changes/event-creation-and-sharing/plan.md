@@ -221,43 +221,49 @@ Add the three S-01 endpoints with DTOs and server-side validation, and stand up 
 
 ### Overview
 
-Establish the first frontend→backend HTTP seam: configuration, an authed-fetch helper that forwards the Supabase JWT, and the server functions the screens will call.
+Establish the first frontend→backend HTTP seam: configuration, an Orval-generated typed API client from the backend OpenAPI spec, a custom fetch mutator that forwards the Supabase JWT, and the server functions the screens will call.
 
 ### Changes Required:
 
 #### 1. Backend base URL config
 
-**Files**: `frontend/src/lib/env.ts`, `frontend/.env`, `.env.example` (if present)
+**Files**: `frontend/src/lib/env.ts`, `frontend/.env`
 
-**Intent**: Make the .NET backend base URL configurable per environment (local Fly-less dev points at `http://localhost:<port>`; production at the Fly.dev URL).
+**Intent**: Make the .NET backend base URL configurable per environment (local dev points at `http://localhost:<port>`; production at the Fly.dev URL).
 
-**Contract**: Add a **`VITE_`-prefixed** backend API URL to the existing Zod schema in `src/lib/env.ts` (`envSchema.parse(import.meta.env)`) and the `.env` files. The base URL is **not secret**, so the F-02 "don't bake secrets into the client bundle" concern does not apply here — and only `VITE_*` vars are present in `import.meta.env`, which is what `env.ts` parses at module scope. Do **not** add a non-`VITE_` name to this schema: on Cloudflare Workers server-runtime vars come from `cloudflare:workers`/`.dev.vars` (never `import.meta.env` at module scope, per `frontend/CLAUDE.md`), so a bare name here would be `undefined` and the module-scope `parse()` would throw on boot.
+**Contract**: Add `VITE_API_URL` (a **`VITE_`-prefixed** URL) to the existing Zod schema in `src/lib/env.ts` and to `.env`. The base URL is **not secret**, so the F-02 "don't bake secrets into the client bundle" concern does not apply — only `VITE_*` vars appear in `import.meta.env`, which `env.ts` parses at module scope. Do **not** add a non-`VITE_` name here: on Cloudflare Workers server-runtime vars come from `cloudflare:workers`/`.dev.vars`, so a bare name would be `undefined` and the module-scope `parse()` would throw on boot.
 
-#### 2. Authed backend fetch helper
+#### 2. Orval setup + code generation
 
-**File**: `frontend/src/lib/api/client.ts` (new)
+**Files**: `frontend/orval.config.ts` (new), `frontend/src/lib/api/axios-instance.ts` (new), `frontend/src/api/` (generated, do not edit), `frontend/package.json` (add `orval` + `@tanstack/react-query` deps + `orval` script)
 
-**Intent**: Centralize calls to the .NET backend, attaching the organizer's JWT for protected endpoints and parsing JSON/errors consistently.
+**Intent**: Generate a fully-typed axios + React Query API client from the backend OpenAPI spec (`backend/Picnivo.API/Picnivo.API.json`). Server functions call the generated plain functions; React components use the generated hooks.
 
-**Contract**: A server-side helper (used inside server functions) that, for authed calls, takes a Supabase **server** client (the one injected by `authMiddleware` — see 3.3), reads the access token via `supabase.auth.getSession()`, and sets `Authorization: Bearer <token>`; for public calls, omits it. Throws/returns a typed error on non-2xx so callers can surface messages. Base URL from Phase 3.1 config.
+**Contract**:
+- Install `orval` (dev dep), `axios`, `@tanstack/react-query`.
+- `orval.config.ts`: point `input` at `../backend/Picnivo.API/Picnivo.API.json` (relative to `frontend/`); set `output.target` to `src/api/`; set `output.client` to `'react-query'`; set `output.override.mutator` to `{ path: 'src/lib/api/axios-instance.ts', name: 'axiosInstance' }`.
+- `src/lib/api/axios-instance.ts`: export a named `axiosInstance` — an `axios.create()` instance with `baseURL: env.VITE_API_URL` and `headers: { 'Content-Type': 'application/json' }`. Auth tokens are **not** set globally — they are injected per-call via `options.headers` in the server functions so each authenticated request carries its own token without leaking between requests on the server.
+- Add `"orval": "orval"` to `package.json` scripts.
+- Run `pnpm orval` to generate `src/api/` with typed call functions **and** React Query hooks for every endpoint. Commit the generated output.
 
 #### 3. Zod schemas + server functions
 
-**File**: `frontend/src/lib/events/functions.ts` (new), `frontend/src/lib/events/schema.ts` (new)
+**Files**: `frontend/src/lib/events/functions.ts` (new), `frontend/src/lib/events/schema.ts` (new)
 
-**Intent**: Provide the typed, validated entry points the UI calls, mirroring the existing `auth/functions.ts` pattern.
+**Intent**: Provide the typed, validated entry points the UI calls server-side, mirroring the existing `auth/functions.ts` pattern. Components use the generated React Query hooks for client-side data fetching.
 
-**Contract**: The two authed functions reuse the existing `authMiddleware` (`src/middleware/auth.ts`) — per `frontend/CLAUDE.md` ("use for protected server functions") — which validates the session with `getUser()` and injects `{ user, supabase }` into context; the access token for the Bearer header comes from `supabase.auth.getSession()` on that injected client (`getUser()` validates but does not return the token). Do not hand-roll a second auth path.
-- `createEventSchema` (Zod): title required, 1–10 date options (each a future instant), optional description/location, item labels. Shared by UI and server fn.
-- `createEventFn` = `createServerFn({ method: 'POST' }).middleware([authMiddleware]).inputValidator(createEventSchema).handler(...)` → calls `POST /api/events` (authed) → returns `{ token }` or error.
-- `listEventsFn` = `createServerFn({ method: 'GET' }).middleware([authMiddleware]).handler(...)` → calls `GET /api/events` (authed) → returns summaries.
-- `getEventByTokenFn` = `createServerFn({ method: 'GET' }).inputValidator(tokenSchema).handler(...)` → calls `GET /api/events/{token}` (public, **no** middleware) → returns detail or null.
+**Contract**: The two authed server functions reuse the existing `authMiddleware` (`src/middleware/auth.ts`) which injects `{ user, supabase }` into context; the access token comes from `supabase.auth.getSession()` on that client. Do not hand-roll a second auth path.
+- `createEventSchema` (Zod): title required, 1–10 date options (each a future ISO instant string), optional description/location, item labels. Shared by UI and server fn.
+- `createEventFn` = `createServerFn({ method: 'POST' }).middleware([authMiddleware]).inputValidator(createEventSchema).handler(...)` → calls the Orval-generated `POST /api/events` plain function with `{ headers: { Authorization: \`Bearer ${token}\` } }` → returns `{ token }` or error.
+- `listEventsFn` = `createServerFn({ method: 'GET' }).middleware([authMiddleware]).handler(...)` → calls the Orval-generated `GET /api/events` plain function with auth header → returns summaries.
+- `getEventByTokenFn` = `createServerFn({ method: 'GET' }).inputValidator(tokenSchema).handler(...)` → calls the Orval-generated `GET /api/events/{token}` plain function (public, **no** auth header) → returns detail or null.
+- Phase 5/6 screens may use the generated React Query hooks (e.g. `useGetApiEvents`) directly in components for client-side refetch and cache invalidation, wrapping them with a `QueryClientProvider` at the app root if not already present.
 
 ### Success Criteria:
 
 #### Automated Verification:
 
-- [ ] Type checking passes: `pnpm typecheck` (or `tsc --noEmit`) in `frontend/`
+- [ ] Type checking passes: `pnpm exec tsc --noEmit` in `frontend/`
 - [ ] Lint passes: `pnpm lint`
 - [ ] Unit tests for `createEventSchema` pass: `pnpm test`
 
@@ -495,25 +501,25 @@ One additive EF migration (new Event columns + unique token index + two new tabl
 
 #### Automated
 
-- [x] 2.1 Solution builds (`dotnet build`)
-- [x] 2.2 Backend tests pass (`dotnet test`)
-- [x] 2.3 Format check passes (`dotnet format --verify-no-changes`)
+- [x] 2.1 Solution builds (`dotnet build`) — 42e2108
+- [x] 2.2 Backend tests pass (`dotnet test`) — 42e2108
+- [x] 2.3 Format check passes (`dotnet format --verify-no-changes`) — 42e2108
 
 #### Manual
 
-- [x] 2.4 curl/REST: create→201+token (auth), get-by-token (no auth), list is caller-scoped
+- [x] 2.4 curl/REST: create→201+token (auth), get-by-token (no auth), list is caller-scoped — 42e2108
 
 ### Phase 3: Frontend Backend-Integration Plumbing
 
 #### Automated
 
-- [ ] 3.1 Type checking passes (`pnpm typecheck`)
-- [ ] 3.2 Lint passes (`pnpm lint`)
-- [ ] 3.3 `createEventSchema` unit tests pass (`pnpm test`)
+- [x] 3.1 Type checking passes (`pnpm typecheck`)
+- [x] 3.2 Lint passes (`pnpm lint`)
+- [x] 3.3 `createEventSchema` unit tests pass (`pnpm test`)
 
 #### Manual
 
-- [ ] 3.4 `createEventFn` reaches backend (authed) and event is retrievable via `getEventByTokenFn` (public)
+- [x] 3.4 `createEventFn` reaches backend (authed) and event is retrievable via `getEventByTokenFn` (public)
 
 ### Phase 4: shadcn/ui Setup & Theming
 

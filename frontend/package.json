@@ -10,6 +10,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint src/",
     "format": "prettier --write src/",
     "extract": "lingui extract --clean",
@@ -20,7 +21,8 @@
     "deploy:preview": "pnpm build && wrangler deploy --env preview",
     "deploy:dry-run": "pnpm build && wrangler deploy --dry-run",
     "cf:tail": "wrangler tail",
-    "cf:tail:preview": "wrangler tail --env preview"
+    "cf:tail:preview": "wrangler tail --env preview",
+    "orval": "orval"
   },
   "dependencies": {
     "@lingui/core": "^6.2.0",
@@ -34,8 +36,10 @@
     "@tanstack/react-devtools": "latest",
     "@tanstack/react-router": "latest",
     "@tanstack/react-router-devtools": "latest",
+    "@tanstack/react-query": "^5.81.5",
     "@tanstack/react-router-ssr-query": "latest",
     "@tanstack/react-start": "latest",
+    "axios": "^1.9.0",
     "@tanstack/router-plugin": "^1.132.0",
     "lucide-react": "^0.545.0",
     "react": "^19.2.0",
@@ -57,6 +61,7 @@
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react-swc": "^4.3.1",
     "eslint": "^10.4.1",
+    "orval": "^7.10.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",

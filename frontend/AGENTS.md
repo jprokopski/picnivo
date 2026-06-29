@@ -21,6 +21,46 @@
 - Cloudflare Workers deployment — see `context/foundation/infrastructure.md` for platform rationale
 - Cloudflare env vars: access via `import { env } from 'cloudflare:workers'` inside server functions only (never at module scope). Local dev secrets go in `.dev.vars` (git-ignored). Production secrets set via `wrangler secret put KEY`
 
+## Feature Structure
+
+Feature code lives in `src/features/<Feature>/<Action>/`, mirroring the backend vertical-slice layout. Each action folder owns everything it needs:
+
+```
+src/features/
+  events/
+    create-event/
+      schema.ts          # Zod input schema + inferred types
+      functions.ts       # createServerFn handlers
+      schema.test.ts     # unit tests co-located with schema
+      components/        # components used ONLY by this action
+        CreateEventForm.tsx
+        ShareLinkDialog.tsx
+    list-events/
+      functions.ts
+      components/
+        EventCard.tsx
+    get-event-by-token/
+      schema.ts
+      functions.ts
+      components/
+        EventDetailView.tsx
+```
+
+**Rules:**
+
+- A component belongs in `<Feature>/<Action>/components/` when it is only ever used by that one action. If two or more actions need it, move it up to `src/components/`.
+- `src/components/` is **only** for truly shared, feature-agnostic components: shadcn/ui primitives, layout chrome, global UI utilities. Never put a component there just because it "might" be reused — it must actually be shared by multiple features.
+- `src/lib/` is for cross-cutting infrastructure (Supabase clients, auth middleware). No feature-specific logic here.
+- Routes stay in `src/routes/` (TanStack Router file-based convention). Routes import from `src/features/`, not the reverse.
+- Tests are co-located with the file they cover (`schema.test.ts` beside `schema.ts`, `ComponentName.test.tsx` inside `components/`).
+
+## API Client
+
+- **Orval** generates the typed API client from the backend OpenAPI spec (`backend/Picnivo.API/Picnivo.API.json`)
+- Generated client lives in `src/api/picnivo-api.ts` — do not edit manually
+- Regenerate after backend endpoint changes: `pnpm orval` (or whatever script is configured)
+- Import generated hooks/functions from `src/api/` in components and server functions
+
 ## Design
 
 - Follow the design references in `context/foundation/design/` when building or changing UI — these JSX mockups (`picnivo-web-*.jsx`, `picnivo-kit.jsx`, `tweaks-panel.jsx`) and CSS (`picnivo.css`, `picnivo-web.css`) are the source of truth for layout, components, and visual styling. Match them before improvising.

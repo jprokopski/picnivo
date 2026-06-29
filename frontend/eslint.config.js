@@ -5,7 +5,14 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import eslintConfigPrettier from "eslint-config-prettier";
 
 export default tseslint.config(
-  { ignores: [".output/", "node_modules/", "src/routeTree.gen.ts"] },
+  {
+    ignores: [
+      ".output/",
+      "node_modules/",
+      "src/routeTree.gen.ts",
+      "src/api/picnivo-api.ts",
+    ],
+  },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
