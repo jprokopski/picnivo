@@ -525,14 +525,14 @@ One additive EF migration (new Event columns + unique token index + two new tabl
 
 #### Automated
 
-- [ ] 4.1 Type checking passes (`pnpm typecheck`)
-- [ ] 4.2 Lint passes (`pnpm lint`)
-- [ ] 4.3 Build succeeds (`pnpm build`)
+- [x] 4.1 Type checking passes (`pnpm typecheck`)
+- [x] 4.2 Lint passes (`pnpm lint`)
+- [x] 4.3 Build succeeds (`pnpm build`)
 
 #### Manual
 
-- [ ] 4.4 Scratch render of Button/Card/Dialog/Calendar shows Picnivo palette in light+dark
-- [ ] 4.5 Existing auth/header pages visually unchanged
+- [x] 4.4 Scratch render of Button/Card/Dialog/Calendar shows Picnivo palette in light+dark
+- [x] 4.5 Existing auth/header pages visually unchanged
 
 ### Phase 5: Create-Event Screen & Share Modal
 
