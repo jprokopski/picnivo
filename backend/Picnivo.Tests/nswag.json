@@ -1,0 +1,30 @@
+{
+  "runtime": "Net100",
+  "documentGenerator": {
+    "fromDocument": {
+      "url": "../Picnivo.API/Picnivo.API.json"
+    }
+  },
+  "codeGenerators": {
+    "openApiToCSharpClient": {
+      "namespace": "Picnivo.Tests.Client",
+      "className": "PicnivoApiClient",
+      "operationGenerationMode": "SingleClientFromOperationId",
+      "useBaseUrl": false,
+      "injectHttpClient": true,
+      "disposeHttpClient": false,
+      "generateClientInterfaces": false,
+      "generateExceptionClasses": true,
+      "exceptionClass": "ApiException",
+      "wrapDtoExceptions": false,
+      "generateSyncMethods": false,
+      "generateDtoTypes": true,
+      "dateTimeType": "System.DateTimeOffset",
+      "dateType": "System.DateTimeOffset",
+      "generateOptionalParameters": false,
+      "generateDefaultValues": true,
+      "generateNullableReferenceTypes": true,
+      "output": "Client/PicnivoApiClient.cs"
+    }
+  }
+}

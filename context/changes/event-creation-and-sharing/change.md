@@ -3,7 +3,7 @@ change_id: event-creation-and-sharing
 title: Organizer creates event with dates, items, shareable link
 status: impl_reviewed
 created: 2026-06-28
-updated: 2026-06-28
+updated: 2026-06-29
 roadmap_id: S-01
 prd_refs: [US-01, FR-001, FR-002, FR-003, FR-004, FR-005, FR-006]
 ---

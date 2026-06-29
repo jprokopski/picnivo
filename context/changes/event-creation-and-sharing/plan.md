@@ -483,25 +483,25 @@ One additive EF migration (new Event columns + unique token index + two new tabl
 
 #### Automated
 
-- [x] 1.1 Solution builds (`dotnet build`)
-- [x] 1.2 Migration applies cleanly (`dotnet ef database update`)
-- [x] 1.3 Migration down-script reverts cleanly (spot check)
+- [x] 1.1 Solution builds (`dotnet build`) — c9cb421
+- [x] 1.2 Migration applies cleanly (`dotnet ef database update`) — c9cb421
+- [x] 1.3 Migration down-script reverts cleanly (spot check) — c9cb421
 
 #### Manual
 
-- [x] 1.4 DB shows new Event columns + unique Token index and DateOptions/EventItems tables with FKs
+- [x] 1.4 DB shows new Event columns + unique Token index and DateOptions/EventItems tables with FKs — c9cb421
 
 ### Phase 2: Backend API Endpoints & First Test Project
 
 #### Automated
 
-- [ ] 2.1 Solution builds (`dotnet build`)
-- [ ] 2.2 Backend tests pass (`dotnet test`)
-- [ ] 2.3 Format check passes (`dotnet format --verify-no-changes`)
+- [x] 2.1 Solution builds (`dotnet build`)
+- [x] 2.2 Backend tests pass (`dotnet test`)
+- [x] 2.3 Format check passes (`dotnet format --verify-no-changes`)
 
 #### Manual
 
-- [ ] 2.4 curl/REST: create→201+token (auth), get-by-token (no auth), list is caller-scoped
+- [x] 2.4 curl/REST: create→201+token (auth), get-by-token (no auth), list is caller-scoped
 
 ### Phase 3: Frontend Backend-Integration Plumbing
 
