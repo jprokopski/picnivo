@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using EntityFramework.Exceptions.Common;
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
@@ -28,38 +27,30 @@ public static class CreateEvent
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 
-        for (var attempt = 0; attempt < 5; attempt++)
+        string token;
+        do { token = ShareTokenGenerator.Generate(); }
+        while (await db.Events.AnyAsync(e => e.Token == token, ct));
+
+        var @event = new Event
         {
-            var @event = new Event
-            {
-                Id = Guid.CreateVersion7(),
-                OrganizerId = organizerId,
-                Title = title,
-                Description = description,
-                Location = location,
-                Token = ShareTokenGenerator.Generate(),
-                DateOptions = req.DateOptions
-                    .Select(d => new DateOption { Id = Guid.CreateVersion7(), StartsAt = d })
-                    .ToList(),
-                Items = itemLabels
-                    .Select(l => new EventItem { Id = Guid.CreateVersion7(), Label = l })
-                    .ToList()
-            };
+            Id = Guid.CreateVersion7(),
+            OrganizerId = organizerId,
+            Title = title,
+            Description = description,
+            Location = location,
+            Token = token,
+            DateOptions = req.DateOptions
+                .Select(d => new DateOption { Id = Guid.CreateVersion7(), StartsAt = d })
+                .ToList(),
+            Items = itemLabels
+                .Select(l => new EventItem { Id = Guid.CreateVersion7(), Label = l })
+                .ToList()
+        };
 
-            db.Events.Add(@event);
-            try
-            {
-                await db.SaveChangesAsync(ct);
-                return Results.Created(
-                    $"/api/events/{@event.Token}",
-                    new CreateEventResponse(@event.Id, @event.Token));
-            }
-            catch (UniqueConstraintException)
-            {
-                db.ChangeTracker.Clear();
-            }
-        }
-
-        return Results.Problem("Failed to generate a unique token. Please try again.");
+        db.Events.Add(@event);
+        await db.SaveChangesAsync(ct);
+        return Results.Created(
+            $"/api/events/{@event.Token}",
+            new CreateEventResponse(@event.Id, @event.Token));
     }
 }
