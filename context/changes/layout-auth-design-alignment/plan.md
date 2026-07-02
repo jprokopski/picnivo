@@ -405,21 +405,21 @@ hand-edit. Stale `/dashboard` entries in `src/locales/en/messages.po` are cleane
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `pnpm exec tsc --noEmit`
-- [x] 1.2 Tests pass: `pnpm test`
-- [x] 1.3 Linting passes: `pnpm lint`
-- [x] 1.4 Production build succeeds: `pnpm build`
-- [x] 1.5 No `/dashboard` route references remain in `src/routes`/`src/components`
-- [x] 1.6 No dead tokens remain in `auth/callback.tsx`
+- [x] 1.1 Type checking passes: `pnpm exec tsc --noEmit` — 0c7cf9f
+- [x] 1.2 Tests pass: `pnpm test` — 0c7cf9f
+- [x] 1.3 Linting passes: `pnpm lint` — 0c7cf9f
+- [x] 1.4 Production build succeeds: `pnpm build` — 0c7cf9f
+- [x] 1.5 No `/dashboard` route references remain in `src/routes`/`src/components` — 0c7cf9f
+- [x] 1.6 No dead tokens remain in `auth/callback.tsx` — 0c7cf9f
 
 #### Manual
 
-- [x] 1.7 `/events` and `/create` render with Header + Footer
-- [x] 1.8 `/login` and `/register` render chrome-free
-- [x] 1.9 `/e/$token` shows full nav to logged-in users, logo bar + single Log in button to guests
-- [x] 1.10 `/` routes correctly by auth state (logged out → `/login`, in → `/events`)
-- [x] 1.11 All sign-in/sign-up/OAuth paths land on `/events`
-- [x] 1.12 `/dashboard` is unreachable
+- [x] 1.7 `/events` and `/create` render with Header + Footer — 0c7cf9f
+- [x] 1.8 `/login` and `/register` render chrome-free — 0c7cf9f
+- [x] 1.9 `/e/$token` shows full nav to logged-in users, logo bar + single Log in button to guests — 0c7cf9f
+- [x] 1.10 `/` routes correctly by auth state (logged out → `/login`, in → `/events`) — 0c7cf9f
+- [x] 1.11 All sign-in/sign-up/OAuth paths land on `/events` — 0c7cf9f
+- [x] 1.12 `/dashboard` is unreachable — 0c7cf9f
 
 ### Phase 2: Auth Redesign to Design WebAuth
 
