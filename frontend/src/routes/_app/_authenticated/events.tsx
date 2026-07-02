@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { EventsList } from "../../features/events/list-events/components/events-list";
-import { listEventsFn } from "../../features/events/list-events/functions";
+import { EventsList } from "../../../features/events/list-events/components/events-list";
+import { listEventsFn } from "../../../features/events/list-events/functions";
 
-export const Route = createFileRoute("/_authenticated/events")({
+export const Route = createFileRoute("/_app/_authenticated/events")({
   loader: async () => {
     const events = await listEventsFn();
     return { events };

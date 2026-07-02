@@ -4,6 +4,7 @@ import { Link, useRouter, useRouterState } from "@tanstack/react-router";
 import { signOutFn } from "../lib/auth/functions";
 import { Avatar } from "./avatar";
 import Logo from "./logo";
+import { Button } from "./ui/button";
 
 const NAV_LINK =
   "text-[14.5px] font-semibold no-underline cursor-pointer transition-colors duration-140 ease-in-out whitespace-nowrap hover:text-(--ink)";
@@ -176,20 +177,11 @@ export default function Header() {
               </div>
             </>
           ) : (
-            <>
-              <Link
-                to="/login"
-                search={{ redirect: "" }}
-                className={NAV_LINK}
-                activeProps={{ className: "text-(--ink)" }}
-                inactiveProps={{ className: "text-(--ink-soft)" }}
-              >
+            <Button asChild>
+              <Link to="/login" search={{ redirect: "" }}>
                 <Trans>Log in</Trans>
               </Link>
-              <Link to="/register" className={PRIMARY_BTN}>
-                <Trans>Sign up</Trans>
-              </Link>
-            </>
+            </Button>
           )}
         </div>
       </div>

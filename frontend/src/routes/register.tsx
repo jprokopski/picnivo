@@ -1,52 +1,52 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useState } from 'react'
-import { Trans } from '@lingui/react/macro'
-import { useLingui } from '@lingui/react/macro'
-import { signUpFn } from '../lib/auth/functions'
-import { createSupabaseBrowserClient } from '../lib/supabase/client'
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
+import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
+import { signUpFn } from "../lib/auth/functions";
+import { createSupabaseBrowserClient } from "../lib/supabase/client";
 
-export const Route = createFileRoute('/register')({
+export const Route = createFileRoute("/register")({
   component: RegisterPage,
-})
+});
 
 function RegisterPage() {
-  const { t } = useLingui()
-  const navigate = useNavigate()
-  const [displayName, setDisplayName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const { t } = useLingui();
+  const navigate = useNavigate();
+  const [displayName, setDisplayName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
     const result = await signUpFn({
       data: { email, password, displayName },
-    })
+    });
 
     if (result.error) {
-      setError(result.error)
-      setLoading(false)
-      return
+      setError(result.error);
+      setLoading(false);
+      return;
     }
 
-    navigate({ to: '/dashboard' })
+    navigate({ to: "/events" });
   }
 
   async function handleGoogleSignIn() {
     try {
-      const supabase = createSupabaseBrowserClient()
-      const origin = window.location.origin
+      const supabase = createSupabaseBrowserClient();
+      const origin = window.location.origin;
       const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
+        provider: "google",
         options: { redirectTo: `${origin}/auth/callback` },
-      })
-      if (error) setError(error.message)
+      });
+      if (error) setError(error.message);
     } catch {
-      setError(t`Failed to start Google sign-in`)
+      setError(t`Failed to start Google sign-in`);
     }
   }
 
@@ -82,7 +82,7 @@ function RegisterPage() {
               required
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              className="w-full rounded-lg border border-(--line) bg-(--surface-strong) px-3 py-2 text-(--sea-ink) placeholder:text-(--sea-ink-soft) focus:border-(--lagoon) focus:outline-none focus:ring-2 focus:ring-(--lagoon)/25"
+              className="w-full rounded-lg border border-(--line) bg-(--surface-strong) px-3 py-2 text-(--sea-ink) placeholder:text-(--sea-ink-soft) focus:border-(--lagoon) focus:ring-2 focus:ring-(--lagoon)/25 focus:outline-none"
               placeholder={t`Your name`}
             />
           </div>
@@ -100,7 +100,7 @@ function RegisterPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-(--line) bg-(--surface-strong) px-3 py-2 text-(--sea-ink) placeholder:text-(--sea-ink-soft) focus:border-(--lagoon) focus:outline-none focus:ring-2 focus:ring-(--lagoon)/25"
+              className="w-full rounded-lg border border-(--line) bg-(--surface-strong) px-3 py-2 text-(--sea-ink) placeholder:text-(--sea-ink-soft) focus:border-(--lagoon) focus:ring-2 focus:ring-(--lagoon)/25 focus:outline-none"
               placeholder={t`you@example.com`}
             />
           </div>
@@ -119,7 +119,7 @@ function RegisterPage() {
               minLength={6}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-(--line) bg-(--surface-strong) px-3 py-2 text-(--sea-ink) placeholder:text-(--sea-ink-soft) focus:border-(--lagoon) focus:outline-none focus:ring-2 focus:ring-(--lagoon)/25"
+              className="w-full rounded-lg border border-(--line) bg-(--surface-strong) px-3 py-2 text-(--sea-ink) placeholder:text-(--sea-ink-soft) focus:border-(--lagoon) focus:ring-2 focus:ring-(--lagoon)/25 focus:outline-none"
               placeholder={t`At least 6 characters`}
             />
           </div>
@@ -173,7 +173,7 @@ function RegisterPage() {
 
         <p className="mt-6 text-center text-sm text-(--sea-ink-soft)">
           <Trans>
-            Already have an account?{' '}
+            Already have an account?{" "}
             <a href="/login" className="font-semibold">
               Sign In
             </a>
@@ -181,5 +181,5 @@ function RegisterPage() {
         </p>
       </div>
     </main>
-  )
+  );
 }

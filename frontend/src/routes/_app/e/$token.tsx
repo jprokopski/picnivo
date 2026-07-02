@@ -2,10 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import {
   EventDetailView,
   EventNotFound,
-} from "../../features/events/get-event-by-token/components/event-detail-view";
-import { getEventByTokenFn } from "../../features/events/get-event-by-token/functions";
+} from "../../../features/events/get-event-by-token/components/event-detail-view";
+import { getEventByTokenFn } from "../../../features/events/get-event-by-token/functions";
 
-export const Route = createFileRoute("/e/$token")({
+export const Route = createFileRoute("/_app/e/$token")({
   loader: async ({ params }) => {
     const event = await getEventByTokenFn({ data: { token: params.token } });
     return { event };

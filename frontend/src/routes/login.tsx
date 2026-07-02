@@ -1,57 +1,61 @@
-import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
-import { useState } from 'react'
-import { Trans } from '@lingui/react/macro'
-import { useLingui } from '@lingui/react/macro'
-import { signInFn } from '../lib/auth/functions'
-import { createSupabaseBrowserClient } from '../lib/supabase/client'
+import {
+  createFileRoute,
+  useNavigate,
+  useSearch,
+} from "@tanstack/react-router";
+import { useState } from "react";
+import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
+import { signInFn } from "../lib/auth/functions";
+import { createSupabaseBrowserClient } from "../lib/supabase/client";
 
-export const Route = createFileRoute('/login')({
+export const Route = createFileRoute("/login")({
   validateSearch: (search: Record<string, unknown>) => ({
-    redirect: (search.redirect as string) || '',
+    redirect: (search.redirect as string) || "",
   }),
   component: LoginPage,
-})
+});
 
 function LoginPage() {
-  const { t } = useLingui()
-  const navigate = useNavigate()
-  const { redirect } = useSearch({ from: '/login' })
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const { t } = useLingui();
+  const navigate = useNavigate();
+  const { redirect } = useSearch({ from: "/login" });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
-    const result = await signInFn({ data: { email, password } })
+    const result = await signInFn({ data: { email, password } });
 
     if (result.error) {
-      setError(result.error)
-      setLoading(false)
-      return
+      setError(result.error);
+      setLoading(false);
+      return;
     }
 
     const safe =
-      redirect && redirect.startsWith('/') && !redirect.startsWith('//')
+      redirect && redirect.startsWith("/") && !redirect.startsWith("//")
         ? redirect
-        : '/dashboard'
-    navigate({ to: safe })
+        : "/events";
+    navigate({ to: safe });
   }
 
   async function handleGoogleSignIn() {
     try {
-      const supabase = createSupabaseBrowserClient()
-      const origin = window.location.origin
+      const supabase = createSupabaseBrowserClient();
+      const origin = window.location.origin;
       const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
+        provider: "google",
         options: { redirectTo: `${origin}/auth/callback` },
-      })
-      if (error) setError(error.message)
+      });
+      if (error) setError(error.message);
     } catch {
-      setError(t`Failed to start Google sign-in`)
+      setError(t`Failed to start Google sign-in`);
     }
   }
 
@@ -87,7 +91,7 @@ function LoginPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-(--line) bg-(--surface-strong) px-3 py-2 text-(--sea-ink) placeholder:text-(--sea-ink-soft) focus:border-(--lagoon) focus:outline-none focus:ring-2 focus:ring-(--lagoon)/25"
+              className="w-full rounded-lg border border-(--line) bg-(--surface-strong) px-3 py-2 text-(--sea-ink) placeholder:text-(--sea-ink-soft) focus:border-(--lagoon) focus:ring-2 focus:ring-(--lagoon)/25 focus:outline-none"
               placeholder={t`you@example.com`}
             />
           </div>
@@ -105,7 +109,7 @@ function LoginPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-(--line) bg-(--surface-strong) px-3 py-2 text-(--sea-ink) placeholder:text-(--sea-ink-soft) focus:border-(--lagoon) focus:outline-none focus:ring-2 focus:ring-(--lagoon)/25"
+              className="w-full rounded-lg border border-(--line) bg-(--surface-strong) px-3 py-2 text-(--sea-ink) placeholder:text-(--sea-ink-soft) focus:border-(--lagoon) focus:ring-2 focus:ring-(--lagoon)/25 focus:outline-none"
               placeholder={t`Your password`}
             />
           </div>
@@ -155,7 +159,7 @@ function LoginPage() {
 
         <p className="mt-6 text-center text-sm text-(--sea-ink-soft)">
           <Trans>
-            Don't have an account?{' '}
+            Don't have an account?{" "}
             <a href="/register" className="font-semibold">
               Register
             </a>
@@ -163,5 +167,5 @@ function LoginPage() {
         </p>
       </div>
     </main>
-  )
+  );
 }
