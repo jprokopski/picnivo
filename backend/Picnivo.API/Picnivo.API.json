@@ -621,7 +621,8 @@
       "CreateEventResponse": {
         "required": [
           "id",
-          "token"
+          "token",
+          "participantId"
         ],
         "type": "object",
         "properties": {
@@ -631,6 +632,10 @@
           },
           "token": {
             "type": "string"
+          },
+          "participantId": {
+            "type": "string",
+            "format": "uuid"
           }
         }
       },
@@ -683,6 +688,7 @@
           "title",
           "description",
           "location",
+          "organizerId",
           "organizerName",
           "bestDateOptionId",
           "chosenDateOptionId",
@@ -707,6 +713,10 @@
               "null",
               "string"
             ]
+          },
+          "organizerId": {
+            "type": "string",
+            "format": "uuid"
           },
           "organizerName": {
             "type": "string"

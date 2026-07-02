@@ -6,17 +6,21 @@ import {
 import { getEventByTokenFn } from "../../../features/events/get-event-by-token/functions";
 
 export const Route = createFileRoute("/_app/e/$token")({
-  loader: async ({ params }) => {
+  loader: async ({ params, context }) => {
     const event = await getEventByTokenFn({ data: { token: params.token } });
-    return { event };
+    const isOrganizer = event ? context.user?.id === event.organizerId : false;
+    return { event, isOrganizer };
   },
   component: EventPage,
 });
 
 function EventPage() {
-  const { event } = Route.useLoaderData();
+  const { event, isOrganizer } = Route.useLoaderData();
+  const { token } = Route.useParams();
 
   if (!event) return <EventNotFound />;
 
-  return <EventDetailView event={event} />;
+  return (
+    <EventDetailView event={event} token={token} isOrganizer={isOrganizer} />
+  );
 }

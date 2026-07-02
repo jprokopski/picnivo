@@ -485,6 +485,21 @@ a returning visitor resumes their identity.
 **Contract**: `getParticipantId(eventToken)`, `setParticipantId(eventToken, id)`,
 `clearParticipantId(eventToken)`. Namespaced key; SSR-safe (guard `window`).
 
+**Addendum (implemented as of Phase 4, 2026-07-02)**: Built as
+`frontend/src/lib/participant/cookie.ts` — an **httpOnly server-side cookie**
+(`getParticipantIdCookie`/`setParticipantIdCookie` via
+`@tanstack/react-start/server`) instead of client-side localStorage. This is a
+deliberate upgrade over the original design: httpOnly defeats XSS-based token
+theft and needs no `window`/SSR guard (it never touches client JS), and it
+reuses the existing `getCookie`/`setCookie` pattern already established in
+`lib/supabase/server.ts`. Consequence: every mutating server function
+(`joinEventFn`, `castVotesFn`, `setAttendanceFn`, `claimItemFn`, etc.) must read
+the participant id server-side from this cookie rather than accept it from the
+client — and must stay POST/PUT (never GET), since `sameSite: lax` is the only
+CSRF mitigation in place. `clearParticipantId` has **no equivalent** — dropped,
+not yet needed by any built feature; revisit if a future "reset identity" flow
+requires it.
+
 #### 2. Join bar
 
 **File**: `frontend/src/features/events/join-event/` (`schema.ts`, `functions.ts`,
@@ -514,6 +529,23 @@ Phase 2's enriched DTO (`you`, tallies, best/chosen date, participants with
 attendance, claim/orphan fields). Provide `isOrganizer = user?.id ===
 event.organizerId`. Regenerate the Orval client (`pnpm orval`) after the backend
 spec updates.
+
+**Addendum (implemented as of Phase 4, 2026-07-02)**: `isOrganizer` detection
+required exposing `OrganizerId` on `GetEventByToken`'s response (added to
+`GetEventByToken.cs`/`GetEventByTokenDtos.cs`) — a small, necessary backend
+change not called out above. More significantly, `CreateEvent` (Phase 1,
+already closed) was revised to auto-create a `Participant` row for the
+organizer at event-creation time and return `ParticipantId`, so the organizer
+has a participant identity to vote/claim on their own event. This means
+**every event has `ParticipantCount ≥ 1` and the organizer's display name in
+`participants[]`/`ParticipantNames` from the moment it's created** — before any
+guest joins. **Phase 6 (crew Coming/Can't-make-it split) and Phase 7 (dashboard
+"N going" + crew avatar stack) must design for this explicitly**: decide
+whether the organizer is filtered out of crew/dashboard participant lists or
+shown deliberately, rather than treating their presence as an oversight. The
+design references (`picnivo-web-event.jsx`, `picnivo-web-events.jsx`) show the
+organizer only in a "hosted by" kicker, never in the crew list — reconcile this
+before Phase 6/7 implementation.
 
 ### Success Criteria:
 
@@ -621,6 +653,12 @@ Complete the hub: the gated checklist haul, confirm-to-claim, claim/unclaim/add,
 the Coming / Can't-make-it crew split, the count-me-out recovery + orphan items,
 and the single-date announcement variant.
 
+**Note (from Phase 4 review, 2026-07-02)**: The organizer is auto-created as a
+`Participant` on their own event (see Phase 4 addendum). Decide explicitly
+whether the Coming/Can't-make-it crew split filters the organizer out or shows
+them deliberately — don't let their presence in `participants[]` fall through
+as an accident.
+
 ### Changes Required:
 
 #### 1. Gated haul → confirm → checklist claiming
@@ -697,6 +735,13 @@ out" releases claims (orphaned server-side) and "I'll make it" sets coming.
 
 Bring the dashboard cards up to the design: real status chips, "N going", "X / Y
 claimed", and the crew avatar stack — from the extended `ListEvents` data.
+
+**Note (from Phase 4 review, 2026-07-02)**: `ListEvents`' `ParticipantCount`/
+`ParticipantNames` include the auto-created organizer participant (see Phase 4
+addendum), so a brand-new event with zero real guests will already show "1
+going" and the organizer in the crew avatar stack. Decide explicitly whether
+the card excludes the organizer from these counts, or whether "1 going" on a
+fresh event is acceptable/intended.
 
 ### Changes Required:
 
@@ -861,17 +906,17 @@ avoid Postgres multiple-cascade-path errors.
 
 #### Automated
 
-- [ ] 4.1 Type check passes: `pnpm typecheck`
-- [ ] 4.2 Lint passes: `pnpm lint`
-- [ ] 4.3 Tests pass: `pnpm test`
-- [ ] 4.4 Token util tests: set/get/clear round-trip; SSR-safe returns null
-- [ ] 4.5 Join bar tests: submits + calls `joinEventFn`; duplicate warning; short name blocked
-- [ ] 4.6 i18n extract/compile succeeds; new strings use Lingui
+- [x] 4.1 Type check passes: `pnpm typecheck`
+- [x] 4.2 Lint passes: `pnpm lint`
+- [x] 4.3 Tests pass: `pnpm test`
+- [x] 4.4 Token util tests: set/get/clear round-trip; SSR-safe returns null
+- [x] 4.5 Join bar tests: submits + calls `joinEventFn`; duplicate warning; short name blocked
+- [x] 4.6 i18n extract/compile succeeds; new strings use Lingui
 
 #### Manual
 
-- [ ] 4.7 Logged-out `/e/{token}` shows join bar; identity persists across reload
-- [ ] 4.8 Duplicate name warns but still joins
+- [x] 4.7 Logged-out `/e/{token}` shows join bar; identity persists across reload
+- [x] 4.8 Duplicate name warns but still joins
 
 ### Phase 5: Frontend — Voting Hub (Summary Layout, Reaction Voting, Best-Date Hero)
 

@@ -3,12 +3,19 @@ import { ClockIcon } from "lucide-react";
 import { PicnicScene } from "@/components/picnic-scene";
 import type { EventDetailResponse } from "@/api/picnivo-api";
 import { formatInstantParts } from "@/lib/format-instant";
+import { JoinBar } from "../../join-event/components/join-bar";
 
 interface EventDetailViewProps {
   event: EventDetailResponse;
+  token: string;
+  isOrganizer: boolean;
 }
 
-export function EventDetailView({ event }: EventDetailViewProps) {
+export function EventDetailView({
+  event,
+  token,
+  isOrganizer,
+}: EventDetailViewProps) {
   return (
     <div className="mx-auto max-w-295 animate-[pv-fade_420ms_cubic-bezier(0.16,1,0.3,1)_both] pt-12 pr-[max(var(--web-gutter),env(safe-area-inset-right))] pb-24 pl-[max(var(--web-gutter),env(safe-area-inset-left))] max-[720px]:pt-7 max-[720px]:pb-16">
       {/* Band */}
@@ -51,6 +58,13 @@ export function EventDetailView({ event }: EventDetailViewProps) {
           </div>
         </div>
       </div>
+
+      {!event.you && !isOrganizer && (
+        <JoinBar
+          eventToken={token}
+          participantNames={event.participants.map((p) => p.displayName)}
+        />
+      )}
 
       <div className="flex flex-col gap-6.5 max-[720px]:gap-5">
         {/* When */}

@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Picnivo.API.ExceptionHandling.ProblemDetails;
 
 namespace Picnivo.API.ExceptionHandling;
 
+[RequiresUnreferencedCode("Scans the assembly for IExceptionProblemDetails implementations via reflection.")]
 public class GlobalExceptionHandler(IProblemDetailsService problemDetailsService) : IExceptionHandler
 {
     private static readonly Dictionary<Type, int> StatusCodesByExceptionType = typeof(Program).Assembly

@@ -58,6 +58,7 @@ public class CreateEventEndpointTests(ApiFixture fixture)
         response.ShouldNotBeNull();
         response.Token.ShouldNotBeEmpty();
         response.Id.ShouldNotBe(Guid.Empty);
+        response.ParticipantId.ShouldNotBe(Guid.Empty);
     }
 
     private static async Task<Guid> ArrangeOrganizerAsync(IServiceProvider services)

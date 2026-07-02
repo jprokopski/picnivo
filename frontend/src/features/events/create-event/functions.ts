@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import axios from "axios";
 import { createEvent } from "../../../api/picnivo-api";
+import { setParticipantIdCookie } from "../../../lib/participant/cookie";
 import { authMiddleware } from "../../../middleware/auth";
 import { createEventSchema } from "./schema";
 
@@ -22,11 +23,22 @@ export const createEventFn = createServerFn({ method: "POST" })
         },
         { headers: { Authorization: `Bearer ${session?.access_token}` } },
       );
-      return { token: result.token, id: result.id, error: null };
+      setParticipantIdCookie(result.token, result.participantId);
+      return {
+        token: result.token,
+        id: result.id,
+        participantId: result.participantId,
+        error: null,
+      };
     } catch (err) {
       if (axios.isAxiosError(err)) {
         const detail = err.response?.data?.detail ?? err.message;
-        return { token: null, id: null, error: detail as string };
+        return {
+          token: null,
+          id: null,
+          participantId: null,
+          error: detail as string,
+        };
       }
       throw err;
     }

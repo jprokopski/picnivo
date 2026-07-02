@@ -18,6 +18,16 @@ public static class CreateEvent
             return Results.Unauthorized();
         }
 
+        var organizerName = await db.Organizers
+            .Where(o => o.Id == organizerId)
+            .Select(o => o.DisplayName)
+            .FirstOrDefaultAsync(ct);
+
+        if (organizerName is null)
+        {
+            return Results.Unauthorized();
+        }
+
         var title = req.Title.Trim();
         var description = req.Description?.Trim();
         var location = req.Location?.Trim();
@@ -30,6 +40,14 @@ public static class CreateEvent
         string token;
         do { token = ShareTokenGenerator.Generate(); }
         while (await db.Events.AnyAsync(e => e.Token == token, ct));
+
+        var organizerParticipant = new Participant
+        {
+            Id = Guid.CreateVersion7(),
+            DisplayName = organizerName,
+            Attendance = AttendanceStatus.Undecided,
+            CreatedAt = DateTimeOffset.UtcNow
+        };
 
         var @event = new Event
         {
@@ -44,13 +62,14 @@ public static class CreateEvent
                 .ToList(),
             Items = itemLabels
                 .Select(l => new EventItem { Id = Guid.CreateVersion7(), Label = l })
-                .ToList()
+                .ToList(),
+            Participants = [organizerParticipant]
         };
 
         db.Events.Add(@event);
         await db.SaveChangesAsync(ct);
         return Results.Created(
             $"/api/events/{@event.Token}",
-            new CreateEventResponse(@event.Id, @event.Token));
+            new CreateEventResponse(@event.Id, @event.Token, organizerParticipant.Id));
     }
 }

@@ -24,6 +24,21 @@ import type {
 } from '@tanstack/react-query';
 
 import { axiosInstance } from './axios-instance';
+export interface AddItemRequest {
+  participantId: string;
+  label: string;
+}
+
+export interface AddItemResponse {
+  id: string;
+}
+
+export type AttendanceStatus = number;
+
+export interface CastVotesRequest {
+  votes: VoteDto[];
+}
+
 export type CreateEventRequestDescription = null | string;
 
 export type CreateEventRequestLocation = null | string;
@@ -39,29 +54,74 @@ export interface CreateEventRequest {
 export interface CreateEventResponse {
   id: string;
   token: string;
+  participantId: string;
 }
+
+/**
+ * @pattern ^-?(?:0|[1-9]\d*)$
+ */
+export type DateOptionDtoYesCount = number | string;
+
+/**
+ * @pattern ^-?(?:0|[1-9]\d*)$
+ */
+export type DateOptionDtoMaybeCount = number | string;
+
+/**
+ * @pattern ^-?(?:0|[1-9]\d*)$
+ */
+export type DateOptionDtoNoCount = number | string;
 
 export interface DateOptionDto {
   id: string;
   startsAt: string;
+  /** @pattern ^-?(?:0|[1-9]\d*)$ */
+  yesCount: DateOptionDtoYesCount;
+  /** @pattern ^-?(?:0|[1-9]\d*)$ */
+  maybeCount: DateOptionDtoMaybeCount;
+  /** @pattern ^-?(?:0|[1-9]\d*)$ */
+  noCount: DateOptionDtoNoCount;
 }
 
 export type EventDetailResponseDescription = null | string;
 
 export type EventDetailResponseLocation = null | string;
 
+export type EventDetailResponseBestDateOptionId = null | string;
+
+export type EventDetailResponseChosenDateOptionId = null | string;
+
+export type EventDetailResponseYou = null | YouDto;
+
 export interface EventDetailResponse {
   title: string;
   description: EventDetailResponseDescription;
   location: EventDetailResponseLocation;
+  organizerId: string;
   organizerName: string;
+  bestDateOptionId: EventDetailResponseBestDateOptionId;
+  chosenDateOptionId: EventDetailResponseChosenDateOptionId;
   dateOptions: DateOptionDto[];
   items: EventItemDto[];
+  participants: ParticipantDto[];
+  you: EventDetailResponseYou;
 }
+
+export type EventItemDtoClaimedByParticipantId = null | string;
+
+export type EventItemDtoClaimedByName = null | string;
+
+export type EventItemDtoAddedByParticipantId = null | string;
+
+export type EventItemDtoOrphanedFromName = null | string;
 
 export interface EventItemDto {
   id: string;
   label: string;
+  claimedByParticipantId: EventItemDtoClaimedByParticipantId;
+  claimedByName: EventItemDtoClaimedByName;
+  addedByParticipantId: EventItemDtoAddedByParticipantId;
+  orphanedFromName: EventItemDtoOrphanedFromName;
 }
 
 export type EventSummaryResponseLocation = null | string;
@@ -78,6 +138,20 @@ export type EventSummaryResponseItemCount = number | string;
 
 export type EventSummaryResponseSoonestDate = null | string;
 
+/**
+ * @pattern ^-?(?:0|[1-9]\d*)$
+ */
+export type EventSummaryResponseParticipantCount = number | string;
+
+/**
+ * @pattern ^-?(?:0|[1-9]\d*)$
+ */
+export type EventSummaryResponseClaimedCount = number | string;
+
+export type EventSummaryResponseChosenDateOptionId = null | string;
+
+export type EventSummaryResponseChosenDateStartsAt = null | string;
+
 export interface EventSummaryResponse {
   id: string;
   title: string;
@@ -89,6 +163,13 @@ export interface EventSummaryResponse {
   /** @pattern ^-?(?:0|[1-9]\d*)$ */
   itemCount: EventSummaryResponseItemCount;
   soonestDate: EventSummaryResponseSoonestDate;
+  /** @pattern ^-?(?:0|[1-9]\d*)$ */
+  participantCount: EventSummaryResponseParticipantCount;
+  participantNames: string[];
+  /** @pattern ^-?(?:0|[1-9]\d*)$ */
+  claimedCount: EventSummaryResponseClaimedCount;
+  chosenDateOptionId: EventSummaryResponseChosenDateOptionId;
+  chosenDateStartsAt: EventSummaryResponseChosenDateStartsAt;
 }
 
 export type HttpValidationProblemDetailsType = null | string;
@@ -115,6 +196,65 @@ export interface HttpValidationProblemDetails {
   instance?: HttpValidationProblemDetailsInstance;
   errors?: HttpValidationProblemDetailsErrors;
 }
+
+export interface JoinEventRequest {
+  displayName: string;
+}
+
+export interface JoinEventResponse {
+  participantId: string;
+  duplicateName: boolean;
+}
+
+export interface ParticipantDto {
+  id: string;
+  displayName: string;
+  attendance: AttendanceStatus;
+}
+
+export type SelectFinalDateRequestDateOptionId = null | string;
+
+export interface SelectFinalDateRequest {
+  dateOptionId: SelectFinalDateRequestDateOptionId;
+}
+
+export interface SetAttendanceRequest {
+  status: AttendanceStatus;
+}
+
+export type VoteChoice = number;
+
+export interface VoteDto {
+  dateOptionId: string;
+  choice: VoteChoice;
+}
+
+export interface YouDto {
+  votes: YouVoteDto[];
+  claimedItemIds: string[];
+  attendance: AttendanceStatus;
+}
+
+export interface YouVoteDto {
+  dateOptionId: string;
+  choice: VoteChoice;
+}
+
+export type RemoveItemParams = {
+participantId?: string;
+};
+
+export type GetEventByTokenParams = {
+participantId?: string;
+};
+
+export type ReleaseClaimParams = {
+participantId: string;
+};
+
+export type ClaimItemParams = {
+participantId: string;
+};
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
@@ -294,6 +434,364 @@ export function useGetApiMe<TData = Awaited<ReturnType<typeof getApiMe>>, TError
 
 
 
+export const castVotes = (
+    token: string,
+    participantId: string,
+    castVotesRequest: CastVotesRequest,
+ options?: SecondParameter<typeof axiosInstance>,) => {
+      
+      
+      return axiosInstance<void>(
+      {url: `/api/events/${token}/participants/${participantId}/votes`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: castVotesRequest
+    },
+      options);
+    }
+  
+
+
+export const getCastVotesMutationOptions = <TError = HttpValidationProblemDetails | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof castVotes>>, TError,{token: string;participantId: string;data: CastVotesRequest}, TContext>, request?: SecondParameter<typeof axiosInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof castVotes>>, TError,{token: string;participantId: string;data: CastVotesRequest}, TContext> => {
+
+const mutationKey = ['castVotes'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof castVotes>>, {token: string;participantId: string;data: CastVotesRequest}> = (props) => {
+          const {token,participantId,data} = props ?? {};
+
+          return  castVotes(token,participantId,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CastVotesMutationResult = NonNullable<Awaited<ReturnType<typeof castVotes>>>
+    export type CastVotesMutationBody = CastVotesRequest
+    export type CastVotesMutationError = HttpValidationProblemDetails | void
+
+    export const useCastVotes = <TError = HttpValidationProblemDetails | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof castVotes>>, TError,{token: string;participantId: string;data: CastVotesRequest}, TContext>, request?: SecondParameter<typeof axiosInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof castVotes>>,
+        TError,
+        {token: string;participantId: string;data: CastVotesRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getCastVotesMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+export const setAttendance = (
+    token: string,
+    participantId: string,
+    setAttendanceRequest: SetAttendanceRequest,
+ options?: SecondParameter<typeof axiosInstance>,) => {
+      
+      
+      return axiosInstance<void>(
+      {url: `/api/events/${token}/participants/${participantId}/attendance`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: setAttendanceRequest
+    },
+      options);
+    }
+  
+
+
+export const getSetAttendanceMutationOptions = <TError = HttpValidationProblemDetails | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof setAttendance>>, TError,{token: string;participantId: string;data: SetAttendanceRequest}, TContext>, request?: SecondParameter<typeof axiosInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof setAttendance>>, TError,{token: string;participantId: string;data: SetAttendanceRequest}, TContext> => {
+
+const mutationKey = ['setAttendance'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof setAttendance>>, {token: string;participantId: string;data: SetAttendanceRequest}> = (props) => {
+          const {token,participantId,data} = props ?? {};
+
+          return  setAttendance(token,participantId,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SetAttendanceMutationResult = NonNullable<Awaited<ReturnType<typeof setAttendance>>>
+    export type SetAttendanceMutationBody = SetAttendanceRequest
+    export type SetAttendanceMutationError = HttpValidationProblemDetails | void
+
+    export const useSetAttendance = <TError = HttpValidationProblemDetails | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof setAttendance>>, TError,{token: string;participantId: string;data: SetAttendanceRequest}, TContext>, request?: SecondParameter<typeof axiosInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof setAttendance>>,
+        TError,
+        {token: string;participantId: string;data: SetAttendanceRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getSetAttendanceMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+export const joinEvent = (
+    token: string,
+    joinEventRequest: JoinEventRequest,
+ options?: SecondParameter<typeof axiosInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return axiosInstance<JoinEventResponse>(
+      {url: `/api/events/${token}/participants`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: joinEventRequest, signal
+    },
+      options);
+    }
+  
+
+
+export const getJoinEventMutationOptions = <TError = HttpValidationProblemDetails | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof joinEvent>>, TError,{token: string;data: JoinEventRequest}, TContext>, request?: SecondParameter<typeof axiosInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof joinEvent>>, TError,{token: string;data: JoinEventRequest}, TContext> => {
+
+const mutationKey = ['joinEvent'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof joinEvent>>, {token: string;data: JoinEventRequest}> = (props) => {
+          const {token,data} = props ?? {};
+
+          return  joinEvent(token,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type JoinEventMutationResult = NonNullable<Awaited<ReturnType<typeof joinEvent>>>
+    export type JoinEventMutationBody = JoinEventRequest
+    export type JoinEventMutationError = HttpValidationProblemDetails | void
+
+    export const useJoinEvent = <TError = HttpValidationProblemDetails | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof joinEvent>>, TError,{token: string;data: JoinEventRequest}, TContext>, request?: SecondParameter<typeof axiosInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof joinEvent>>,
+        TError,
+        {token: string;data: JoinEventRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getJoinEventMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+export const removeItem = (
+    token: string,
+    itemId: string,
+    params?: RemoveItemParams,
+ options?: SecondParameter<typeof axiosInstance>,) => {
+      
+      
+      return axiosInstance<void>(
+      {url: `/api/events/${token}/items/${itemId}`, method: 'DELETE',
+        params
+    },
+      options);
+    }
+  
+
+
+export const getRemoveItemMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof removeItem>>, TError,{token: string;itemId: string;params?: RemoveItemParams}, TContext>, request?: SecondParameter<typeof axiosInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof removeItem>>, TError,{token: string;itemId: string;params?: RemoveItemParams}, TContext> => {
+
+const mutationKey = ['removeItem'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof removeItem>>, {token: string;itemId: string;params?: RemoveItemParams}> = (props) => {
+          const {token,itemId,params} = props ?? {};
+
+          return  removeItem(token,itemId,params,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RemoveItemMutationResult = NonNullable<Awaited<ReturnType<typeof removeItem>>>
+    
+    export type RemoveItemMutationError = void
+
+    export const useRemoveItem = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof removeItem>>, TError,{token: string;itemId: string;params?: RemoveItemParams}, TContext>, request?: SecondParameter<typeof axiosInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof removeItem>>,
+        TError,
+        {token: string;itemId: string;params?: RemoveItemParams},
+        TContext
+      > => {
+
+      const mutationOptions = getRemoveItemMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+export const addItem = (
+    token: string,
+    addItemRequest: AddItemRequest,
+ options?: SecondParameter<typeof axiosInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return axiosInstance<AddItemResponse>(
+      {url: `/api/events/${token}/items`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: addItemRequest, signal
+    },
+      options);
+    }
+  
+
+
+export const getAddItemMutationOptions = <TError = HttpValidationProblemDetails | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof addItem>>, TError,{token: string;data: AddItemRequest}, TContext>, request?: SecondParameter<typeof axiosInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof addItem>>, TError,{token: string;data: AddItemRequest}, TContext> => {
+
+const mutationKey = ['addItem'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof addItem>>, {token: string;data: AddItemRequest}> = (props) => {
+          const {token,data} = props ?? {};
+
+          return  addItem(token,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AddItemMutationResult = NonNullable<Awaited<ReturnType<typeof addItem>>>
+    export type AddItemMutationBody = AddItemRequest
+    export type AddItemMutationError = HttpValidationProblemDetails | void
+
+    export const useAddItem = <TError = HttpValidationProblemDetails | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof addItem>>, TError,{token: string;data: AddItemRequest}, TContext>, request?: SecondParameter<typeof axiosInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof addItem>>,
+        TError,
+        {token: string;data: AddItemRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getAddItemMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+export const selectFinalDate = (
+    token: string,
+    selectFinalDateRequest: SelectFinalDateRequest,
+ options?: SecondParameter<typeof axiosInstance>,) => {
+      
+      
+      return axiosInstance<void>(
+      {url: `/api/events/${token}/chosen-date`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: selectFinalDateRequest
+    },
+      options);
+    }
+  
+
+
+export const getSelectFinalDateMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof selectFinalDate>>, TError,{token: string;data: SelectFinalDateRequest}, TContext>, request?: SecondParameter<typeof axiosInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof selectFinalDate>>, TError,{token: string;data: SelectFinalDateRequest}, TContext> => {
+
+const mutationKey = ['selectFinalDate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof selectFinalDate>>, {token: string;data: SelectFinalDateRequest}> = (props) => {
+          const {token,data} = props ?? {};
+
+          return  selectFinalDate(token,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SelectFinalDateMutationResult = NonNullable<Awaited<ReturnType<typeof selectFinalDate>>>
+    export type SelectFinalDateMutationBody = SelectFinalDateRequest
+    export type SelectFinalDateMutationError = void
+
+    export const useSelectFinalDate = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof selectFinalDate>>, TError,{token: string;data: SelectFinalDateRequest}, TContext>, request?: SecondParameter<typeof axiosInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof selectFinalDate>>,
+        TError,
+        {token: string;data: SelectFinalDateRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getSelectFinalDateMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
 export const listEvents = (
     
  options?: SecondParameter<typeof axiosInstance>,signal?: AbortSignal
@@ -442,12 +940,14 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     
 export const getEventByToken = (
     token: string,
+    params?: GetEventByTokenParams,
  options?: SecondParameter<typeof axiosInstance>,signal?: AbortSignal
 ) => {
       
       
       return axiosInstance<EventDetailResponse>(
-      {url: `/api/events/${token}`, method: 'GET', signal
+      {url: `/api/events/${token}`, method: 'GET',
+        params, signal
     },
       options);
     }
@@ -455,23 +955,25 @@ export const getEventByToken = (
 
 
 
-export const getGetEventByTokenQueryKey = (token?: string,) => {
+export const getGetEventByTokenQueryKey = (token?: string,
+    params?: GetEventByTokenParams,) => {
     return [
-    `/api/events/${token}`
+    `/api/events/${token}`, ...(params ? [params]: [])
     ] as const;
     }
 
     
-export const getGetEventByTokenQueryOptions = <TData = Awaited<ReturnType<typeof getEventByToken>>, TError = void>(token: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEventByToken>>, TError, TData>>, request?: SecondParameter<typeof axiosInstance>}
+export const getGetEventByTokenQueryOptions = <TData = Awaited<ReturnType<typeof getEventByToken>>, TError = void>(token: string,
+    params?: GetEventByTokenParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEventByToken>>, TError, TData>>, request?: SecondParameter<typeof axiosInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetEventByTokenQueryKey(token);
+  const queryKey =  queryOptions?.queryKey ?? getGetEventByTokenQueryKey(token,params);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEventByToken>>> = ({ signal }) => getEventByToken(token, requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEventByToken>>> = ({ signal }) => getEventByToken(token,params, requestOptions, signal);
 
       
 
@@ -485,7 +987,8 @@ export type GetEventByTokenQueryError = void
 
 
 export function useGetEventByToken<TData = Awaited<ReturnType<typeof getEventByToken>>, TError = void>(
- token: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEventByToken>>, TError, TData>> & Pick<
+ token: string,
+    params: undefined |  GetEventByTokenParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEventByToken>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getEventByToken>>,
           TError,
@@ -495,7 +998,8 @@ export function useGetEventByToken<TData = Awaited<ReturnType<typeof getEventByT
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetEventByToken<TData = Awaited<ReturnType<typeof getEventByToken>>, TError = void>(
- token: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEventByToken>>, TError, TData>> & Pick<
+ token: string,
+    params?: GetEventByTokenParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEventByToken>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getEventByToken>>,
           TError,
@@ -505,16 +1009,18 @@ export function useGetEventByToken<TData = Awaited<ReturnType<typeof getEventByT
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetEventByToken<TData = Awaited<ReturnType<typeof getEventByToken>>, TError = void>(
- token: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEventByToken>>, TError, TData>>, request?: SecondParameter<typeof axiosInstance>}
+ token: string,
+    params?: GetEventByTokenParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEventByToken>>, TError, TData>>, request?: SecondParameter<typeof axiosInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
 export function useGetEventByToken<TData = Awaited<ReturnType<typeof getEventByToken>>, TError = void>(
- token: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEventByToken>>, TError, TData>>, request?: SecondParameter<typeof axiosInstance>}
+ token: string,
+    params?: GetEventByTokenParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEventByToken>>, TError, TData>>, request?: SecondParameter<typeof axiosInstance>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetEventByTokenQueryOptions(token,options)
+  const queryOptions = getGetEventByTokenQueryOptions(token,params,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -522,3 +1028,126 @@ export function useGetEventByToken<TData = Awaited<ReturnType<typeof getEventByT
 
   return query;
 }
+
+
+
+
+
+export const releaseClaim = (
+    token: string,
+    itemId: string,
+    params: ReleaseClaimParams,
+ options?: SecondParameter<typeof axiosInstance>,) => {
+      
+      
+      return axiosInstance<void>(
+      {url: `/api/events/${token}/items/${itemId}/claim`, method: 'DELETE',
+        params
+    },
+      options);
+    }
+  
+
+
+export const getReleaseClaimMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof releaseClaim>>, TError,{token: string;itemId: string;params: ReleaseClaimParams}, TContext>, request?: SecondParameter<typeof axiosInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof releaseClaim>>, TError,{token: string;itemId: string;params: ReleaseClaimParams}, TContext> => {
+
+const mutationKey = ['releaseClaim'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof releaseClaim>>, {token: string;itemId: string;params: ReleaseClaimParams}> = (props) => {
+          const {token,itemId,params} = props ?? {};
+
+          return  releaseClaim(token,itemId,params,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReleaseClaimMutationResult = NonNullable<Awaited<ReturnType<typeof releaseClaim>>>
+    
+    export type ReleaseClaimMutationError = void
+
+    export const useReleaseClaim = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof releaseClaim>>, TError,{token: string;itemId: string;params: ReleaseClaimParams}, TContext>, request?: SecondParameter<typeof axiosInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof releaseClaim>>,
+        TError,
+        {token: string;itemId: string;params: ReleaseClaimParams},
+        TContext
+      > => {
+
+      const mutationOptions = getReleaseClaimMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+export const claimItem = (
+    token: string,
+    itemId: string,
+    params: ClaimItemParams,
+ options?: SecondParameter<typeof axiosInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return axiosInstance<void>(
+      {url: `/api/events/${token}/items/${itemId}/claim`, method: 'POST',
+        params, signal
+    },
+      options);
+    }
+  
+
+
+export const getClaimItemMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof claimItem>>, TError,{token: string;itemId: string;params: ClaimItemParams}, TContext>, request?: SecondParameter<typeof axiosInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof claimItem>>, TError,{token: string;itemId: string;params: ClaimItemParams}, TContext> => {
+
+const mutationKey = ['claimItem'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof claimItem>>, {token: string;itemId: string;params: ClaimItemParams}> = (props) => {
+          const {token,itemId,params} = props ?? {};
+
+          return  claimItem(token,itemId,params,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ClaimItemMutationResult = NonNullable<Awaited<ReturnType<typeof claimItem>>>
+    
+    export type ClaimItemMutationError = void
+
+    export const useClaimItem = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof claimItem>>, TError,{token: string;itemId: string;params: ClaimItemParams}, TContext>, request?: SecondParameter<typeof axiosInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof claimItem>>,
+        TError,
+        {token: string;itemId: string;params: ClaimItemParams},
+        TContext
+      > => {
+
+      const mutationOptions = getClaimItemMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }

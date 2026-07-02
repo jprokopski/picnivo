@@ -25,6 +25,7 @@ public record EventDetailResponse(
     string Title,
     string? Description,
     string? Location,
+    Guid OrganizerId,
     string OrganizerName,
     Guid? BestDateOptionId,
     Guid? ChosenDateOptionId,
