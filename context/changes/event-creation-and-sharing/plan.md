@@ -525,30 +525,30 @@ One additive EF migration (new Event columns + unique token index + two new tabl
 
 #### Automated
 
-- [x] 4.1 Type checking passes (`pnpm typecheck`)
-- [x] 4.2 Lint passes (`pnpm lint`)
-- [x] 4.3 Build succeeds (`pnpm build`)
+- [x] 4.1 Type checking passes (`pnpm typecheck`) — 0710267
+- [x] 4.2 Lint passes (`pnpm lint`) — 0710267
+- [x] 4.3 Build succeeds (`pnpm build`) — 0710267
 
 #### Manual
 
-- [x] 4.4 Scratch render of Button/Card/Dialog/Calendar shows Picnivo palette in light+dark
-- [x] 4.5 Existing auth/header pages visually unchanged
+- [x] 4.4 Scratch render of Button/Card/Dialog/Calendar shows Picnivo palette in light+dark — 0710267
+- [x] 4.5 Existing auth/header pages visually unchanged — 0710267
 
 ### Phase 5: Create-Event Screen & Share Modal
 
 #### Automated
 
-- [ ] 5.1 Type checking passes (`pnpm typecheck`)
-- [ ] 5.2 Lint passes (`pnpm lint`)
-- [ ] 5.3 Tests pass (`pnpm test`)
-- [ ] 5.4 Lingui extract + compile clean (`pnpm extract` / `pnpm compile`)
+- [x] 5.1 Type checking passes (`pnpm typecheck`)
+- [x] 5.2 Lint passes (`pnpm lint`)
+- [x] 5.3 Tests pass (`pnpm test`)
+- [x] 5.4 Lingui extract + compile clean (`pnpm extract` / `pnpm compile`)
 
 #### Manual
 
-- [ ] 5.5 Create event (title + 1–10 dates + items) in ~2 min → working copyable link
-- [ ] 5.6 Validation blocks empty title / 0 / >10 / past dates with clear messages
-- [ ] 5.7 Usable on mobile viewport (calendar + time on touch)
-- [ ] 5.8 Copy-to-clipboard + "Open event page" navigation work
+- [x] 5.5 Create event (title + 1–10 dates + items) in ~2 min → working copyable link
+- [x] 5.6 Validation blocks empty title / 0 / >10 / past dates with clear messages
+- [x] 5.7 Usable on mobile viewport (calendar + time on touch)
+- [x] 5.8 Copy-to-clipboard + "Open event page" navigation work
 
 ### Phase 6: Events Dashboard & Public Event Page
 

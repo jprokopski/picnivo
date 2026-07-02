@@ -11,11 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedCreateRouteImport } from './routes/_authenticated/create'
 
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
@@ -25,11 +25,6 @@ const RegisterRoute = RegisterRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
@@ -51,20 +46,25 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedCreateRoute = AuthenticatedCreateRouteImport.update({
+  id: '/create',
+  path: '/create',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/create': typeof AuthenticatedCreateRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/auth/callback': typeof AuthCallbackRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/create': typeof AuthenticatedCreateRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/auth/callback': typeof AuthCallbackRoute
 }
@@ -72,9 +72,9 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
-  '/about': typeof AboutRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/_authenticated/create': typeof AuthenticatedCreateRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/auth/callback': typeof AuthCallbackRoute
 }
@@ -82,20 +82,20 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/about'
     | '/login'
     | '/register'
+    | '/create'
     | '/dashboard'
     | '/auth/callback'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/login' | '/register' | '/dashboard' | '/auth/callback'
+  to: '/' | '/login' | '/register' | '/create' | '/dashboard' | '/auth/callback'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
-    | '/about'
     | '/login'
     | '/register'
+    | '/_authenticated/create'
     | '/_authenticated/dashboard'
     | '/auth/callback'
   fileRoutesById: FileRoutesById
@@ -103,7 +103,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
-  AboutRoute: typeof AboutRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
@@ -123,13 +122,6 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -160,14 +152,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/create': {
+      id: '/_authenticated/create'
+      path: '/create'
+      fullPath: '/create'
+      preLoaderRoute: typeof AuthenticatedCreateRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedCreateRoute: typeof AuthenticatedCreateRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedCreateRoute: AuthenticatedCreateRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
 }
 
@@ -178,7 +179,6 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
-  AboutRoute: AboutRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   AuthCallbackRoute: AuthCallbackRoute,

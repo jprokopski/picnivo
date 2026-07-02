@@ -13,28 +13,41 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/routes/about.tsx:16
-msgid "A small starter with room to grow."
-msgstr "A small starter with room to grow."
+#: src/features/events/create-event/components/date-picker.tsx:483
+msgid "{count} days proposed · friends vote Yes / Maybe / No"
+msgstr "{count} days proposed · friends vote Yes / Maybe / No"
 
-#: src/components/Header.tsx:41
-#: src/routes/about.tsx:13
-msgid "About"
-msgstr "About"
+#: src/features/events/create-event/components/create-event-form.tsx:366
+msgid "{dateCount} dates"
+msgstr "{dateCount} dates"
 
-#: src/routes/index.tsx:29
-msgid "About This Starter"
-msgstr "About This Starter"
+#: src/features/events/create-event/components/create-event-form.tsx:370
+msgid "{itemCount} items"
+msgstr "{itemCount} items"
 
-#: src/routes/index.tsx:109
-msgid "Add routes in <0>src/routes</0> and tweak visual tokens in "
-"<1>src/styles.css</1>."
-msgstr "Add routes in <0>src/routes</0> and tweak visual tokens in "
-"<1>src/styles.css</1>."
+#: src/features/events/create-event/components/create-event-form.tsx:129
+msgid "A note"
+msgstr "A note"
 
-#: src/components/Footer.tsx:10
-msgid "All rights reserved."
-msgstr "All rights reserved."
+#: src/features/events/create-event/components/create-event-form.tsx:119
+msgid "Add a spot"
+msgstr "Add a spot"
+
+#: src/features/events/create-event/components/items-editor.tsx:58
+msgid "Add an item…"
+msgstr "Add an item…"
+
+#: src/features/events/create-event/components/items-editor.tsx:69
+msgid "Add item"
+msgstr "Add item"
+
+#: src/features/events/create-event/components/date-picker.tsx:517
+msgid "Add more days"
+msgstr "Add more days"
+
+#: src/features/events/create-event/components/date-picker.tsx:427
+msgid "Add this date"
+msgstr "Add this date"
 
 #: src/routes/register.tsx:175
 msgid "Already have an account? <0>Sign In</0>"
@@ -44,21 +57,46 @@ msgstr "Already have an account? <0>Sign In</0>"
 msgid "At least 6 characters"
 msgstr "At least 6 characters"
 
-#: src/components/ThemeToggle.tsx:75
-msgid "Auto"
-msgstr "Auto"
+#: src/features/events/create-event/components/create-event-form.tsx:246
+msgid "Back"
+msgstr "Back"
 
-#: src/components/Footer.tsx:13
-msgid "Built with TanStack Start"
-msgstr "Built with TanStack Start"
+#: src/features/events/create-event/components/items-editor.tsx:18
+msgid "Beach umbrella"
+msgstr "Beach umbrella"
 
-#: src/routes/index.tsx:59
-msgid "Call server code from your UI without creating API boilerplate."
-msgstr "Call server code from your UI without creating API boilerplate."
+#: src/features/events/create-event/components/create-event-form.tsx:174
+msgid "Bring a little something"
+msgstr "Bring a little something"
+
+#: src/features/events/create-event/components/items-editor.tsx:21
+msgid "Bug spray"
+msgstr "Bug spray"
+
+#: src/components/ui/dialog.tsx:77
+#: src/components/ui/dialog.tsx:115
+msgid "Close"
+msgstr "Close"
 
 #: src/routes/auth/callback.tsx:46
 msgid "Completing sign in..."
 msgstr "Completing sign in..."
+
+#: src/features/events/create-event/components/create-event-form.tsx:258
+msgid "Continue"
+msgstr "Continue"
+
+#: src/features/events/create-event/components/share-link-dialog.tsx:93
+msgid "Copied!"
+msgstr "Copied!"
+
+#: src/features/events/create-event/components/share-link-dialog.tsx:98
+msgid "Copy link"
+msgstr "Copy link"
+
+#: src/features/events/create-event/components/create-event-form.tsx:271
+msgid "Create & get link"
+msgstr "Create & get link"
 
 #: src/routes/register.tsx:135
 msgid "Create Account"
@@ -72,18 +110,25 @@ msgstr "Create an Account"
 msgid "Creating account..."
 msgstr "Creating account..."
 
-#: src/components/ThemeToggle.tsx:75
-msgid "Dark"
-msgstr "Dark"
+#: src/features/events/create-event/components/create-event-form.tsx:269
+msgid "Creating…"
+msgstr "Creating…"
 
-#: src/components/Header.tsx:58
+#: src/features/events/create-event/components/items-editor.tsx:16
+msgid "Cups & plates"
+msgstr "Cups & plates"
+
+#: src/features/events/create-event/components/date-picker.tsx:203
+msgid "Custom"
+msgstr "Custom"
+
 #: src/routes/_authenticated/dashboard.tsx:29
 msgid "Dashboard"
 msgstr "Dashboard"
 
-#: src/routes/index.tsx:85
-msgid "Design quickly with utility-first styling and reusable tokens."
-msgstr "Design quickly with utility-first styling and reusable tokens."
+#: src/features/events/create-event/components/items-editor.tsx:17
+msgid "Dessert"
+msgstr "Dessert"
 
 #: src/routes/register.tsx:77
 msgid "Display Name"
@@ -93,9 +138,9 @@ msgstr "Display Name"
 msgid "Don't have an account? <0>Register</0>"
 msgstr "Don't have an account? <0>Register</0>"
 
-#: src/routes/index.tsx:98
-msgid "Edit <0>src/routes/index.tsx</0> to customize the home page."
-msgstr "Edit <0>src/routes/index.tsx</0> to customize the home page."
+#: src/features/events/create-event/components/create-event-form.tsx:101
+msgid "e.g. Sunset Beach Picnic"
+msgstr "e.g. Sunset Beach Picnic"
 
 #: src/routes/login.tsx:82
 #: src/routes/register.tsx:95
@@ -106,34 +151,61 @@ msgstr "Email"
 msgid "Email:"
 msgstr "Email:"
 
+#: src/features/events/create-event/components/create-event-form.tsx:96
+msgid "Event name"
+msgstr "Event name"
+
 #: src/routes/login.tsx:54
 #: src/routes/register.tsx:49
 msgid "Failed to start Google sign-in"
 msgstr "Failed to start Google sign-in"
 
-#: src/components/Footer.tsx:24
-msgid "Follow TanStack on X"
-msgstr "Follow TanStack on X"
+#: src/components/footer.tsx:10
+msgid "From scattered group chat to a ready-to-go plan — on one shared page."
+msgstr "From scattered group chat to a ready-to-go plan — on one shared page."
 
 #: src/routes/register.tsx:58
 msgid "Get started"
 msgstr "Get started"
 
-#: src/components/Footer.tsx:40
-msgid "Go to TanStack GitHub"
-msgstr "Go to TanStack GitHub"
+#: src/features/events/create-event/components/create-event-form.tsx:290
+msgid "Live preview"
+msgstr "Live preview"
 
-#: src/components/Header.tsx:34
-msgid "Home"
-msgstr "Home"
+#: src/components/header.tsx:234
+msgid "Log in"
+msgstr "Log in"
 
-#: src/components/ThemeToggle.tsx:75
-msgid "Light"
-msgstr "Light"
+#: src/components/header.tsx:119
+#: src/components/header.tsx:198
+msgid "My events"
+msgstr "My events"
 
-#: src/components/Header.tsx:76
-msgid "Log In"
-msgstr "Log In"
+#: src/components/header.tsx:142
+#: src/features/events/create-event/components/create-event-form.tsx:186
+msgid "New event"
+msgstr "New event"
+
+#: src/features/events/create-event/components/date-picker.tsx:320
+msgid "Next month"
+msgstr "Next month"
+
+#: src/features/events/create-event/components/create-event-form.tsx:300
+msgid "No account needed for guests — they just open the link."
+msgstr "No account needed for guests — they just open the link."
+
+#: src/features/events/create-event/components/create-event-form.tsx:52
+msgid "One or more selected times are in the past. Please update the time."
+msgstr "One or more selected times are in the past. Please update the time."
+
+#: src/features/events/create-event/components/share-link-dialog.tsx:106
+msgid "Open event page"
+msgstr "Open event page"
+
+#: src/features/events/create-event/components/create-event-form.tsx:113
+#: src/features/events/create-event/components/create-event-form.tsx:131
+msgid "optional"
+msgstr "optional"
 
 #: src/routes/login.tsx:125
 #: src/routes/register.tsx:143
@@ -145,29 +217,49 @@ msgstr "OR"
 msgid "Password"
 msgstr "Password"
 
-#: src/routes/index.tsx:94
-msgid "Quick Start"
-msgstr "Quick Start"
+#: src/features/events/create-event/components/date-picker.tsx:287
+msgid "Pick a custom date"
+msgstr "Pick a custom date"
 
-#: src/components/Header.tsx:82
-msgid "Register"
-msgstr "Register"
+#: src/features/events/create-event/components/date-picker.tsx:480
+msgid "Pick at least one day to continue."
+msgstr "Pick at least one day to continue."
 
-#: src/routes/index.tsx:37
-msgid "Router Guide"
-msgstr "Router Guide"
+#: src/features/events/create-event/components/create-event-form.tsx:169
+msgid "Pick some days"
+msgstr "Pick some days"
 
-#: src/routes/index.tsx:48
-msgid "Routes and links stay in sync across every page."
-msgstr "Routes and links stay in sync across every page."
+#: src/components/footer.tsx:16
+msgid "Picnivo · prototype"
+msgstr "Picnivo · prototype"
 
-#: src/routes/index.tsx:56
-msgid "Server Functions"
-msgstr "Server Functions"
+#: src/features/events/create-event/components/create-event-form.tsx:189
+msgid "Plan something good."
+msgstr "Plan something good."
 
-#: src/routes/index.tsx:72
-msgid "Ship progressively rendered responses for faster experiences."
-msgstr "Ship progressively rendered responses for faster experiences."
+#: src/features/events/create-event/components/date-picker.tsx:298
+msgid "Previous month"
+msgstr "Previous month"
+
+#: src/features/events/create-event/components/items-editor.tsx:43
+msgid "Remove {item}"
+msgstr "Remove {item}"
+
+#: src/features/events/create-event/components/create-event-form.tsx:192
+msgid "Set it up once, share one link, and watch the date, the food, and the "
+"guest list fill themselves in."
+msgstr "Set it up once, share one link, and watch the date, the food, and the "
+"guest list fill themselves in."
+
+#: src/features/events/create-event/components/create-event-form.tsx:138
+msgid "Set the vibe…"
+msgstr "Set the vibe…"
+
+#: src/features/events/create-event/components/share-link-dialog.tsx:62
+msgid "Share this link with the group. They vote and claim items — no app, no "
+"login."
+msgstr "Share this link with the group. They vote and claim items — no app, no "
+"login."
 
 #: src/routes/login.tsx:66
 #: src/routes/login.tsx:118
@@ -178,10 +270,17 @@ msgstr "Sign In"
 msgid "Sign in with Google"
 msgstr "Sign in with Google"
 
-#: src/components/Header.tsx:65
+#: src/components/header.tsx:219
+msgid "Sign out"
+msgstr "Sign out"
+
 #: src/routes/_authenticated/dashboard.tsx:49
 msgid "Sign Out"
 msgstr "Sign Out"
+
+#: src/components/header.tsx:237
+msgid "Sign up"
+msgstr "Sign up"
 
 #: src/routes/register.tsx:171
 msgid "Sign up with Google"
@@ -191,57 +290,39 @@ msgstr "Sign up with Google"
 msgid "Signing in..."
 msgstr "Signing in..."
 
-#: src/routes/index.tsx:16
-msgid "Start simple, ship quickly."
-msgstr "Start simple, ship quickly."
+#: src/features/events/create-event/components/create-event-form.tsx:73
+#: src/features/events/create-event/components/create-event-form.tsx:80
+msgid "Something went wrong. Please try again."
+msgstr "Something went wrong. Please try again."
 
-#: src/routes/index.tsx:69
-msgid "Streaming by Default"
-msgstr "Streaming by Default"
+#. placeholder {0}: step + 1
+#: src/features/events/create-event/components/create-event-form.tsx:221
+msgid "Step {0} of {TOTAL_STEPS}"
+msgstr "Step {0} of {TOTAL_STEPS}"
 
-#: src/routes/index.tsx:82
-msgid "Tailwind Native"
-msgstr "Tailwind Native"
+#: src/features/events/create-event/components/date-picker.tsx:519
+msgid "Suggested days"
+msgstr "Suggested days"
 
-#: src/routes/index.tsx:13
-msgid "TanStack Start Base Template"
-msgstr "TanStack Start Base Template"
+#: src/features/events/create-event/components/items-editor.tsx:80
+msgid "Tap to add"
+msgstr "Tap to add"
 
-#: src/routes/about.tsx:19
-msgid "TanStack Start gives you type-safe routing, server functions, and modern "
-"SSR defaults. Use this as a clean foundation, then layer in your own "
-"routes, styling, and add-ons."
-msgstr "TanStack Start gives you type-safe routing, server functions, and "
-"modern SSR defaults. Use this as a clean foundation, then layer in your "
-"own routes, styling, and add-ons."
+#: src/features/events/create-event/components/create-event-form.tsx:164
+msgid "The basics"
+msgstr "The basics"
 
-#: src/components/ThemeToggle.tsx:69
-msgid "Theme mode: auto (system). Click to switch to light mode."
-msgstr "Theme mode: auto (system). Click to switch to light mode."
+#: src/features/events/create-event/components/items-editor.tsx:20
+msgid "Trash bags"
+msgstr "Trash bags"
 
-#: src/components/ThemeToggle.tsx:71
-msgid "Theme mode: dark. Click to switch mode."
-msgstr "Theme mode: dark. Click to switch mode."
+#: src/features/events/create-event/components/create-event-form.tsx:354
+msgid "Untitled event"
+msgstr "Untitled event"
 
-#: src/components/ThemeToggle.tsx:72
-msgid "Theme mode: light. Click to switch mode."
-msgstr "Theme mode: light. Click to switch mode."
-
-#: src/routes/index.tsx:19
-msgid "This base starter intentionally keeps things light: two routes, clean "
-"structure, and the essentials you need to build from scratch."
-msgstr "This base starter intentionally keeps things light: two routes, clean "
-"structure, and the essentials you need to build from scratch."
-
-#: src/routes/index.tsx:45
-msgid "Type-Safe Routing"
-msgstr "Type-Safe Routing"
-
-#: src/routes/index.tsx:103
-msgid "Update <0>src/components/Header.tsx</0> and "
-"<1>src/components/Footer.tsx</1> for brand links."
-msgstr "Update <0>src/components/Header.tsx</0> and "
-"<1>src/components/Footer.tsx</1> for brand links."
+#: src/features/events/create-event/components/items-editor.tsx:19
+msgid "Watermelon"
+msgstr "Watermelon"
 
 #: src/routes/login.tsx:63
 msgid "Welcome back"
@@ -250,6 +331,30 @@ msgstr "Welcome back"
 #: src/routes/_authenticated/dashboard.tsx:32
 msgid "Welcome, {displayName}"
 msgstr "Welcome, {displayName}"
+
+#: src/features/events/create-event/components/create-event-form.tsx:175
+msgid "What do we need?"
+msgstr "What do we need?"
+
+#: src/features/events/create-event/components/create-event-form.tsx:165
+msgid "What's the plan?"
+msgstr "What's the plan?"
+
+#: src/features/events/create-event/components/create-event-form.tsx:170
+msgid "When could it happen?"
+msgstr "When could it happen?"
+
+#: src/features/events/create-event/components/create-event-form.tsx:111
+msgid "Where"
+msgstr "Where"
+
+#: src/features/events/create-event/components/date-picker.tsx:482
+msgid "With one date this is an announcement — add more to open voting."
+msgstr "With one date this is an announcement — add more to open voting."
+
+#: src/components/header.tsx:100
+msgid "You"
+msgstr "You"
 
 #: src/routes/login.tsx:91
 #: src/routes/register.tsx:104
@@ -263,3 +368,7 @@ msgstr "Your name"
 #: src/routes/login.tsx:109
 msgid "Your password"
 msgstr "Your password"
+
+#: src/features/events/create-event/components/share-link-dialog.tsx:57
+msgid "Your picnic is live!"
+msgstr "Your picnic is live!"
