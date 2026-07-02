@@ -1,3 +1,4 @@
+using FluentValidation.TestHelper;
 using Picnivo.API.Features.Participants.JoinEvent;
 
 namespace Picnivo.Tests.Features.Participants.JoinEvent;
@@ -13,10 +14,10 @@ public class JoinEventValidatorTests
         var request = new JoinEventRequest("   ");
 
         // Act
-        var result = await _validator.ValidateAsync(request);
+        var result = await _validator.TestValidateAsync(request);
 
         // Assert
-        result.IsValid.ShouldBeFalse();
+        result.ShouldHaveValidationErrorFor(r => r.DisplayName);
     }
 
     [Fact]
@@ -26,10 +27,10 @@ public class JoinEventValidatorTests
         var request = new JoinEventRequest(new string('a', 101));
 
         // Act
-        var result = await _validator.ValidateAsync(request);
+        var result = await _validator.TestValidateAsync(request);
 
         // Assert
-        result.IsValid.ShouldBeFalse();
+        result.ShouldHaveValidationErrorFor(r => r.DisplayName);
     }
 
     [Fact]
@@ -39,9 +40,9 @@ public class JoinEventValidatorTests
         var request = new JoinEventRequest("Alice");
 
         // Act
-        var result = await _validator.ValidateAsync(request);
+        var result = await _validator.TestValidateAsync(request);
 
         // Assert
-        result.IsValid.ShouldBeTrue();
+        result.ShouldNotHaveAnyValidationErrors();
     }
 }

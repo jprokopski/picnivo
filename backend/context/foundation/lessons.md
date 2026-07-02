@@ -71,3 +71,17 @@
 - **Problem**: Without a 0 = Invalid sentinel, an uninitialized/default enum value silently reads as a valid, meaningful member instead of failing loudly.
 - **Rule**: Always assign explicit int values to enum members, reserving 0 for an Invalid/Unspecified/None sentinel, so accidental `default(T)` is detectable and reordering can't silently renumber members.
 - **Applies to**: implement, impl-review
+
+## Use TestValidateAsync for validator tests
+
+- **Context**: FluentValidation validator tests in backend/Picnivo.Tests/
+- **Problem**: Without TestValidateAsync, validator test assertions are more verbose and less clean to write/read.
+- **Rule**: Use TestValidateAsync for validator tests.
+- **Applies to**: implement, impl-review
+
+## Use var instead of explicit class
+
+- **Context**: All C# backend code — any .cs file in backend/
+- **Problem**: No specific incident; inconsistent use of explicit types vs. var creates a mixed style across the codebase.
+- **Rule**: Use `var` instead of an explicit class/type name for local variable declarations when the type is apparent from the right-hand side.
+- **Applies to**: implement, impl-review

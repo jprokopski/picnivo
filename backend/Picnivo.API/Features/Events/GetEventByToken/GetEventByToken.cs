@@ -53,7 +53,7 @@ public static class GetEventByToken
                 .Select(v => v.Count)
                 .FirstOrDefault();
 
-        Guid? bestDateOptionId = raw.DateOptions
+        var bestDateOptionId = raw.DateOptions
             .OrderByDescending(d => CountFor(d.Id, VoteChoice.Yes))
             .ThenBy(d => CountFor(d.Id, VoteChoice.No))
             .ThenBy(d => d.StartsAt)

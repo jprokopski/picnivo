@@ -1,3 +1,4 @@
+using FluentValidation.TestHelper;
 using Picnivo.API.Data.Models;
 using Picnivo.API.Features.Votes.CastVotes;
 
@@ -14,10 +15,10 @@ public class CastVotesValidatorTests
         var request = new CastVotesRequest([]);
 
         // Act
-        var result = await _validator.ValidateAsync(request);
+        var result = await _validator.TestValidateAsync(request);
 
         // Assert
-        result.IsValid.ShouldBeFalse();
+        result.ShouldHaveValidationErrorFor(r => r.Votes);
     }
 
     [Fact]
@@ -27,10 +28,10 @@ public class CastVotesValidatorTests
         var request = new CastVotesRequest([new VoteDto(Guid.NewGuid(), (VoteChoice)99)]);
 
         // Act
-        var result = await _validator.ValidateAsync(request);
+        var result = await _validator.TestValidateAsync(request);
 
         // Assert
-        result.IsValid.ShouldBeFalse();
+        result.ShouldHaveValidationErrorFor("Votes[0].Choice");
     }
 
     [Fact]
@@ -40,9 +41,9 @@ public class CastVotesValidatorTests
         var request = new CastVotesRequest([new VoteDto(Guid.NewGuid(), VoteChoice.Yes)]);
 
         // Act
-        var result = await _validator.ValidateAsync(request);
+        var result = await _validator.TestValidateAsync(request);
 
         // Assert
-        result.IsValid.ShouldBeTrue();
+        result.ShouldNotHaveAnyValidationErrors();
     }
 }

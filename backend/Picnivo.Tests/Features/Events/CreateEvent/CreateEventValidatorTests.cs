@@ -1,3 +1,4 @@
+using FluentValidation.TestHelper;
 using Picnivo.API.Features.Events.CreateEvent;
 
 namespace Picnivo.Tests.Features.Events.CreateEvent;
@@ -13,10 +14,10 @@ public class CreateEventValidatorTests
         var request = ValidRequest() with { Title = "   " };
 
         // Act
-        var result = await _validator.ValidateAsync(request);
+        var result = await _validator.TestValidateAsync(request);
 
         // Assert
-        result.IsValid.ShouldBeFalse();
+        result.ShouldHaveValidationErrorFor(r => r.Title);
     }
 
     [Fact]
@@ -26,10 +27,10 @@ public class CreateEventValidatorTests
         var request = ValidRequest() with { DateOptions = [] };
 
         // Act
-        var result = await _validator.ValidateAsync(request);
+        var result = await _validator.TestValidateAsync(request);
 
         // Assert
-        result.IsValid.ShouldBeFalse();
+        result.ShouldHaveValidationErrorFor(r => r.DateOptions);
     }
 
     [Fact]
@@ -39,10 +40,10 @@ public class CreateEventValidatorTests
         var request = ValidRequest(11);
 
         // Act
-        var result = await _validator.ValidateAsync(request);
+        var result = await _validator.TestValidateAsync(request);
 
         // Assert
-        result.IsValid.ShouldBeFalse();
+        result.ShouldHaveValidationErrorFor(r => r.DateOptions);
     }
 
     [Fact]
@@ -52,10 +53,10 @@ public class CreateEventValidatorTests
         var request = ValidRequest() with { DateOptions = [DateTimeOffset.UtcNow.AddDays(-1)] };
 
         // Act
-        var result = await _validator.ValidateAsync(request);
+        var result = await _validator.TestValidateAsync(request);
 
         // Assert
-        result.IsValid.ShouldBeFalse();
+        result.ShouldHaveValidationErrorFor(r => r.DateOptions);
     }
 
     [Fact]
@@ -65,10 +66,10 @@ public class CreateEventValidatorTests
         var request = ValidRequest();
 
         // Act
-        var result = await _validator.ValidateAsync(request);
+        var result = await _validator.TestValidateAsync(request);
 
         // Assert
-        result.IsValid.ShouldBeTrue();
+        result.ShouldNotHaveAnyValidationErrors();
     }
 
     private static CreateEventRequest ValidRequest(int dateCount = 2) => new(

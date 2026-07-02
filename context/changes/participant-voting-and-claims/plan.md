@@ -845,17 +845,17 @@ avoid Postgres multiple-cascade-path errors.
 
 #### Automated
 
-- [ ] 3.1 Build passes: `dotnet build`
-- [ ] 3.2 Tests pass: `dotnet test`
-- [ ] 3.3 Claim gate tests across states (not-coming 403, coming allowed, Yes-on-chosen allowed, 1-date after confirm)
-- [ ] 3.4 Attendance/orphan tests: count-out releases + orphans claims; re-claim clears orphan; plain release doesn't orphan
-- [ ] 3.5 Claim race test: one winner, 409 loser; release frees item
-- [ ] 3.6 Item tests: add stamps adder + dedupe; adder delete; non-adder 403; organizer delete any
-- [ ] 3.7 Lock-date tests: organizer 200, non-organizer 403, unauthenticated 401, invalid dateOptionId rejected
+- [x] 3.1 Build passes: `dotnet build`
+- [x] 3.2 Tests pass: `dotnet test`
+- [x] 3.3 Claim gate tests across states (not-coming 403, coming allowed, Yes-on-chosen allowed, 1-date after confirm)
+- [x] 3.4 Attendance/orphan tests: count-out releases + orphans claims; re-claim clears orphan; plain release doesn't orphan
+- [x] 3.5 Claim race test: one winner, 409 loser; release frees item
+- [x] 3.6 Item tests: add stamps adder + dedupe; adder delete; non-adder 403; organizer delete any
+- [x] 3.7 Lock-date tests: organizer 200, non-organizer 403, unauthenticated 401, invalid dateOptionId rejected
 
 #### Manual
 
-- [ ] 3.8 HTTP flow: join → vote → lock → confirm → claim → count out (orphan) → other claims orphan
+- [x] 3.8 HTTP flow: join → vote → lock → confirm → claim → count out (orphan) → other claims orphan
 
 ### Phase 4: Frontend — Join & Participant Identity
 

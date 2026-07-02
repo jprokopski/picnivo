@@ -14,6 +14,13 @@ public class EventItemConfiguration : IEntityTypeConfiguration<EventItem>
             .IsRequired()
             .HasMaxLength(200);
 
+        builder.Property<string>("NormalizedLabel")
+            .HasComputedColumnSql("lower(\"Label\")", stored: true);
+
+        builder.HasIndex("EventId", "NormalizedLabel")
+            .IsUnique()
+            .HasDatabaseName("IX_EventItems_Event_NormalizedLabel");
+
         builder.HasOne(i => i.AddedByParticipant)
             .WithMany()
             .HasForeignKey(i => i.AddedByParticipantId)

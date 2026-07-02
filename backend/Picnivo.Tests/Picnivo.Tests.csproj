@@ -14,21 +14,16 @@
     <Compile Remove="Client/**" />
   </ItemGroup>
 
-  <Target Name="GenerateApiClient"
-          BeforeTargets="CoreCompile"
-          Condition="Exists('$(_PicnivoApiSpec)')">
+  <Target Name="GenerateApiClient" BeforeTargets="CoreCompile" Condition="Exists('$(_PicnivoApiSpec)')">
     <MakeDir Directories="$(MSBuildProjectDirectory)/Client" />
-    <Exec Command="dotnet nswag run nswag.json"
-          WorkingDirectory="$(MSBuildProjectDirectory)" />
+    <Exec Command="dotnet nswag run nswag.json" WorkingDirectory="$(MSBuildProjectDirectory)" />
     <ItemGroup>
       <Compile Include="$(_GeneratedClient)" />
     </ItemGroup>
   </Target>
 
   <!-- On incremental builds the spec is unchanged, so also include the already-generated file -->
-  <Target Name="IncludeGeneratedClient"
-          BeforeTargets="CoreCompile"
-          Condition="!Exists('$(_PicnivoApiSpec)') And Exists('$(_GeneratedClient)')">
+  <Target Name="IncludeGeneratedClient" BeforeTargets="CoreCompile" Condition="!Exists('$(_PicnivoApiSpec)') And Exists('$(_GeneratedClient)')">
     <ItemGroup>
       <Compile Include="$(_GeneratedClient)" />
     </ItemGroup>
@@ -36,6 +31,7 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.4" />
+    <PackageReference Include="EntityFrameworkCore.Exceptions.Sqlite" Version="10.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.5" />
