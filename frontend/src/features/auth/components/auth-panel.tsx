@@ -7,8 +7,8 @@ import Logo from "../../../components/logo";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
-import { AuthScene } from "./AuthScene";
-import { AvatarStack } from "./AvatarStack";
+import { AuthScene } from "./auth-scene";
+import { AvatarStack } from "./avatar-stack";
 
 type AuthMode = "signin" | "signup";
 

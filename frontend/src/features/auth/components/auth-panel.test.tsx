@@ -15,7 +15,7 @@ import {
   createRouter,
 } from "@tanstack/react-router";
 import { i18n } from "../../../lib/i18n";
-import { AuthPanel } from "./AuthPanel";
+import { AuthPanel } from "./auth-panel";
 
 // ---------------------------------------------------------------------------
 // vi.mock must be top-level (it is hoisted by vitest)

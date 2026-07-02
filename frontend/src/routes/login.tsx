@@ -3,7 +3,7 @@ import {
   useNavigate,
   useSearch,
 } from "@tanstack/react-router";
-import { AuthPanel } from "../features/auth/components/AuthPanel";
+import { AuthPanel } from "../features/auth/components/auth-panel";
 
 export const Route = createFileRoute("/login")({
   validateSearch: (search: Record<string, unknown>) => ({

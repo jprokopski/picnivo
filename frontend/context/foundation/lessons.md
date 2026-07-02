@@ -29,3 +29,10 @@
 - **Problem**: String interpolation silently produces conflicting Tailwind classes that twMerge can't resolve, causing hard-to-debug style collisions.
 - **Rule**: Always use `cn()` from `@/lib/utils` for any conditional or composed `className`. Template literals and string concatenation in `className` are banned. Prefer `condition && "class"` over ternaries with empty strings.
 - **Applies to**: implement, impl-review
+
+## Use kebab-case for frontend project files
+
+- **Context**: New files under `frontend/src/**`, especially `src/components/` and `src/features/<Feature>/**/components/`.
+- **Problem**: New feature files (e.g. `AuthPanel.tsx`, `AuthScene.tsx`, `AvatarStack.tsx`) used PascalCase filenames, diverging from the existing kebab-case convention (`header.tsx`, `logo.tsx`, `avatar.tsx`, `format-instant.ts`), making naming inconsistent and harder to predict/grep across the repo.
+- **Rule**: Use kebab-case for all project files in `frontend/` (e.g. `auth-panel.tsx`, not `AuthPanel.tsx`), matching the existing convention in `src/components/`.
+- **Applies to**: implement, impl-review

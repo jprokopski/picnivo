@@ -66,11 +66,11 @@ msgstr "Add this date"
 msgid "All"
 msgstr "All"
 
-#: src/features/auth/components/AuthPanel.tsx:275
+#: src/features/auth/components/auth-panel.tsx:275
 msgid "Already have an account?"
 msgstr "Already have an account?"
 
-#: src/features/auth/components/AuthPanel.tsx:241
+#: src/features/auth/components/auth-panel.tsx:241
 msgid "At least 6 characters"
 msgstr "At least 6 characters"
 
@@ -103,7 +103,7 @@ msgstr "Completing sign in..."
 msgid "Continue"
 msgstr "Continue"
 
-#: src/features/auth/components/AuthPanel.tsx:182
+#: src/features/auth/components/auth-panel.tsx:182
 msgid "Continue with Google"
 msgstr "Continue with Google"
 
@@ -119,12 +119,12 @@ msgstr "Copy link"
 msgid "Create & get link"
 msgstr "Create & get link"
 
-#: src/features/auth/components/AuthPanel.tsx:149
-#: src/features/auth/components/AuthPanel.tsx:263
+#: src/features/auth/components/auth-panel.tsx:149
+#: src/features/auth/components/auth-panel.tsx:263
 msgid "Create account"
 msgstr "Create account"
 
-#: src/features/auth/components/AuthPanel.tsx:284
+#: src/features/auth/components/auth-panel.tsx:284
 msgid "Create one"
 msgstr "Create one"
 
@@ -132,7 +132,7 @@ msgstr "Create one"
 msgid "Create your first event"
 msgstr "Create your first event"
 
-#: src/features/auth/components/AuthPanel.tsx:261
+#: src/features/auth/components/auth-panel.tsx:261
 msgid "Creating account..."
 msgstr "Creating account..."
 
@@ -160,7 +160,7 @@ msgstr "Dessert"
 msgid "e.g. Sunset Beach Picnic"
 msgstr "e.g. Sunset Beach Picnic"
 
-#: src/features/auth/components/AuthPanel.tsx:217
+#: src/features/auth/components/auth-panel.tsx:217
 msgid "Email"
 msgstr "Email"
 
@@ -172,7 +172,7 @@ msgstr "Event name"
 msgid "Events you're hosting."
 msgstr "Events you're hosting."
 
-#: src/features/auth/components/AuthPanel.tsx:109
+#: src/features/auth/components/auth-panel.tsx:109
 msgid "Failed to start Google sign-in"
 msgstr "Failed to start Google sign-in"
 
@@ -184,13 +184,13 @@ msgstr "Filter events"
 msgid "From scattered group chat to a ready-to-go plan — on one shared page."
 msgstr "From scattered group chat to a ready-to-go plan — on one shared page."
 
-#: src/features/auth/components/AuthPanel.tsx:128
+#: src/features/auth/components/auth-panel.tsx:128
 msgid "From scattered group chat to a ready-to-go plan — pick a date, claim "
 "what to bring, all on one shared page."
 msgstr "From scattered group chat to a ready-to-go plan — pick a date, claim "
 "what to bring, all on one shared page."
 
-#: src/features/auth/components/AuthPanel.tsx:249
+#: src/features/auth/components/auth-panel.tsx:249
 msgid "Hide"
 msgstr "Hide"
 
@@ -206,7 +206,7 @@ msgstr "Hosting"
 msgid "items"
 msgstr "items"
 
-#: src/features/auth/components/AuthPanel.tsx:153
+#: src/features/auth/components/auth-panel.tsx:153
 msgid "Join Picnivo"
 msgstr "Join Picnivo"
 
@@ -218,7 +218,7 @@ msgstr "Live preview"
 msgid "Log in"
 msgstr "Log in"
 
-#: src/features/auth/components/AuthPanel.tsx:209
+#: src/features/auth/components/auth-panel.tsx:209
 msgid "Maya Chen"
 msgstr "Maya Chen"
 
@@ -232,7 +232,7 @@ msgstr "My events"
 msgid "New event"
 msgstr "New event"
 
-#: src/features/auth/components/AuthPanel.tsx:277
+#: src/features/auth/components/auth-panel.tsx:277
 msgid "New to Picnivo?"
 msgstr "New to Picnivo?"
 
@@ -287,15 +287,15 @@ msgstr "Open event page"
 msgid "optional"
 msgstr "optional"
 
-#: src/features/auth/components/AuthPanel.tsx:191
+#: src/features/auth/components/auth-panel.tsx:191
 msgid "or sign in with email"
 msgstr "or sign in with email"
 
-#: src/features/auth/components/AuthPanel.tsx:189
+#: src/features/auth/components/auth-panel.tsx:189
 msgid "or sign up with email"
 msgstr "or sign up with email"
 
-#: src/features/auth/components/AuthPanel.tsx:232
+#: src/features/auth/components/auth-panel.tsx:232
 msgid "Password"
 msgstr "Password"
 
@@ -323,7 +323,7 @@ msgstr "Picnivo · prototype"
 msgid "Plan something good."
 msgstr "Plan something good."
 
-#: src/features/auth/components/AuthPanel.tsx:122
+#: src/features/auth/components/auth-panel.tsx:122
 msgid "Plan the hang — together."
 msgstr "Plan the hang — together."
 
@@ -359,17 +359,17 @@ msgid "Share this link with the group. They vote and claim items — no app, no 
 msgstr "Share this link with the group. They vote and claim items — no app, no "
 "login."
 
-#: src/features/auth/components/AuthPanel.tsx:249
+#: src/features/auth/components/auth-panel.tsx:249
 msgid "Show"
 msgstr "Show"
 
-#: src/features/auth/components/AuthPanel.tsx:149
-#: src/features/auth/components/AuthPanel.tsx:268
-#: src/features/auth/components/AuthPanel.tsx:284
+#: src/features/auth/components/auth-panel.tsx:149
+#: src/features/auth/components/auth-panel.tsx:268
+#: src/features/auth/components/auth-panel.tsx:284
 msgid "Sign in"
 msgstr "Sign in"
 
-#: src/features/auth/components/AuthPanel.tsx:164
+#: src/features/auth/components/auth-panel.tsx:164
 msgid "Sign in to pick dates and rally your crew."
 msgstr "Sign in to pick dates and rally your crew."
 
@@ -377,7 +377,7 @@ msgstr "Sign in to pick dates and rally your crew."
 msgid "Sign out"
 msgstr "Sign out"
 
-#: src/features/auth/components/AuthPanel.tsx:266
+#: src/features/auth/components/auth-panel.tsx:266
 msgid "Signing in..."
 msgstr "Signing in..."
 
@@ -390,7 +390,7 @@ msgstr "Something went wrong."
 msgid "Something went wrong. Please try again."
 msgstr "Something went wrong. Please try again."
 
-#: src/features/auth/components/AuthPanel.tsx:160
+#: src/features/auth/components/auth-panel.tsx:160
 msgid "Start planning get-togethers everyone actually shows up to."
 msgstr "Start planning get-togethers everyone actually shows up to."
 
@@ -447,11 +447,11 @@ msgstr "Watermelon"
 msgid "We couldn't find that event."
 msgstr "We couldn't find that event."
 
-#: src/features/auth/components/AuthPanel.tsx:155
+#: src/features/auth/components/auth-panel.tsx:155
 msgid "Welcome back"
 msgstr "Welcome back"
 
-#: src/features/auth/components/AuthPanel.tsx:124
+#: src/features/auth/components/auth-panel.tsx:124
 msgid "Welcome back to the picnic."
 msgstr "Welcome back to the picnic."
 
@@ -479,7 +479,7 @@ msgstr "When works?"
 msgid "Where"
 msgstr "Where"
 
-#: src/features/auth/components/AuthPanel.tsx:140
+#: src/features/auth/components/auth-panel.tsx:140
 msgid "Where good hangs come together"
 msgstr "Where good hangs come together"
 
@@ -491,7 +491,7 @@ msgstr "With one date this is an announcement — add more to open voting."
 msgid "You"
 msgstr "You"
 
-#: src/features/auth/components/AuthPanel.tsx:225
+#: src/features/auth/components/auth-panel.tsx:225
 msgid "you@email.com"
 msgstr "you@email.com"
 
@@ -499,7 +499,7 @@ msgstr "you@email.com"
 msgid "Your events"
 msgstr "Your events"
 
-#: src/features/auth/components/AuthPanel.tsx:201
+#: src/features/auth/components/auth-panel.tsx:201
 msgid "Your name"
 msgstr "Your name"
 
