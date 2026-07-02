@@ -60,6 +60,7 @@ Existing tools fail from both ends — event platforms (Eventbrite, Meetup) are 
 #### Acceptance Criteria
 - Participant can vote within 30 seconds of opening the link (≤ name entry + vote)
 - Vote summary updates to reflect the new vote on page load
+- Item claiming is available only to participants attending the chosen date (voted Yes on it, or confirmed attendance despite voting against)
 - Claimed item shows the participant's name next to it
 
 ## Functional Requirements
@@ -85,8 +86,11 @@ Existing tools fail from both ends — event platforms (Eventbrite, Meetup) are 
   > Socrates: Counter-argument considered: "unverified names allow impersonation." Resolution: revised — add duplicate name detection/warning. In a small friend group, impersonation is a prank, not a threat, but a warning helps avoid confusion.
 - FR-008: Participant can vote Yes/Maybe/No on each proposed date option. Priority: must-have
   > Socrates: Counter-argument considered: "Maybe is noise — people pick it to avoid commitment." Resolution: kept; Maybe means "I can make it work but it's not ideal." The organizer can weigh Maybes lower than Yeses when picking the final date.
-- FR-009: Participant can claim an item from the logistics list ("I'll bring X"). One claim per item, first-come-first-served. Priority: must-have
+- FR-009: Participant can claim an item from the logistics list ("I'll bring X"), but only if they are attending the chosen date — i.e. they voted Yes on the date the organizer selected, OR they explicitly confirmed attendance despite not voting Yes (see FR-013). One claim per item, first-come-first-served. Priority: must-have
   > Socrates: Counter-argument considered: "what if two people want to bring the same thing?" Resolution: kept; one person per item, first-come-first-served. If someone else claimed it, pick another. Simple and clear.
+  > Socrates: Counter-argument considered: "gating item claims on attendance adds a step." Resolution: kept; only people who are actually coming should commit to bringing things, otherwise the logistics list fills with claims from no-shows. Voting Yes on the chosen date or explicitly confirming attendance both satisfy the gate.
+- FR-013: A participant who did not vote Yes on the chosen date (voted Maybe/No, or did not vote) can explicitly confirm they will attend anyway. Confirming attendance unlocks item claiming for that participant. Priority: must-have
+  > Socrates: Counter-argument considered: "a No-voter claiming items is contradictory." Resolution: kept; a participant may vote against a date but still decide to come once it's chosen. The explicit confirmation captures that intent and is the second path to unlocking item claiming.
 
 ### Event page
 - FR-010: Any event visitor can see a summary of votes per date option (updated on page load). Priority: must-have
@@ -106,7 +110,7 @@ Existing tools fail from both ends — event platforms (Eventbrite, Meetup) are 
 
 Picnivo reduces a multi-person, multi-decision coordination loop (date + items + attendance) to a single shared state that converges toward a ready-to-go event.
 
-The rule consumes three input streams from participants: individual date preferences (Yes/Maybe/No per proposed option), item claims (who brings what), and implicit attendance (joining or voting registers the person as attending). From these inputs, the rule produces a single event page that shows: the group's best date (ranked by consensus — most Yes votes, ties broken by fewest No votes), who's bringing what (one claim per item, no gaps visible), and who's coming.
+The rule consumes three input streams from participants: individual date preferences (Yes/Maybe/No per proposed option), item claims (who brings what), and attendance for the chosen date. Item claiming is gated on attendance: a participant can only claim an item if they are attending the date the organizer chose — either by having voted Yes on it, or by explicitly confirming attendance despite voting against. From these inputs, the rule produces a single event page that shows: the group's best date (ranked by consensus — most Yes votes, ties broken by fewest No votes), who's bringing what (one claim per item, no gaps visible), and who's coming.
 
 The organizer shares one link. As friends interact, the page fills in — the event goes from "scattered discussion" to "ready to go" without the organizer manually aggregating anything. The convergence is the product: each participant action reduces uncertainty about the event's date, logistics, and attendance.
 
