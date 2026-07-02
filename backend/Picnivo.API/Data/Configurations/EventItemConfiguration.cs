@@ -13,5 +13,15 @@ public class EventItemConfiguration : IEntityTypeConfiguration<EventItem>
         builder.Property(i => i.Label)
             .IsRequired()
             .HasMaxLength(200);
+
+        builder.HasOne(i => i.AddedByParticipant)
+            .WithMany()
+            .HasForeignKey(i => i.AddedByParticipantId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasOne(i => i.OrphanedFromParticipant)
+            .WithMany()
+            .HasForeignKey(i => i.OrphanedFromParticipantId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

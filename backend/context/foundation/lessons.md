@@ -64,3 +64,10 @@
 - **Problem**: Developer preference — extension methods written without the `extension` keyword are harder to identify at a glance.
 - **Rule**: Always use the `extension` keyword when defining C# extension methods.
 - **Applies to**: implement, impl-review
+
+## Reserve enum value 0 for Invalid/Unspecified
+
+- **Context**: Any new enum, anywhere in the codebase.
+- **Problem**: Without a 0 = Invalid sentinel, an uninitialized/default enum value silently reads as a valid, meaningful member instead of failing loudly.
+- **Rule**: Always assign explicit int values to enum members, reserving 0 for an Invalid/Unspecified/None sentinel, so accidental `default(T)` is detectable and reordering can't silently renumber members.
+- **Applies to**: implement, impl-review
