@@ -538,17 +538,17 @@ One additive EF migration (new Event columns + unique token index + two new tabl
 
 #### Automated
 
-- [x] 5.1 Type checking passes (`pnpm typecheck`)
-- [x] 5.2 Lint passes (`pnpm lint`)
-- [x] 5.3 Tests pass (`pnpm test`)
-- [x] 5.4 Lingui extract + compile clean (`pnpm extract` / `pnpm compile`)
+- [x] 5.1 Type checking passes (`pnpm typecheck`) — 868e31e
+- [x] 5.2 Lint passes (`pnpm lint`) — 868e31e
+- [x] 5.3 Tests pass (`pnpm test`) — 868e31e
+- [x] 5.4 Lingui extract + compile clean (`pnpm extract` / `pnpm compile`) — 868e31e
 
 #### Manual
 
-- [x] 5.5 Create event (title + 1–10 dates + items) in ~2 min → working copyable link
-- [x] 5.6 Validation blocks empty title / 0 / >10 / past dates with clear messages
-- [x] 5.7 Usable on mobile viewport (calendar + time on touch)
-- [x] 5.8 Copy-to-clipboard + "Open event page" navigation work
+- [x] 5.5 Create event (title + 1–10 dates + items) in ~2 min → working copyable link — 868e31e
+- [x] 5.6 Validation blocks empty title / 0 / >10 / past dates with clear messages — 868e31e
+- [x] 5.7 Usable on mobile viewport (calendar + time on touch) — 868e31e
+- [x] 5.8 Copy-to-clipboard + "Open event page" navigation work — 868e31e
 
 ### Phase 6: Events Dashboard & Public Event Page
 
