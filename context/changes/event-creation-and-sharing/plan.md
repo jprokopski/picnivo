@@ -557,10 +557,10 @@ One additive EF migration (new Event columns + unique token index + two new tabl
 
 #### Automated
 
-- [x] 6.1 Type checking passes (`pnpm typecheck`)
-- [x] 6.2 Lint passes (`pnpm lint`)
-- [x] 6.3 Tests pass (`pnpm test`)
-- [x] 6.4 Build succeeds (`pnpm build`)
+- [x] 6.1 Type checking passes (`pnpm typecheck`) — 6d8f859
+- [x] 6.2 Lint passes (`pnpm lint`) — 6d8f859
+- [x] 6.3 Tests pass (`pnpm test`) — 6d8f859
+- [x] 6.4 Build succeeds (`pnpm build`) — 6d8f859
 
 #### Manual
 
