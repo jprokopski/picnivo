@@ -817,14 +817,14 @@ avoid Postgres multiple-cascade-path errors.
 
 #### Automated
 
-- [x] 1.1 Build passes: `dotnet build`
-- [x] 1.2 Migration applies cleanly: `dotnet ef database update`
-- [x] 1.3 Migration reverts cleanly to previous migration
-- [x] 1.4 Existing tests still pass: `dotnet test`
+- [x] 1.1 Build passes: `dotnet build` — 934ff75
+- [x] 1.2 Migration applies cleanly: `dotnet ef database update` — 934ff75
+- [x] 1.3 Migration reverts cleanly to previous migration — 934ff75
+- [x] 1.4 Existing tests still pass: `dotnet test` — 934ff75
 
 #### Manual
 
-- [x] 1.5 DB shows three new tables, both unique indexes, new columns with correct FK/nullability
+- [x] 1.5 DB shows three new tables, both unique indexes, new columns with correct FK/nullability — 934ff75
 
 ### Phase 2: Backend — Join, Voting & Read Models
 
