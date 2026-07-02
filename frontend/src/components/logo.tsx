@@ -1,4 +1,6 @@
-const BASKET_PIXELS: [number, number, number, number, string][] = [
+import { cn } from "../lib/utils";
+
+export const BASKET_PIXELS: [number, number, number, number, string][] = [
   [120, 70, 20, 20, "#8a5420"],
   [140, 50, 80, 20, "#8a5420"],
   [220, 70, 20, 20, "#8a5420"],
@@ -29,10 +31,20 @@ const BASKET_PIXELS: [number, number, number, number, string][] = [
   [96, 238, 20, 20, "#d89a4f"],
 ];
 
-function BasketTile({ size = 28 }: { size?: number }) {
+function BasketTile({
+  size = 28,
+  tone = "default",
+}: {
+  size?: number;
+  tone?: "default" | "light";
+}) {
   return (
     <span
-      className="inline-flex shrink-0 items-center justify-center bg-[linear-gradient(165deg,var(--marigold-tint)_0%,var(--coral-tint)_100%)] p-[0.12em] shadow-[inset_0_0_0_1px_rgba(43,32,24,0.08),0_1px_2px_rgba(120,72,28,0.12)]"
+      className={
+        tone === "light"
+          ? "inline-flex shrink-0 items-center justify-center bg-[rgba(255,252,246,0.92)] p-[0.12em] shadow-[inset_0_0_0_1px_rgba(43,32,24,0.08),0_1px_2px_rgba(120,72,28,0.12)]"
+          : "inline-flex shrink-0 items-center justify-center bg-[linear-gradient(165deg,var(--marigold-tint)_0%,var(--coral-tint)_100%)] p-[0.12em] shadow-[inset_0_0_0_1px_rgba(43,32,24,0.08),0_1px_2px_rgba(120,72,28,0.12)]"
+      }
       style={{
         width: size,
         height: size,
@@ -57,13 +69,22 @@ function BasketTile({ size = 28 }: { size?: number }) {
   );
 }
 
-export default function Logo({ size = 17 }: { size?: number }) {
+export default function Logo({
+  size = 17,
+  tone = "default",
+}: {
+  size?: number;
+  tone?: "default" | "light";
+}) {
   return (
     <span
-      className="font-display inline-flex items-center gap-[0.5em] font-extrabold tracking-[-0.02em] text-(--ink)"
+      className={cn(
+        "font-display inline-flex items-center gap-[0.5em] font-extrabold tracking-[-0.02em]",
+        tone === "light" ? "text-white" : "text-(--ink)",
+      )}
       style={{ fontSize: size }}
     >
-      <BasketTile size={Math.round(size * 1.62)} />
+      <BasketTile size={Math.round(size * 1.62)} tone={tone} />
       <span className="translate-y-[0.02em] leading-none">Picnivo</span>
     </span>
   );

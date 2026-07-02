@@ -7,8 +7,6 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { I18nProvider } from "@lingui/react";
 import { i18n } from "../lib/i18n";
-import Footer from "../components/footer";
-import Header from "../components/header";
 import { getSessionFn } from "../lib/supabase/session";
 import type { RouterContext } from "../router";
 
@@ -25,7 +23,10 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Picnivo" },
     ],
-    links: [{ rel: "stylesheet", href: appCss }],
+    links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+    ],
   }),
   shellComponent: RootDocument,
 });
@@ -38,9 +39,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <I18nProvider i18n={i18n}>
-          <Header />
           {children}
-          <Footer />
           <TanStackDevtools
             config={{ position: "bottom-right" }}
             plugins={[

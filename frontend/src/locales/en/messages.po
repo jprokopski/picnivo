@@ -27,8 +27,8 @@ msgid "{dateCount} dates"
 msgstr "{dateCount} dates"
 
 #: src/features/events/list-events/components/event-card.tsx:29
-msgid "{dateOptionCount} dates · voting open"
-msgstr "{dateOptionCount} dates · voting open"
+msgid "{dateOptionCount} dates"
+msgstr "{dateOptionCount} dates"
 
 #: src/features/events/create-event/components/create-event-form.tsx:370
 msgid "{itemCount} items"
@@ -66,11 +66,11 @@ msgstr "Add this date"
 msgid "All"
 msgstr "All"
 
-#: src/routes/register.tsx:175
-msgid "Already have an account? <0>Sign In</0>"
-msgstr "Already have an account? <0>Sign In</0>"
+#: src/features/auth/components/auth-panel.tsx:275
+msgid "Already have an account?"
+msgstr "Already have an account?"
 
-#: src/routes/register.tsx:123
+#: src/features/auth/components/auth-panel.tsx:241
 msgid "At least 6 characters"
 msgstr "At least 6 characters"
 
@@ -95,13 +95,17 @@ msgstr "Bug spray"
 msgid "Close"
 msgstr "Close"
 
-#: src/routes/auth/callback.tsx:46
+#: src/routes/auth/callback.tsx:52
 msgid "Completing sign in..."
 msgstr "Completing sign in..."
 
 #: src/features/events/create-event/components/create-event-form.tsx:258
 msgid "Continue"
 msgstr "Continue"
+
+#: src/features/auth/components/auth-panel.tsx:182
+msgid "Continue with Google"
+msgstr "Continue with Google"
 
 #: src/features/events/create-event/components/share-link-dialog.tsx:93
 msgid "Copied!"
@@ -115,19 +119,20 @@ msgstr "Copy link"
 msgid "Create & get link"
 msgstr "Create & get link"
 
-#: src/routes/register.tsx:135
-msgid "Create Account"
-msgstr "Create Account"
+#: src/features/auth/components/auth-panel.tsx:149
+#: src/features/auth/components/auth-panel.tsx:263
+msgid "Create account"
+msgstr "Create account"
 
-#: src/routes/register.tsx:61
-msgid "Create an Account"
-msgstr "Create an Account"
+#: src/features/auth/components/auth-panel.tsx:284
+msgid "Create one"
+msgstr "Create one"
 
 #: src/features/events/list-events/components/events-list.tsx:121
 msgid "Create your first event"
 msgstr "Create your first event"
 
-#: src/routes/register.tsx:133
+#: src/features/auth/components/auth-panel.tsx:261
 msgid "Creating account..."
 msgstr "Creating account..."
 
@@ -143,10 +148,6 @@ msgstr "Cups & plates"
 msgid "Custom"
 msgstr "Custom"
 
-#: src/routes/_authenticated/dashboard.tsx:29
-msgid "Dashboard"
-msgstr "Dashboard"
-
 #: src/features/events/get-event-by-token/components/event-detail-view.tsx:40
 msgid "dates"
 msgstr "dates"
@@ -155,26 +156,13 @@ msgstr "dates"
 msgid "Dessert"
 msgstr "Dessert"
 
-#: src/routes/register.tsx:77
-msgid "Display Name"
-msgstr "Display Name"
-
-#: src/routes/login.tsx:157
-msgid "Don't have an account? <0>Register</0>"
-msgstr "Don't have an account? <0>Register</0>"
-
 #: src/features/events/create-event/components/create-event-form.tsx:101
 msgid "e.g. Sunset Beach Picnic"
 msgstr "e.g. Sunset Beach Picnic"
 
-#: src/routes/login.tsx:82
-#: src/routes/register.tsx:95
+#: src/features/auth/components/auth-panel.tsx:217
 msgid "Email"
 msgstr "Email"
-
-#: src/routes/_authenticated/dashboard.tsx:38
-msgid "Email:"
-msgstr "Email:"
 
 #: src/features/events/create-event/components/create-event-form.tsx:96
 msgid "Event name"
@@ -184,8 +172,7 @@ msgstr "Event name"
 msgid "Events you're hosting."
 msgstr "Events you're hosting."
 
-#: src/routes/login.tsx:54
-#: src/routes/register.tsx:49
+#: src/features/auth/components/auth-panel.tsx:109
 msgid "Failed to start Google sign-in"
 msgstr "Failed to start Google sign-in"
 
@@ -197,9 +184,15 @@ msgstr "Filter events"
 msgid "From scattered group chat to a ready-to-go plan — on one shared page."
 msgstr "From scattered group chat to a ready-to-go plan — on one shared page."
 
-#: src/routes/register.tsx:58
-msgid "Get started"
-msgstr "Get started"
+#: src/features/auth/components/auth-panel.tsx:128
+msgid "From scattered group chat to a ready-to-go plan — pick a date, claim "
+"what to bring, all on one shared page."
+msgstr "From scattered group chat to a ready-to-go plan — pick a date, claim "
+"what to bring, all on one shared page."
+
+#: src/features/auth/components/auth-panel.tsx:249
+msgid "Hide"
+msgstr "Hide"
 
 #: src/features/events/list-events/components/event-card.tsx:67
 msgid "Hosted by you"
@@ -213,23 +206,35 @@ msgstr "Hosting"
 msgid "items"
 msgstr "items"
 
+#: src/features/auth/components/auth-panel.tsx:153
+msgid "Join Picnivo"
+msgstr "Join Picnivo"
+
 #: src/features/events/create-event/components/create-event-form.tsx:290
 msgid "Live preview"
 msgstr "Live preview"
 
-#: src/components/header.tsx:187
+#: src/components/header.tsx:182
 msgid "Log in"
 msgstr "Log in"
 
-#: src/components/header.tsx:71
-#: src/components/header.tsx:151
+#: src/features/auth/components/auth-panel.tsx:209
+msgid "Maya Chen"
+msgstr "Maya Chen"
+
+#: src/components/header.tsx:72
+#: src/components/header.tsx:152
 msgid "My events"
 msgstr "My events"
 
-#: src/components/header.tsx:94
+#: src/components/header.tsx:95
 #: src/features/events/create-event/components/create-event-form.tsx:186
 msgid "New event"
 msgstr "New event"
+
+#: src/features/auth/components/auth-panel.tsx:277
+msgid "New to Picnivo?"
+msgstr "New to Picnivo?"
 
 #: src/features/events/create-event/components/date-picker.tsx:320
 msgid "Next month"
@@ -282,13 +287,15 @@ msgstr "Open event page"
 msgid "optional"
 msgstr "optional"
 
-#: src/routes/login.tsx:125
-#: src/routes/register.tsx:143
-msgid "OR"
-msgstr "OR"
+#: src/features/auth/components/auth-panel.tsx:191
+msgid "or sign in with email"
+msgstr "or sign in with email"
 
-#: src/routes/login.tsx:100
-#: src/routes/register.tsx:113
+#: src/features/auth/components/auth-panel.tsx:189
+msgid "or sign up with email"
+msgstr "or sign up with email"
+
+#: src/features/auth/components/auth-panel.tsx:232
 msgid "Password"
 msgstr "Password"
 
@@ -315,6 +322,14 @@ msgstr "Picnivo · prototype"
 #: src/features/events/create-event/components/create-event-form.tsx:189
 msgid "Plan something good."
 msgstr "Plan something good."
+
+#: src/features/auth/components/auth-panel.tsx:122
+msgid "Plan the hang — together."
+msgstr "Plan the hang — together."
+
+#: src/components/error-fallback.tsx:14
+msgid "Please try again in a moment."
+msgstr "Please try again in a moment."
 
 #: src/features/events/create-event/components/date-picker.tsx:298
 msgid "Previous month"
@@ -344,39 +359,40 @@ msgid "Share this link with the group. They vote and claim items — no app, no 
 msgstr "Share this link with the group. They vote and claim items — no app, no "
 "login."
 
-#: src/routes/login.tsx:66
-#: src/routes/login.tsx:118
-msgid "Sign In"
-msgstr "Sign In"
+#: src/features/auth/components/auth-panel.tsx:249
+msgid "Show"
+msgstr "Show"
 
-#: src/routes/login.tsx:153
-msgid "Sign in with Google"
-msgstr "Sign in with Google"
+#: src/features/auth/components/auth-panel.tsx:149
+#: src/features/auth/components/auth-panel.tsx:268
+#: src/features/auth/components/auth-panel.tsx:284
+msgid "Sign in"
+msgstr "Sign in"
 
-#: src/components/header.tsx:172
+#: src/features/auth/components/auth-panel.tsx:164
+msgid "Sign in to pick dates and rally your crew."
+msgstr "Sign in to pick dates and rally your crew."
+
+#: src/components/header.tsx:173
 msgid "Sign out"
 msgstr "Sign out"
 
-#: src/routes/_authenticated/dashboard.tsx:49
-msgid "Sign Out"
-msgstr "Sign Out"
-
-#: src/components/header.tsx:190
-msgid "Sign up"
-msgstr "Sign up"
-
-#: src/routes/register.tsx:171
-msgid "Sign up with Google"
-msgstr "Sign up with Google"
-
-#: src/routes/login.tsx:118
+#: src/features/auth/components/auth-panel.tsx:266
 msgid "Signing in..."
 msgstr "Signing in..."
+
+#: src/components/error-fallback.tsx:11
+msgid "Something went wrong."
+msgstr "Something went wrong."
 
 #: src/features/events/create-event/components/create-event-form.tsx:73
 #: src/features/events/create-event/components/create-event-form.tsx:80
 msgid "Something went wrong. Please try again."
 msgstr "Something went wrong. Please try again."
+
+#: src/features/auth/components/auth-panel.tsx:160
+msgid "Start planning get-togethers everyone actually shows up to."
+msgstr "Start planning get-togethers everyone actually shows up to."
 
 #. placeholder {0}: step + 1
 #: src/features/events/create-event/components/create-event-form.tsx:221
@@ -415,6 +431,10 @@ msgstr "To be defined"
 msgid "Trash bags"
 msgstr "Trash bags"
 
+#: src/components/error-fallback.tsx:24
+msgid "Try again"
+msgstr "Try again"
+
 #: src/features/events/create-event/components/create-event-form.tsx:354
 msgid "Untitled event"
 msgstr "Untitled event"
@@ -427,13 +447,13 @@ msgstr "Watermelon"
 msgid "We couldn't find that event."
 msgstr "We couldn't find that event."
 
-#: src/routes/login.tsx:63
+#: src/features/auth/components/auth-panel.tsx:155
 msgid "Welcome back"
 msgstr "Welcome back"
 
-#: src/routes/_authenticated/dashboard.tsx:32
-msgid "Welcome, {displayName}"
-msgstr "Welcome, {displayName}"
+#: src/features/auth/components/auth-panel.tsx:124
+msgid "Welcome back to the picnic."
+msgstr "Welcome back to the picnic."
 
 #: src/features/events/create-event/components/create-event-form.tsx:175
 msgid "What do we need?"
@@ -459,30 +479,29 @@ msgstr "When works?"
 msgid "Where"
 msgstr "Where"
 
+#: src/features/auth/components/auth-panel.tsx:140
+msgid "Where good hangs come together"
+msgstr "Where good hangs come together"
+
 #: src/features/events/create-event/components/date-picker.tsx:482
 msgid "With one date this is an announcement — add more to open voting."
 msgstr "With one date this is an announcement — add more to open voting."
 
-#: src/components/header.tsx:52
+#: src/components/header.tsx:53
 msgid "You"
 msgstr "You"
 
-#: src/routes/login.tsx:91
-#: src/routes/register.tsx:104
-msgid "you@example.com"
-msgstr "you@example.com"
+#: src/features/auth/components/auth-panel.tsx:225
+msgid "you@email.com"
+msgstr "you@email.com"
 
 #: src/features/events/list-events/components/events-list.tsx:52
 msgid "Your events"
 msgstr "Your events"
 
-#: src/routes/register.tsx:86
+#: src/features/auth/components/auth-panel.tsx:201
 msgid "Your name"
 msgstr "Your name"
-
-#: src/routes/login.tsx:109
-msgid "Your password"
-msgstr "Your password"
 
 #: src/features/events/create-event/components/share-link-dialog.tsx:57
 msgid "Your picnic is live!"

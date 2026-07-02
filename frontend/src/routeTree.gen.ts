@@ -11,13 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
+import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ETokenRouteImport } from './routes/e/$token'
 import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
-import { Route as AuthenticatedEventsRouteImport } from './routes/_authenticated/events'
-import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as AuthenticatedCreateRouteImport } from './routes/_authenticated/create'
+import { Route as AppAuthenticatedRouteImport } from './routes/_app/_authenticated'
+import { Route as AppETokenRouteImport } from './routes/_app/e/$token'
+import { Route as AppAuthenticatedEventsRouteImport } from './routes/_app/_authenticated/events'
+import { Route as AppAuthenticatedCreateRouteImport } from './routes/_app/_authenticated/create'
 
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
@@ -29,8 +29,8 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRoute = AuthenticatedRouteImport.update({
-  id: '/_authenticated',
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -38,63 +38,60 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ETokenRoute = ETokenRouteImport.update({
-  id: '/e/$token',
-  path: '/e/$token',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
   id: '/auth/callback',
   path: '/auth/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedEventsRoute = AuthenticatedEventsRouteImport.update({
+const AppAuthenticatedRoute = AppAuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppETokenRoute = AppETokenRouteImport.update({
+  id: '/e/$token',
+  path: '/e/$token',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAuthenticatedEventsRoute = AppAuthenticatedEventsRouteImport.update({
   id: '/events',
   path: '/events',
-  getParentRoute: () => AuthenticatedRoute,
+  getParentRoute: () => AppAuthenticatedRoute,
 } as any)
-const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-const AuthenticatedCreateRoute = AuthenticatedCreateRouteImport.update({
+const AppAuthenticatedCreateRoute = AppAuthenticatedCreateRouteImport.update({
   id: '/create',
   path: '/create',
-  getParentRoute: () => AuthenticatedRoute,
+  getParentRoute: () => AppAuthenticatedRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/create': typeof AuthenticatedCreateRoute
-  '/dashboard': typeof AuthenticatedDashboardRoute
-  '/events': typeof AuthenticatedEventsRoute
   '/auth/callback': typeof AuthCallbackRoute
-  '/e/$token': typeof ETokenRoute
+  '/create': typeof AppAuthenticatedCreateRoute
+  '/events': typeof AppAuthenticatedEventsRoute
+  '/e/$token': typeof AppETokenRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/create': typeof AuthenticatedCreateRoute
-  '/dashboard': typeof AuthenticatedDashboardRoute
-  '/events': typeof AuthenticatedEventsRoute
   '/auth/callback': typeof AuthCallbackRoute
-  '/e/$token': typeof ETokenRoute
+  '/create': typeof AppAuthenticatedCreateRoute
+  '/events': typeof AppAuthenticatedEventsRoute
+  '/e/$token': typeof AppETokenRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/_authenticated/create': typeof AuthenticatedCreateRoute
-  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
-  '/_authenticated/events': typeof AuthenticatedEventsRoute
+  '/_app/_authenticated': typeof AppAuthenticatedRouteWithChildren
   '/auth/callback': typeof AuthCallbackRoute
-  '/e/$token': typeof ETokenRoute
+  '/_app/_authenticated/create': typeof AppAuthenticatedCreateRoute
+  '/_app/_authenticated/events': typeof AppAuthenticatedEventsRoute
+  '/_app/e/$token': typeof AppETokenRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -102,41 +99,38 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/register'
-    | '/create'
-    | '/dashboard'
-    | '/events'
     | '/auth/callback'
+    | '/create'
+    | '/events'
     | '/e/$token'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/register'
-    | '/create'
-    | '/dashboard'
-    | '/events'
     | '/auth/callback'
+    | '/create'
+    | '/events'
     | '/e/$token'
   id:
     | '__root__'
     | '/'
-    | '/_authenticated'
+    | '/_app'
     | '/login'
     | '/register'
-    | '/_authenticated/create'
-    | '/_authenticated/dashboard'
-    | '/_authenticated/events'
+    | '/_app/_authenticated'
     | '/auth/callback'
-    | '/e/$token'
+    | '/_app/_authenticated/create'
+    | '/_app/_authenticated/events'
+    | '/_app/e/$token'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
-  ETokenRoute: typeof ETokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -155,11 +149,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated': {
-      id: '/_authenticated'
+    '/_app': {
+      id: '/_app'
       path: ''
       fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedRouteImport
+      preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -169,13 +163,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/e/$token': {
-      id: '/e/$token'
-      path: '/e/$token'
-      fullPath: '/e/$token'
-      preLoaderRoute: typeof ETokenRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/auth/callback': {
       id: '/auth/callback'
       path: '/auth/callback'
@@ -183,53 +170,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/events': {
-      id: '/_authenticated/events'
+    '/_app/_authenticated': {
+      id: '/_app/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppAuthenticatedRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/e/$token': {
+      id: '/_app/e/$token'
+      path: '/e/$token'
+      fullPath: '/e/$token'
+      preLoaderRoute: typeof AppETokenRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/_authenticated/events': {
+      id: '/_app/_authenticated/events'
       path: '/events'
       fullPath: '/events'
-      preLoaderRoute: typeof AuthenticatedEventsRouteImport
-      parentRoute: typeof AuthenticatedRoute
+      preLoaderRoute: typeof AppAuthenticatedEventsRouteImport
+      parentRoute: typeof AppAuthenticatedRoute
     }
-    '/_authenticated/dashboard': {
-      id: '/_authenticated/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/create': {
-      id: '/_authenticated/create'
+    '/_app/_authenticated/create': {
+      id: '/_app/_authenticated/create'
       path: '/create'
       fullPath: '/create'
-      preLoaderRoute: typeof AuthenticatedCreateRouteImport
-      parentRoute: typeof AuthenticatedRoute
+      preLoaderRoute: typeof AppAuthenticatedCreateRouteImport
+      parentRoute: typeof AppAuthenticatedRoute
     }
   }
 }
 
-interface AuthenticatedRouteChildren {
-  AuthenticatedCreateRoute: typeof AuthenticatedCreateRoute
-  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
-  AuthenticatedEventsRoute: typeof AuthenticatedEventsRoute
+interface AppAuthenticatedRouteChildren {
+  AppAuthenticatedCreateRoute: typeof AppAuthenticatedCreateRoute
+  AppAuthenticatedEventsRoute: typeof AppAuthenticatedEventsRoute
 }
 
-const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
-  AuthenticatedCreateRoute: AuthenticatedCreateRoute,
-  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
-  AuthenticatedEventsRoute: AuthenticatedEventsRoute,
+const AppAuthenticatedRouteChildren: AppAuthenticatedRouteChildren = {
+  AppAuthenticatedCreateRoute: AppAuthenticatedCreateRoute,
+  AppAuthenticatedEventsRoute: AppAuthenticatedEventsRoute,
 }
 
-const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
-  AuthenticatedRouteChildren,
-)
+const AppAuthenticatedRouteWithChildren =
+  AppAuthenticatedRoute._addFileChildren(AppAuthenticatedRouteChildren)
+
+interface AppRouteChildren {
+  AppAuthenticatedRoute: typeof AppAuthenticatedRouteWithChildren
+  AppETokenRoute: typeof AppETokenRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAuthenticatedRoute: AppAuthenticatedRouteWithChildren,
+  AppETokenRoute: AppETokenRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   AuthCallbackRoute: AuthCallbackRoute,
-  ETokenRoute: ETokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
