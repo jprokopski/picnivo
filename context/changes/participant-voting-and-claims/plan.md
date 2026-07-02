@@ -830,16 +830,16 @@ avoid Postgres multiple-cascade-path errors.
 
 #### Automated
 
-- [x] 2.1 Build passes: `dotnet build`
-- [x] 2.2 Tests pass: `dotnet test`
-- [x] 2.3 Handler tests: join, duplicate-name flag, vote upsert, invalid dateOptionId
-- [x] 2.4 Endpoint tests: join id, GET tallies + bestDateOptionId, GET with participantId returns `you`, 404 unknown token
-- [x] 2.5 Integrity test: duplicate `(participant, dateOption)` never yields two rows
-- [x] 2.6 ListEvents test: participant count, crew names, claimed count, chosen-date fields correct
+- [x] 2.1 Build passes: `dotnet build` — d7dae5a
+- [x] 2.2 Tests pass: `dotnet test` — d7dae5a
+- [x] 2.3 Handler tests: join, duplicate-name flag, vote upsert, invalid dateOptionId — d7dae5a
+- [x] 2.4 Endpoint tests: join id, GET tallies + bestDateOptionId, GET with participantId returns `you`, 404 unknown token — d7dae5a
+- [x] 2.5 Integrity test: duplicate `(participant, dateOption)` never yields two rows — d7dae5a
+- [x] 2.6 ListEvents test: participant count, crew names, claimed count, chosen-date fields correct — d7dae5a
 
 #### Manual
 
-- [x] 2.7 HTTP client: join, vote, GET hub + list — tallies, best date, dashboard counts correct
+- [x] 2.7 HTTP client: join, vote, GET hub + list — tallies, best date, dashboard counts correct — d7dae5a
 
 ### Phase 3: Backend — Claims, Attendance Recovery, Items & Lock Date
 
