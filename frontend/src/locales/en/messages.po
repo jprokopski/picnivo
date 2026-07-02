@@ -13,6 +13,11 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#. placeholder {0}: event.organizerName
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:22
+msgid "{0} is hosting"
+msgstr "{0} is hosting"
+
 #: src/features/events/create-event/components/date-picker.tsx:483
 msgid "{count} days proposed · friends vote Yes / Maybe / No"
 msgstr "{count} days proposed · friends vote Yes / Maybe / No"
@@ -21,9 +26,17 @@ msgstr "{count} days proposed · friends vote Yes / Maybe / No"
 msgid "{dateCount} dates"
 msgstr "{dateCount} dates"
 
+#: src/features/events/list-events/components/event-card.tsx:29
+msgid "{dateOptionCount} dates · voting open"
+msgstr "{dateOptionCount} dates · voting open"
+
 #: src/features/events/create-event/components/create-event-form.tsx:370
 msgid "{itemCount} items"
 msgstr "{itemCount} items"
+
+#: src/features/events/list-events/components/event-card.tsx:86
+msgid "{itemCount} items on the list"
+msgstr "{itemCount} items on the list"
 
 #: src/features/events/create-event/components/create-event-form.tsx:129
 msgid "A note"
@@ -48,6 +61,10 @@ msgstr "Add more days"
 #: src/features/events/create-event/components/date-picker.tsx:427
 msgid "Add this date"
 msgstr "Add this date"
+
+#: src/features/events/list-events/components/events-list.tsx:36
+msgid "All"
+msgstr "All"
 
 #: src/routes/register.tsx:175
 msgid "Already have an account? <0>Sign In</0>"
@@ -106,6 +123,10 @@ msgstr "Create Account"
 msgid "Create an Account"
 msgstr "Create an Account"
 
+#: src/features/events/list-events/components/events-list.tsx:121
+msgid "Create your first event"
+msgstr "Create your first event"
+
 #: src/routes/register.tsx:133
 msgid "Creating account..."
 msgstr "Creating account..."
@@ -125,6 +146,10 @@ msgstr "Custom"
 #: src/routes/_authenticated/dashboard.tsx:29
 msgid "Dashboard"
 msgstr "Dashboard"
+
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:40
+msgid "dates"
+msgstr "dates"
 
 #: src/features/events/create-event/components/items-editor.tsx:17
 msgid "Dessert"
@@ -155,10 +180,18 @@ msgstr "Email:"
 msgid "Event name"
 msgstr "Event name"
 
+#: src/features/events/list-events/components/events-list.tsx:55
+msgid "Events you're hosting."
+msgstr "Events you're hosting."
+
 #: src/routes/login.tsx:54
 #: src/routes/register.tsx:49
 msgid "Failed to start Google sign-in"
 msgstr "Failed to start Google sign-in"
+
+#: src/features/events/list-events/components/events-list.tsx:69
+msgid "Filter events"
+msgstr "Filter events"
 
 #: src/components/footer.tsx:10
 msgid "From scattered group chat to a ready-to-go plan — on one shared page."
@@ -168,20 +201,32 @@ msgstr "From scattered group chat to a ready-to-go plan — on one shared page."
 msgid "Get started"
 msgstr "Get started"
 
+#: src/features/events/list-events/components/event-card.tsx:67
+msgid "Hosted by you"
+msgstr "Hosted by you"
+
+#: src/features/events/list-events/components/event-card.tsx:50
+msgid "Hosting"
+msgstr "Hosting"
+
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:48
+msgid "items"
+msgstr "items"
+
 #: src/features/events/create-event/components/create-event-form.tsx:290
 msgid "Live preview"
 msgstr "Live preview"
 
-#: src/components/header.tsx:234
+#: src/components/header.tsx:187
 msgid "Log in"
 msgstr "Log in"
 
-#: src/components/header.tsx:119
-#: src/components/header.tsx:198
+#: src/components/header.tsx:71
+#: src/components/header.tsx:151
 msgid "My events"
 msgstr "My events"
 
-#: src/components/header.tsx:142
+#: src/components/header.tsx:94
 #: src/features/events/create-event/components/create-event-form.tsx:186
 msgid "New event"
 msgstr "New event"
@@ -194,9 +239,39 @@ msgstr "Next month"
 msgid "No account needed for guests — they just open the link."
 msgstr "No account needed for guests — they just open the link."
 
+#: src/features/events/list-events/components/event-card.tsx:34
+msgid "No dates yet"
+msgstr "No dates yet"
+
+#: src/features/events/list-events/components/events-list.tsx:42
+#: src/features/events/list-events/components/events-list.tsx:114
+msgid "No events yet."
+msgstr "No events yet."
+
+#: src/features/events/list-events/components/events-list.tsx:43
+msgid "No ongoing events yet."
+msgstr "No ongoing events yet."
+
+#: src/features/events/list-events/components/events-list.tsx:44
+msgid "No past events yet."
+msgstr "No past events yet."
+
 #: src/features/events/create-event/components/create-event-form.tsx:52
 msgid "One or more selected times are in the past. Please update the time."
 msgstr "One or more selected times are in the past. Please update the time."
+
+#: src/features/events/list-events/components/events-list.tsx:37
+msgid "Ongoing"
+msgstr "Ongoing"
+
+#. placeholder {0}: event.title
+#: src/features/events/list-events/components/event-card.tsx:42
+msgid "Open {0}"
+msgstr "Open {0}"
+
+#: src/features/events/list-events/components/event-card.tsx:80
+msgid "Open event"
+msgstr "Open event"
 
 #: src/features/events/create-event/components/share-link-dialog.tsx:106
 msgid "Open event page"
@@ -216,6 +291,10 @@ msgstr "OR"
 #: src/routes/register.tsx:113
 msgid "Password"
 msgstr "Password"
+
+#: src/features/events/list-events/components/events-list.tsx:38
+msgid "Past"
+msgstr "Past"
 
 #: src/features/events/create-event/components/date-picker.tsx:287
 msgid "Pick a custom date"
@@ -240,6 +319,10 @@ msgstr "Plan something good."
 #: src/features/events/create-event/components/date-picker.tsx:298
 msgid "Previous month"
 msgstr "Previous month"
+
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:63
+msgid "Proposed dates"
+msgstr "Proposed dates"
 
 #: src/features/events/create-event/components/items-editor.tsx:43
 msgid "Remove {item}"
@@ -270,7 +353,7 @@ msgstr "Sign In"
 msgid "Sign in with Google"
 msgstr "Sign in with Google"
 
-#: src/components/header.tsx:219
+#: src/components/header.tsx:172
 msgid "Sign out"
 msgstr "Sign out"
 
@@ -278,7 +361,7 @@ msgstr "Sign out"
 msgid "Sign Out"
 msgstr "Sign Out"
 
-#: src/components/header.tsx:237
+#: src/components/header.tsx:190
 msgid "Sign up"
 msgstr "Sign up"
 
@@ -312,6 +395,22 @@ msgstr "Tap to add"
 msgid "The basics"
 msgstr "The basics"
 
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:105
+msgid "The haul"
+msgstr "The haul"
+
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:138
+msgid "The link may be mistyped, or the event no longer exists."
+msgstr "The link may be mistyped, or the event no longer exists."
+
+#: src/features/events/list-events/components/events-list.tsx:58
+msgid "The plans you've set up. Share the link and see who's in."
+msgstr "The plans you've set up. Share the link and see who's in."
+
+#: src/features/events/list-events/components/event-card.tsx:58
+msgid "To be defined"
+msgstr "To be defined"
+
 #: src/features/events/create-event/components/items-editor.tsx:20
 msgid "Trash bags"
 msgstr "Trash bags"
@@ -323,6 +422,10 @@ msgstr "Untitled event"
 #: src/features/events/create-event/components/items-editor.tsx:19
 msgid "Watermelon"
 msgstr "Watermelon"
+
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:135
+msgid "We couldn't find that event."
+msgstr "We couldn't find that event."
 
 #: src/routes/login.tsx:63
 msgid "Welcome back"
@@ -336,6 +439,10 @@ msgstr "Welcome, {displayName}"
 msgid "What do we need?"
 msgstr "What do we need?"
 
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:108
+msgid "What to bring"
+msgstr "What to bring"
+
 #: src/features/events/create-event/components/create-event-form.tsx:165
 msgid "What's the plan?"
 msgstr "What's the plan?"
@@ -343,6 +450,10 @@ msgstr "What's the plan?"
 #: src/features/events/create-event/components/create-event-form.tsx:170
 msgid "When could it happen?"
 msgstr "When could it happen?"
+
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:60
+msgid "When works?"
+msgstr "When works?"
 
 #: src/features/events/create-event/components/create-event-form.tsx:111
 msgid "Where"
@@ -352,7 +463,7 @@ msgstr "Where"
 msgid "With one date this is an announcement — add more to open voting."
 msgstr "With one date this is an announcement — add more to open voting."
 
-#: src/components/header.tsx:100
+#: src/components/header.tsx:52
 msgid "You"
 msgstr "You"
 
@@ -360,6 +471,10 @@ msgstr "You"
 #: src/routes/register.tsx:104
 msgid "you@example.com"
 msgstr "you@example.com"
+
+#: src/features/events/list-events/components/events-list.tsx:52
+msgid "Your events"
+msgstr "Your events"
 
 #: src/routes/register.tsx:86
 msgid "Your name"

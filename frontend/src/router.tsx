@@ -1,25 +1,27 @@
-import { createRouter as createTanStackRouter } from '@tanstack/react-router'
-import type { User } from '@supabase/supabase-js'
-import { routeTree } from './routeTree.gen'
+import { createRouter as createTanStackRouter } from "@tanstack/react-router";
+import type { User } from "@supabase/supabase-js";
+import { ErrorFallback } from "./components/error-fallback";
+import { routeTree } from "./routeTree.gen";
 
 export type RouterContext = {
-  user: User | null
-}
+  user: User | null;
+};
 
 export function getRouter() {
   const router = createTanStackRouter({
     routeTree,
     scrollRestoration: true,
-    defaultPreload: 'intent',
+    defaultPreload: "intent",
     defaultPreloadStaleTime: 0,
+    defaultErrorComponent: ErrorFallback,
     context: { user: null },
-  })
+  });
 
-  return router
+  return router;
 }
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface Register {
-    router: ReturnType<typeof getRouter>
+    router: ReturnType<typeof getRouter>;
   }
 }

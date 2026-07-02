@@ -2,56 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { Link, useRouter, useRouterState } from "@tanstack/react-router";
 import { signOutFn } from "../lib/auth/functions";
+import { Avatar } from "./avatar";
 import Logo from "./logo";
-
-const AVATAR_COLORS = [
-  "#F15A37",
-  "#F2A93C",
-  "#2E7E9A",
-  "#3F9E63",
-  "#C75B8B",
-  "#7A5BD1",
-  "#E0492A",
-  "#1F8A7A",
-];
-
-function avatarColor(name: string) {
-  let h = 0;
-  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
-  return AVATAR_COLORS[h % AVATAR_COLORS.length];
-}
-
-function initials(name: string) {
-  const p = name.trim().split(/\s+/);
-  return (
-    (p[0]?.[0] || "?").toUpperCase() + (p[1]?.[0] ? p[1][0].toUpperCase() : "")
-  );
-}
-
-function Avatar({
-  name,
-  size = 34,
-  className = "",
-}: {
-  name: string;
-  size?: number;
-  className?: string;
-}) {
-  return (
-    <span
-      className={`flex shrink-0 items-center justify-center rounded-full font-sans font-extrabold text-white ${className}`}
-      style={{
-        width: size,
-        height: size,
-        fontSize: size * 0.38,
-        background: avatarColor(name),
-      }}
-      aria-label={name}
-    >
-      {initials(name)}
-    </span>
-  );
-}
 
 const NAV_LINK =
   "text-[14.5px] font-semibold no-underline cursor-pointer transition-colors duration-140 ease-in-out whitespace-nowrap hover:text-(--ink)";
@@ -111,7 +63,7 @@ export default function Header() {
         <nav className="flex items-center gap-6.5 max-[720px]:gap-4 max-[480px]:hidden">
           {user && (
             <Link
-              to="/dashboard"
+              to="/events"
               className={NAV_LINK}
               activeProps={{ className: "text-(--ink)" }}
               inactiveProps={{ className: "text-(--ink-soft)" }}
@@ -176,7 +128,8 @@ export default function Header() {
                       </div>
                     </div>
                     <div className="mx-1 my-1.5 hidden h-px bg-(--line) max-[480px]:block" />
-                    <button
+                    <Link
+                      to="/events"
                       className={`${MENU_ITEM} hidden max-[480px]:flex`}
                       role="menuitem"
                       onClick={() => setMenuOpen(false)}
@@ -196,7 +149,7 @@ export default function Header() {
                         <path d="M16 2v4M8 2v4M3 10h18" />
                       </svg>
                       <Trans>My events</Trans>
-                    </button>
+                    </Link>
                     <div className="mx-1 my-1.5 h-px bg-(--line)" />
                     <button
                       className={MENU_ITEM}

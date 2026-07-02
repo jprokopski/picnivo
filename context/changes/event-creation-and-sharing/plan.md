@@ -47,7 +47,7 @@ A logged-in organizer can:
 - **No participant flow** — no name entry, voting, item claiming, vote summaries, best-date ranking, or attendance confirmation. That is S-02 (FR-007–FR-013, FR-010–FR-012).
 - **No participant-added items** — FR-005's participant half is deferred to S-02. S-01 is organizer-only item management.
 - **No event editing/deletion after creation** beyond what's needed to create. (Edit flows can be a later slice; not in US-01.)
-- **No rich dashboard** — no All/Ongoing/Past filters and no vote-derived status chips (those need S-02 data). Just a simple card list.
+- **No rich dashboard** — no vote-derived status chips (those need S-02 data). ~~No All/Ongoing/Past filters~~ — **superseded during Phase 6**: the design-fidelity addendum ("match the mock 1:1, mock wins on conflicts") took precedence once the mocks turned out to include All/Ongoing/Past filters; kept as a date-only filter (no vote/status semantics) per `picnivo-web-events.jsx`.
 - **No retrofit of existing auth pages** to shadcn — login/register/dashboard keep their current hand-built styling this slice.
 - **No real-time updates, email, reminders, calendar export** — PRD non-goals / deferred.
 - **No image/cover uploads** — the design mock shows cover imagery; S-01 uses a static/derived placeholder, no upload pipeline.
@@ -395,6 +395,8 @@ Build the single-page, sectioned create form (Basics / Dates / Items) with the c
 
 Add the organizer's events list and the read-only public event page the share link lands on.
 
+**Design fidelity (required, not aspirational).** Both screens must match the mocks in `frontend/context/foundation/design/` **1:1** — layout, spacing, component choice, and visual styling, not just "inspired by." This is the explicit bar per `frontend/CLAUDE.md`'s Design section ("Match them before improvising"). Build side-by-side with the relevant `.jsx` mock and `picnivo.css`/`picnivo-web.css` open; where the mock and shadcn defaults diverge, the mock wins — restyle the shadcn primitive rather than accepting its stock look. Treat any deliberate deviation (e.g. dynamic data the static mock doesn't show) as an explicit, called-out exception, not a drift.
+
 ### Changes Required:
 
 #### 1. Events list route
@@ -403,7 +405,7 @@ Add the organizer's events list and the read-only public event page the share li
 
 **Intent**: Show the organizer the events they've created (US-01: "see their events"; FR-002).
 
-**Contract**: Auth-guarded. Loads via `listEventsFn` (in `beforeLoad`/loader or a query). Renders a simple responsive grid of shadcn `Card`s (title, location, date count, item count, a link to open the event / copy link). No filters or vote-derived status chips. Empty state with a CTA to `/create`. Lingui throughout. Add nav entry ("My events" / "New event") consistent with the header pattern.
+**Contract**: Auth-guarded. Loads via `listEventsFn` (in `beforeLoad`/loader or a query). Renders a simple responsive grid of shadcn `Card`s (title, location, date count, item count, a link to open the event / copy link). No filters or vote-derived status chips. Empty state with a CTA to `/create`. Lingui throughout. Add nav entry ("My events" / "New event") consistent with the header pattern. Must match the design mock `frontend/context/foundation/design/picnivo-web-events.jsx` **1:1** (grid layout, card composition/spacing, empty state) — see the Design fidelity note above.
 
 #### 2. Public event page route
 
@@ -411,7 +413,7 @@ Add the organizer's events list and the read-only public event page the share li
 
 **Intent**: The destination of the share link — a read-only event view requiring no account (Access Control: "the link IS the access").
 
-**Contract**: **Public** route (not under `_authenticated`). Loads via `getEventByTokenFn({ token })`. Renders title, description, location, organizer display name, the date options (formatted in the viewer's locale), and the item list — all read-only. Follow the design mock `frontend/context/foundation/design/picnivo-web-event.jsx` (the source-of-truth layout for this page, per `frontend/CLAUDE.md`). 404/not-found state for unknown tokens. Lingui throughout. (S-02 will layer voting/claiming onto this page.)
+**Contract**: **Public** route (not under `_authenticated`). Loads via `getEventByTokenFn({ token })`. Renders title, description, location, organizer display name, the date options (formatted in the viewer's locale), and the item list — all read-only. Must match the design mock `frontend/context/foundation/design/picnivo-web-event.jsx` **1:1** (the source-of-truth layout for this page, per `frontend/CLAUDE.md`) — see the Design fidelity note above. 404/not-found state for unknown tokens. Lingui throughout. (S-02 will layer voting/claiming onto this page.)
 
 #### 3. Tests
 
@@ -436,6 +438,7 @@ Add the organizer's events list and the read-only public event page the share li
 - [ ] Opening `/e/{token}` in a fresh/incognito session (logged out) shows the event read-only; an unknown token shows not-found.
 - [ ] Pages are usable on mobile viewports.
 - [ ] End-to-end: create → copy link → open in logged-out browser → see the event. (US-01 satisfied.)
+- [ ] Side-by-side comparison against `picnivo-web-events.jsx` and `picnivo-web-event.jsx`: layout, spacing, and styling match 1:1 (no unapproved shadcn-default look or improvised layout).
 
 **Implementation Note**: Pause for manual confirmation after automated verification passes.
 
@@ -554,10 +557,10 @@ One additive EF migration (new Event columns + unique token index + two new tabl
 
 #### Automated
 
-- [ ] 6.1 Type checking passes (`pnpm typecheck`)
-- [ ] 6.2 Lint passes (`pnpm lint`)
-- [ ] 6.3 Tests pass (`pnpm test`)
-- [ ] 6.4 Build succeeds (`pnpm build`)
+- [x] 6.1 Type checking passes (`pnpm typecheck`)
+- [x] 6.2 Lint passes (`pnpm lint`)
+- [x] 6.3 Tests pass (`pnpm test`)
+- [x] 6.4 Build succeeds (`pnpm build`)
 
 #### Manual
 
@@ -565,3 +568,4 @@ One additive EF migration (new Event columns + unique token index + two new tabl
 - [ ] 6.6 `/e/{token}` renders read-only when logged out; unknown token shows not-found
 - [ ] 6.7 Pages usable on mobile viewports
 - [ ] 6.8 End-to-end: create → copy link → open logged-out → see event (US-01)
+- [ ] 6.9 Side-by-side comparison against `picnivo-web-events.jsx` and `picnivo-web-event.jsx`: layout, spacing, and styling match 1:1
