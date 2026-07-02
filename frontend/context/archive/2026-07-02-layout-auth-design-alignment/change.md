@@ -1,9 +1,10 @@
 ---
 change_id: layout-auth-design-alignment
 title: Align layout composition and auth pages to the design references (and prune off-design routes)
-status: implemented
+status: archived
 created: 2026-07-02
 updated: 2026-07-02
+archived_at: 2026-07-02T11:20:07Z
 ---
 
 ## Notes
