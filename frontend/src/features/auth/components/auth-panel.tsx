@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { signInFn, signUpFn } from "../../../lib/auth/functions";
 import { createSupabaseBrowserClient } from "../../../lib/supabase/client";
+import { cn } from "../../../lib/utils";
 import Logo from "../../../components/logo";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
@@ -36,7 +37,7 @@ function GoogleIcon() {
 }
 
 const FIELD_INPUT =
-  "h-12 rounded-(--r-sm) border-(--line) bg-(--card) px-4 text-base text-(--ink) shadow-none placeholder:text-(--ink-faint) focus-visible:border-(--accent) focus-visible:ring-(--accent-tint) focus-visible:ring-[4px]";
+  "h-12 rounded-(--r-sm) border-(--line) bg-(--card) px-4 text-base text-(--ink) shadow-none placeholder:text-(--ink-faint) focus-visible:border-(--accent) focus-visible:ring-(--accent-tint) focus-visible:ring-4";
 
 const FIELD_LABEL = "mb-1.75 block text-[13px] font-bold text-(--ink)";
 
@@ -74,26 +75,31 @@ export function AuthPanel({ mode, redirect, onToggleMode }: AuthPanelProps) {
     setError("");
     setSubmitting(true);
 
-    const result = isSignup
-      ? await signUpFn({ data: { email, password, displayName: name } })
-      : await signInFn({ data: { email, password } });
+    try {
+      const result = isSignup
+        ? await signUpFn({ data: { email, password, displayName: name } })
+        : await signInFn({ data: { email, password } });
 
-    if (result.error) {
-      setError(result.error);
+      if (result.error) {
+        setError(result.error);
+        return;
+      }
+
+      if (isSignup) {
+        navigate({ to: "/events" });
+        return;
+      }
+
+      const safe =
+        redirect && redirect.startsWith("/") && !redirect.startsWith("//")
+          ? redirect
+          : "/events";
+      navigate({ to: safe });
+    } catch {
+      setError(t`Something went wrong. Please try again.`);
+    } finally {
       setSubmitting(false);
-      return;
     }
-
-    if (isSignup) {
-      navigate({ to: "/events" });
-      return;
-    }
-
-    const safe =
-      redirect && redirect.startsWith("/") && !redirect.startsWith("//")
-        ? redirect
-        : "/events";
-    navigate({ to: safe });
   }
 
   async function handleGoogleSignIn() {
@@ -239,7 +245,7 @@ export function AuthPanel({ mode, redirect, onToggleMode }: AuthPanelProps) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder={isSignup ? t`At least 6 characters` : "••••••••"}
-                className={`${FIELD_INPUT} pr-14`}
+                className={cn(FIELD_INPUT, "pr-14")}
               />
               <button
                 type="button"

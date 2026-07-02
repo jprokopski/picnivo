@@ -1,3 +1,5 @@
+import { cn } from "../lib/utils";
+
 export const BASKET_PIXELS: [number, number, number, number, string][] = [
   [120, 70, 20, 20, "#8a5420"],
   [140, 50, 80, 20, "#8a5420"],
@@ -76,10 +78,10 @@ export default function Logo({
 }) {
   return (
     <span
-      className={
-        "font-display inline-flex items-center gap-[0.5em] font-extrabold tracking-[-0.02em] " +
-        (tone === "light" ? "text-white" : "text-(--ink)")
-      }
+      className={cn(
+        "font-display inline-flex items-center gap-[0.5em] font-extrabold tracking-[-0.02em]",
+        tone === "light" ? "text-white" : "text-(--ink)",
+      )}
       style={{ fontSize: size }}
     >
       <BasketTile size={Math.round(size * 1.62)} tone={tone} />

@@ -40,7 +40,11 @@ export const Route = createFileRoute("/auth/callback")({
       });
     }
 
-    throw redirect({ to: deps.next || "/events" });
+    const safeNext =
+      deps.next && deps.next.startsWith("/") && !deps.next.startsWith("//")
+        ? deps.next
+        : "/events";
+    throw redirect({ to: safeNext });
   },
   component: CallbackPage,
 });
