@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
@@ -42,6 +43,38 @@ public class ListEventsEndpointTests(ApiFixture fixture)
         item.Title.ShouldBe("My Picnic");
         item.DateOptionCount.ShouldBe(1);
         item.ItemCount.ShouldBe(1);
+    }
+
+    [Fact]
+    public async Task ReturnsParticipantAndClaimCounts()
+    {
+        // Arrange
+        await using var ctx = await fixture.CheckOutAsync();
+        var organizerId = await ArrangeOrganizerAsync(ctx.Services);
+        await SeedEventAsync(ctx.Services, organizerId, "Crew Picnic", "testtoken01");
+
+        using var scope = ctx.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<PicnivoDbContext>();
+        var @event = await db.Events.Include(e => e.Items).SingleAsync(e => e.Token == "testtoken01");
+        var participant = new Participant { Id = Guid.CreateVersion7(), EventId = @event.Id, DisplayName = "Alice", CreatedAt = DateTimeOffset.UtcNow };
+        db.Participants.Add(participant);
+        db.ItemClaims.Add(new ItemClaim
+        {
+            Id = Guid.CreateVersion7(),
+            EventItemId = @event.Items.Single().Id,
+            ParticipantId = participant.Id,
+            ClaimedAt = DateTimeOffset.UtcNow
+        });
+        await db.SaveChangesAsync();
+
+        // Act
+        var response = await ctx.AuthedApiClient(organizerId).ListEventsAsync();
+
+        // Assert
+        var summary = response.Single(s => s.Token == "testtoken01");
+        summary.ParticipantCount.ShouldBe(1);
+        summary.ParticipantNames.ShouldBe(["Alice"]);
+        summary.ClaimedCount.ShouldBe(1);
     }
 
     private static async Task<Guid> ArrangeOrganizerAsync(IServiceProvider services)

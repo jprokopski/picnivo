@@ -55,6 +55,55 @@ public class ListEventsHandlerTests
         summary.SoonestDate.ShouldNotBeNull();
     }
 
+    [Fact]
+    public async Task SummaryHasParticipantClaimAndChosenDateData()
+    {
+        // Arrange
+        await using var db = TestDb.Create();
+        var orgId = Guid.NewGuid();
+        db.Organizers.Add(new Organizer { Id = orgId, DisplayName = "Test", CreatedAt = DateTimeOffset.UtcNow });
+        await db.SaveChangesAsync();
+        db.ChangeTracker.Clear();
+
+        var dateOptionA = new DateOption { Id = Guid.CreateVersion7(), StartsAt = DateTimeOffset.UtcNow.AddDays(8) };
+        var itemA = new EventItem { Id = Guid.CreateVersion7(), Label = "Sandwiches" };
+        var itemB = new EventItem { Id = Guid.CreateVersion7(), Label = "Drinks" };
+        var @event = new Event
+        {
+            Id = Guid.CreateVersion7(),
+            OrganizerId = orgId,
+            Title = "Dashboard Test",
+            Token = "dashboardtoken1",
+            CreatedAt = DateTimeOffset.UtcNow,
+            DateOptions = [dateOptionA],
+            Items = [itemA, itemB]
+        };
+        db.Events.Add(@event);
+        await db.SaveChangesAsync();
+        @event.ChosenDateOptionId = dateOptionA.Id;
+        await db.SaveChangesAsync();
+        db.ChangeTracker.Clear();
+
+        var alice = new Participant { Id = Guid.CreateVersion7(), EventId = @event.Id, DisplayName = "Alice", CreatedAt = DateTimeOffset.UtcNow };
+        var bob = new Participant { Id = Guid.CreateVersion7(), EventId = @event.Id, DisplayName = "Bob", CreatedAt = DateTimeOffset.UtcNow.AddMinutes(1) };
+        db.Participants.AddRange(alice, bob);
+        db.ItemClaims.Add(new ItemClaim { Id = Guid.CreateVersion7(), EventItemId = itemA.Id, ParticipantId = alice.Id, ClaimedAt = DateTimeOffset.UtcNow });
+        await db.SaveChangesAsync();
+        db.ChangeTracker.Clear();
+
+        // Act
+        var result = await ListEventsHandler.Handle(UserWith(orgId), db, CancellationToken.None);
+
+        // Assert
+        var ok = result.ShouldBeOfType<Ok<List<EventSummaryResponse>>>();
+        var summary = ok.Value!.Single(s => s.Token == "dashboardtoken1");
+        summary.ParticipantCount.ShouldBe(2);
+        summary.ParticipantNames.ShouldBe(["Alice", "Bob"]);
+        summary.ClaimedCount.ShouldBe(1);
+        summary.ChosenDateOptionId.ShouldBe(dateOptionA.Id);
+        summary.ChosenDateStartsAt.ShouldBe(dateOptionA.StartsAt);
+    }
+
     private static ClaimsPrincipal UserWith(Guid organizerId) =>
         new(new ClaimsIdentity([new Claim("sub", organizerId.ToString())]));
 

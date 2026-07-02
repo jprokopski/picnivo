@@ -8,4 +8,9 @@ public record EventSummaryResponse(
     DateTimeOffset CreatedAt,
     int DateOptionCount,
     int ItemCount,
-    DateTimeOffset? SoonestDate);
+    DateTimeOffset? SoonestDate,
+    int ParticipantCount,
+    IReadOnlyList<string> ParticipantNames,
+    int ClaimedCount,
+    Guid? ChosenDateOptionId,
+    DateTimeOffset? ChosenDateStartsAt);
