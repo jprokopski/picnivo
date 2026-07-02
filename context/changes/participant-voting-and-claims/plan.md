@@ -906,17 +906,17 @@ avoid Postgres multiple-cascade-path errors.
 
 #### Automated
 
-- [x] 4.1 Type check passes: `pnpm typecheck`
-- [x] 4.2 Lint passes: `pnpm lint`
-- [x] 4.3 Tests pass: `pnpm test`
-- [x] 4.4 Token util tests: set/get/clear round-trip; SSR-safe returns null
-- [x] 4.5 Join bar tests: submits + calls `joinEventFn`; duplicate warning; short name blocked
-- [x] 4.6 i18n extract/compile succeeds; new strings use Lingui
+- [x] 4.1 Type check passes: `pnpm typecheck` — dd63474
+- [x] 4.2 Lint passes: `pnpm lint` — dd63474
+- [x] 4.3 Tests pass: `pnpm test` — dd63474
+- [x] 4.4 Token util tests: set/get/clear round-trip; SSR-safe returns null — dd63474
+- [x] 4.5 Join bar tests: submits + calls `joinEventFn`; duplicate warning; short name blocked — dd63474
+- [x] 4.6 i18n extract/compile succeeds; new strings use Lingui — dd63474
 
 #### Manual
 
-- [x] 4.7 Logged-out `/e/{token}` shows join bar; identity persists across reload
-- [x] 4.8 Duplicate name warns but still joins
+- [x] 4.7 Logged-out `/e/{token}` shows join bar; identity persists across reload — dd63474
+- [x] 4.8 Duplicate name warns but still joins — dd63474
 
 ### Phase 5: Frontend — Voting Hub (Summary Layout, Reaction Voting, Best-Date Hero)
 
