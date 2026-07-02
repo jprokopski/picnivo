@@ -178,7 +178,7 @@ export default function Header() {
             </>
           ) : (
             <Button asChild>
-              <Link to="/login" search={{ redirect: "" }}>
+              <Link to="/login" search={{ redirect: "", mode: "signin" }}>
                 <Trans>Log in</Trans>
               </Link>
             </Button>

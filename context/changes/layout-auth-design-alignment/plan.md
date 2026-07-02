@@ -425,18 +425,18 @@ hand-edit. Stale `/dashboard` entries in `src/locales/en/messages.po` are cleane
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `pnpm exec tsc --noEmit`
-- [ ] 2.2 Tests pass (incl. new `AuthPanel` tests): `pnpm test`
-- [ ] 2.3 Linting passes: `pnpm lint`
-- [ ] 2.4 Production build succeeds: `pnpm build`
-- [ ] 2.5 No dead tokens anywhere in `src/` (grep clean)
-- [ ] 2.6 Lingui catalog re-extracts cleanly: `pnpm extract`
+- [x] 2.1 Type checking passes: `pnpm exec tsc --noEmit`
+- [x] 2.2 Tests pass (incl. new `AuthPanel` tests): `pnpm test`
+- [x] 2.3 Linting passes: `pnpm lint`
+- [x] 2.4 Production build succeeds: `pnpm build`
+- [x] 2.5 No dead tokens anywhere in `src/` (grep clean)
+- [x] 2.6 Lingui catalog re-extracts cleanly: `pnpm extract`
 
 #### Manual
 
-- [ ] 2.7 `/login` renders the design split-panel on the current palette
-- [ ] 2.8 Signin/signup toggle updates URL `mode`; name field appears only in signup
-- [ ] 2.9 Show/hide password toggle works
-- [ ] 2.10 Email signin, email signup, and Google all land on `/events` (or safe redirect)
-- [ ] 2.11 `/register` redirects to `/login` in signup mode
-- [ ] 2.12 Brand panel is responsive on narrow viewports
+- [x] 2.7 `/login` renders the design split-panel on the current palette
+- [x] 2.8 Signin/signup toggle updates URL `mode`; name field appears only in signup
+- [x] 2.9 Show/hide password toggle works
+- [x] 2.10 Email signin, email signup, and Google all land on `/events` (or safe redirect)
+- [x] 2.11 `/register` redirects to `/login` in signup mode
+- [x] 2.12 Brand panel is responsive on narrow viewports

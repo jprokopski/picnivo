@@ -25,13 +25,19 @@ export const Route = createFileRoute("/auth/callback")({
   loaderDeps: ({ search }) => ({ code: search.code, next: search.next }),
   loader: async ({ deps }) => {
     if (!deps.code) {
-      throw redirect({ to: "/login", search: { redirect: "" } });
+      throw redirect({
+        to: "/login",
+        search: { redirect: "", mode: "signin" },
+      });
     }
 
     const result = await exchangeCodeFn({ data: { code: deps.code } });
 
     if (!result.success) {
-      throw redirect({ to: "/login", search: { redirect: "" } });
+      throw redirect({
+        to: "/login",
+        search: { redirect: "", mode: "signin" },
+      });
     }
 
     throw redirect({ to: deps.next || "/events" });
