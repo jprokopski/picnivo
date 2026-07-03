@@ -31,7 +31,12 @@ vi.mock("../../../lib/supabase/client", () => ({
   })),
 }));
 
+vi.mock("sonner", () => ({
+  toast: { error: vi.fn() },
+}));
+
 const { signInFn, signUpFn } = await import("../../../lib/auth/functions");
+const { toast } = await import("sonner");
 
 function renderPanel(
   mode: "signin" | "signup" = "signin",
@@ -161,7 +166,7 @@ describe("AuthPanel", () => {
     );
   });
 
-  it("renders an inline error when the auth function fails", async () => {
+  it("surfaces an error via toast when the auth function fails", async () => {
     vi.mocked(signInFn).mockResolvedValue({ error: "Invalid credentials" });
     renderPanel("signin");
     fireEvent.change(await screen.findByLabelText(/Email/i), {
@@ -172,7 +177,7 @@ describe("AuthPanel", () => {
     });
     fireEvent.click(screen.getByRole("button", { name: /Sign in/i }));
     await waitFor(() =>
-      expect(screen.getByText("Invalid credentials")).toBeDefined(),
+      expect(toast.error).toHaveBeenCalledWith("Invalid credentials"),
     );
   });
 });

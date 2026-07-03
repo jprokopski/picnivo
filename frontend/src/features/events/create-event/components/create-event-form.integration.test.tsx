@@ -40,7 +40,12 @@ vi.mock("../functions", () => ({
   createEventFn: vi.fn(),
 }));
 
+vi.mock("sonner", () => ({
+  toast: { error: vi.fn() },
+}));
+
 import { createEventFn } from "../functions";
+import { toast } from "sonner";
 
 function Wrapper({ children }: { children: React.ReactNode }) {
   return <I18nProvider i18n={i18n}>{children}</I18nProvider>;
@@ -65,6 +70,7 @@ async function fillAndReachSubmit() {
 describe("CreateEventForm — submit flow", () => {
   beforeEach(() => {
     vi.mocked(createEventFn).mockReset();
+    vi.mocked(toast.error).mockClear();
   });
 
   it("shows the share dialog after a successful submit", async () => {
@@ -129,7 +135,7 @@ describe("CreateEventForm — submit flow", () => {
     expect(screen.queryByText(/Your picnic is live!/i)).toBeNull();
   });
 
-  it("shows an error alert when createEventFn returns an error", async () => {
+  it("surfaces an error via toast when createEventFn returns an error", async () => {
     vi.mocked(createEventFn).mockResolvedValue({
       token: null,
       id: null,
@@ -151,7 +157,7 @@ describe("CreateEventForm — submit flow", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getAllByRole("alert").length).toBeGreaterThan(0);
+      expect(toast.error).toHaveBeenCalledWith("Server error");
     });
   });
 });

@@ -19,7 +19,12 @@ vi.mock("../functions", () => ({
   joinEventFn: vi.fn(),
 }));
 
+vi.mock("sonner", () => ({
+  toast: { error: vi.fn() },
+}));
+
 import { joinEventFn } from "../functions";
+import { toast } from "sonner";
 
 function Wrapper({ children }: { children: React.ReactNode }) {
   return <I18nProvider i18n={i18n}>{children}</I18nProvider>;
@@ -32,6 +37,7 @@ afterEach(() => {
 beforeEach(() => {
   vi.mocked(joinEventFn).mockReset();
   invalidate.mockClear();
+  vi.mocked(toast.error).mockClear();
 });
 
 describe("JoinBar", () => {
@@ -99,7 +105,7 @@ describe("JoinBar", () => {
     });
   });
 
-  it("shows an error message when the join call fails", async () => {
+  it("surfaces an error via toast when the join call fails", async () => {
     vi.mocked(joinEventFn).mockResolvedValue({
       participantId: null,
       duplicateName: false,
@@ -118,7 +124,7 @@ describe("JoinBar", () => {
     fireEvent.click(screen.getByRole("button", { name: /join/i }));
 
     await waitFor(() => {
-      expect(screen.getByText("Server error")).toBeDefined();
+      expect(toast.error).toHaveBeenCalledWith("Server error");
     });
   });
 });

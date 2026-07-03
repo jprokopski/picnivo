@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { Trans, useLingui } from "@lingui/react/macro";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { ClockIcon, HandIcon, LinkIcon, ShareIcon } from "lucide-react";
 import { PicnicScene } from "@/components/picnic-scene";
@@ -28,7 +29,6 @@ export function CreateEventForm() {
   const [step, setStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [shareToken, setShareToken] = useState<string | null>(null);
-  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const stepValid = [title.trim().length > 0, dateSelections.length > 0, true];
 
@@ -48,14 +48,13 @@ export function CreateEventForm() {
 
     const now = new Date();
     if (dateOptions.some((iso) => new Date(iso) <= now)) {
-      setSubmitError(
+      toast.error(
         t`One or more selected times are in the past. Please update the time.`,
       );
       return;
     }
 
     setIsSubmitting(true);
-    setSubmitError(null);
 
     try {
       const result = await createEventFn({
@@ -69,15 +68,13 @@ export function CreateEventForm() {
       });
 
       if (result.error || !result.token || !result.participantId) {
-        setSubmitError(
-          result.error ?? t`Something went wrong. Please try again.`,
-        );
+        toast.error(result.error ?? t`Something went wrong. Please try again.`);
         return;
       }
 
       setShareToken(result.token);
     } catch {
-      setSubmitError(t`Something went wrong. Please try again.`);
+      toast.error(t`Something went wrong. Please try again.`);
     } finally {
       setIsSubmitting(false);
     }
@@ -109,7 +106,7 @@ export function CreateEventForm() {
           className="mb-1.5 block text-[13px] font-bold"
         >
           <Trans>Where</Trans>
-          <span className="ml-1.5 text-[13px] font-medium text-muted-foreground">
+          <span className="text-muted-foreground ml-1.5 text-[13px] font-medium">
             · <Trans>optional</Trans>
           </span>
         </Label>
@@ -127,7 +124,7 @@ export function CreateEventForm() {
           className="mb-1.5 block text-[13px] font-bold"
         >
           <Trans>A note</Trans>
-          <span className="ml-1.5 text-[13px] font-medium text-muted-foreground">
+          <span className="text-muted-foreground ml-1.5 text-[13px] font-medium">
             · <Trans>optional</Trans>
           </span>
         </Label>
@@ -185,10 +182,10 @@ export function CreateEventForm() {
           <p className="mb-2.5 font-mono text-[11px] font-medium tracking-[0.14em] text-(--accent-deep) uppercase">
             <Trans>New event</Trans>
           </p>
-          <h1 className="m-0 font-display text-[46px] leading-[1.02] font-extrabold tracking-tight text-balance text-foreground max-[900px]:text-[40px] max-[720px]:text-[32px] max-[480px]:text-[28px] max-[360px]:text-[26px]">
+          <h1 className="font-display text-foreground m-0 text-[46px] leading-[1.02] font-extrabold tracking-tight text-balance max-[900px]:text-[40px] max-[720px]:text-[32px] max-[480px]:text-[28px] max-[360px]:text-[26px]">
             <Trans>Plan something good.</Trans>
           </h1>
-          <p className="m-0 mt-3 max-w-[56ch] text-[17px] leading-normal text-muted-foreground max-[720px]:mt-2.5 max-[720px]:text-[15.5px]">
+          <p className="text-muted-foreground m-0 mt-3 max-w-[56ch] text-[17px] leading-normal max-[720px]:mt-2.5 max-[720px]:text-[15.5px]">
             <Trans>
               Set it up once, share one link, and watch the date, the food, and
               the guest list fill themselves in.
@@ -199,7 +196,7 @@ export function CreateEventForm() {
         <form onSubmit={handleSubmit} noValidate>
           <div className="grid grid-cols-[1.45fr_1fr] items-start gap-10 max-[900px]:grid-cols-1 max-[900px]:gap-6">
             {/* Form card — stepped wizard */}
-            <div className="flex min-w-0 flex-col gap-1 rounded-(--r-lg) border border-border bg-card px-7 py-6.5 shadow-(--sh-md) max-[720px]:px-5 max-[720px]:py-5.5">
+            <div className="border-border bg-card flex min-w-0 flex-col gap-1 rounded-(--r-lg) border px-7 py-6.5 shadow-(--sh-md) max-[720px]:px-5 max-[720px]:py-5.5">
               {/* Progress dots + step counter */}
               <div className="mb-5 flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
@@ -217,7 +214,7 @@ export function CreateEventForm() {
                     />
                   ))}
                 </div>
-                <span className="font-mono text-[13px] text-muted-foreground">
+                <span className="text-muted-foreground font-mono text-[13px]">
                   <Trans>
                     Step {step + 1} of {TOTAL_STEPS}
                   </Trans>
@@ -229,7 +226,7 @@ export function CreateEventForm() {
                 <p className="mb-1.25 font-mono text-[11px] font-medium tracking-[0.14em] text-(--accent-deep) uppercase">
                   {stepsConfig[step].kicker}
                 </p>
-                <h2 className="m-0 mb-5 font-display text-2xl font-bold tracking-[-0.01em]">
+                <h2 className="font-display m-0 mb-5 text-2xl font-bold tracking-[-0.01em]">
                   {stepsConfig[step].title}
                 </h2>
                 {stepsConfig[step].node}
@@ -273,15 +270,6 @@ export function CreateEventForm() {
                   </Button>
                 )}
               </div>
-
-              {submitError && (
-                <p
-                  role="alert"
-                  className="mt-2 text-center text-xs text-destructive"
-                >
-                  {submitError}
-                </p>
-              )}
             </div>
 
             {/* Aside — live preview */}
@@ -296,7 +284,7 @@ export function CreateEventForm() {
                 dateCount={dateSelections.length}
                 itemCount={items.length}
               />
-              <p className="text-center text-xs text-muted-foreground">
+              <p className="text-muted-foreground text-center text-xs">
                 <Trans>
                   No account needed for guests — they just open the link.
                 </Trans>
@@ -335,42 +323,42 @@ function PreviewCard({
   itemCount,
 }: PreviewCardProps) {
   return (
-    <div className="overflow-hidden rounded-(--r-md) border border-border bg-card p-0 shadow-(--sh-md)">
+    <div className="border-border bg-card overflow-hidden rounded-(--r-md) border p-0 shadow-(--sh-md)">
       <div className="relative h-40 overflow-hidden bg-[linear-gradient(180deg,#ffd58a_0%,#ff9d6b_40%,#f1633f_78%,#e0492a_100%)]">
         <PicnicScene variant="sunset" slot="card" />
       </div>
 
       {/* Accent bar */}
-      <div className="h-1.25 shrink-0 bg-primary" />
+      <div className="bg-primary h-1.25 shrink-0" />
 
       {/* Content */}
       <div className="px-5 pt-4.5 pb-5">
         <p className="mb-1 truncate font-mono text-[11px] font-medium tracking-[0.14em] text-(--accent-deep) uppercase">
           {location || "To be defined"}
         </p>
-        <h3 className="m-0 font-display text-[21px] font-bold tracking-[-0.01em] wrap-break-word">
+        <h3 className="font-display m-0 text-[21px] font-bold tracking-[-0.01em] wrap-break-word">
           {title || (
-            <span className="font-normal text-muted-foreground">
+            <span className="text-muted-foreground font-normal">
               <Trans>Untitled event</Trans>
             </span>
           )}
         </h3>
         {description && (
-          <p className="mt-2 line-clamp-2 text-[13px] wrap-break-word text-muted-foreground">
+          <p className="text-muted-foreground mt-2 line-clamp-2 text-[13px] wrap-break-word">
             {description}
           </p>
         )}
         <div className="mt-3.5 flex gap-2.5">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3.25 py-1.75 text-[13px] font-semibold text-foreground">
+          <span className="border-border bg-card text-foreground inline-flex items-center gap-1.5 rounded-full border px-3.25 py-1.75 text-[13px] font-semibold">
             <ClockIcon size={14} color="var(--ink-soft)" />
             <Trans>{dateCount} dates</Trans>
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3.25 py-1.75 text-[13px] font-semibold text-foreground">
+          <span className="border-border bg-card text-foreground inline-flex items-center gap-1.5 rounded-full border px-3.25 py-1.75 text-[13px] font-semibold">
             <HandIcon size={14} color="var(--ink-soft)" />
             <Trans>{itemCount} items</Trans>
           </span>
         </div>
-        <div className="mt-4 flex items-center gap-2 rounded-(--r-sm) border-[1.5px] border-dashed border-border bg-(--card-2) px-3.5 py-2.75">
+        <div className="border-border mt-4 flex items-center gap-2 rounded-(--r-sm) border-[1.5px] border-dashed bg-(--card-2) px-3.5 py-2.75">
           <LinkIcon size={18} color="var(--accent-deep)" />
           <span className="flex-1 font-mono text-[13.5px]">
             picnivo.com/e/••••••

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { useRouter } from "@tanstack/react-router";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { joinEventFn } from "../functions";
@@ -15,7 +16,6 @@ export function JoinBar({ eventToken, participantNames }: JoinBarProps) {
   const router = useRouter();
   const [name, setName] = useState("");
   const [isJoining, setIsJoining] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const trimmed = name.trim();
   const valid = trimmed.length > 1;
@@ -26,14 +26,13 @@ export function JoinBar({ eventToken, participantNames }: JoinBarProps) {
   async function handleJoin() {
     if (!valid || isJoining) return;
     setIsJoining(true);
-    setError(null);
 
     const result = await joinEventFn({
       data: { token: eventToken, displayName: trimmed },
     });
 
     if (result.error || !result.participantId) {
-      setError(result.error ?? t`Something went wrong. Please try again.`);
+      toast.error(result.error ?? t`Something went wrong. Please try again.`);
       setIsJoining(false);
       return;
     }
@@ -74,11 +73,6 @@ export function JoinBar({ eventToken, participantNames }: JoinBarProps) {
       {dupe && (
         <p role="alert" className="w-full text-[13px] text-(--no)">
           <Trans>Someone's already using that name — add a last initial?</Trans>
-        </p>
-      )}
-      {error && (
-        <p role="alert" className="w-full text-[13px] text-destructive">
-          {error}
         </p>
       )}
     </div>
