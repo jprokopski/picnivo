@@ -11,10 +11,11 @@ public static class CastVotes
         Guid participantId,
         CastVotesRequest req,
         PicnivoDbContext db,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
-        var @event = await db.Events
-            .Where(e => e.Token == token)
+        var @event = await db
+            .Events.Where(e => e.Token == token)
             .Select(e => new { e.Id, DateOptionIds = e.DateOptions.Select(d => d.Id).ToList() })
             .FirstOrDefaultAsync(ct);
 
@@ -28,8 +29,10 @@ public static class CastVotes
             return Results.BadRequest();
         }
 
-        var participantBelongs = await db.Participants
-            .AnyAsync(p => p.Id == participantId && p.EventId == @event.Id, ct);
+        var participantBelongs = await db.Participants.AnyAsync(
+            p => p.Id == participantId && p.EventId == @event.Id,
+            ct
+        );
 
         if (!participantBelongs)
         {
@@ -42,8 +45,10 @@ public static class CastVotes
         }
 
         var dateOptionIds = req.Votes.Select(v => v.DateOptionId).ToList();
-        var existing = await db.DateVotes
-            .Where(v => v.ParticipantId == participantId && dateOptionIds.Contains(v.DateOptionId))
+        var existing = await db
+            .DateVotes.Where(v =>
+                v.ParticipantId == participantId && dateOptionIds.Contains(v.DateOptionId)
+            )
             .ToListAsync(ct);
 
         foreach (var vote in req.Votes)
@@ -55,13 +60,15 @@ public static class CastVotes
             }
             else
             {
-                db.DateVotes.Add(new DateVote
-                {
-                    Id = Guid.CreateVersion7(),
-                    ParticipantId = participantId,
-                    DateOptionId = vote.DateOptionId,
-                    Choice = vote.Choice
-                });
+                db.DateVotes.Add(
+                    new DateVote
+                    {
+                        Id = Guid.CreateVersion7(),
+                        ParticipantId = participantId,
+                        DateOptionId = vote.DateOptionId,
+                        Choice = vote.Choice,
+                    }
+                );
             }
         }
 

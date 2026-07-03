@@ -15,8 +15,16 @@ public class CastVotesEndpointTests(ApiFixture fixture)
         await using var ctx = await fixture.CheckOutAsync();
 
         // Act
-        var ex = await Should.ThrowAsync<ApiException>(() => ctx.ApiClient.CastVotesAsync(
-            "unknowntokenxyz", Guid.NewGuid(), new CastVotesRequest { Votes = [new VoteDto { DateOptionId = Guid.NewGuid(), Choice = 1 }] }));
+        var ex = await Should.ThrowAsync<ApiException>(() =>
+            ctx.ApiClient.CastVotesAsync(
+                "unknowntokenxyz",
+                Guid.NewGuid(),
+                new CastVotesRequest
+                {
+                    Votes = [new VoteDto { DateOptionId = Guid.NewGuid(), Choice = 1 }],
+                }
+            )
+        );
 
         // Assert
         ex.StatusCode.ShouldBe(404);
@@ -27,13 +35,27 @@ public class CastVotesEndpointTests(ApiFixture fixture)
     {
         // Arrange
         await using var ctx = await fixture.CheckOutAsync();
-        var (token, participantId, dateOptionId) = await SeedEventWithParticipantAsync(ctx.Services);
+        var (token, participantId, dateOptionId) = await SeedEventWithParticipantAsync(
+            ctx.Services
+        );
 
         // Act
-        await ctx.ApiClient.CastVotesAsync(token, participantId,
-            new CastVotesRequest { Votes = [new VoteDto { DateOptionId = dateOptionId, Choice = 1 }] });
-        await ctx.ApiClient.CastVotesAsync(token, participantId,
-            new CastVotesRequest { Votes = [new VoteDto { DateOptionId = dateOptionId, Choice = 3 }] });
+        await ctx.ApiClient.CastVotesAsync(
+            token,
+            participantId,
+            new CastVotesRequest
+            {
+                Votes = [new VoteDto { DateOptionId = dateOptionId, Choice = 1 }],
+            }
+        );
+        await ctx.ApiClient.CastVotesAsync(
+            token,
+            participantId,
+            new CastVotesRequest
+            {
+                Votes = [new VoteDto { DateOptionId = dateOptionId, Choice = 3 }],
+            }
+        );
 
         // Assert
         using var scope = ctx.Services.CreateScope();
@@ -43,15 +65,29 @@ public class CastVotesEndpointTests(ApiFixture fixture)
         votes[0].Choice.ShouldBe(VoteChoice.No);
     }
 
-    private static async Task<(string Token, Guid ParticipantId, Guid DateOptionId)> SeedEventWithParticipantAsync(
-        IServiceProvider services, string token = "testtoken01")
+    private static async Task<(
+        string Token,
+        Guid ParticipantId,
+        Guid DateOptionId
+    )> SeedEventWithParticipantAsync(IServiceProvider services, string token = "testtoken01")
     {
         using var scope = services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<PicnivoDbContext>();
         var organizerId = Guid.NewGuid();
-        db.Organizers.Add(new Organizer { Id = organizerId, DisplayName = "Organizer", CreatedAt = DateTimeOffset.UtcNow });
+        db.Organizers.Add(
+            new Organizer
+            {
+                Id = organizerId,
+                DisplayName = "Organizer",
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
 
-        var dateOption = new DateOption { Id = Guid.CreateVersion7(), StartsAt = DateTimeOffset.UtcNow.AddDays(7) };
+        var dateOption = new DateOption
+        {
+            Id = Guid.CreateVersion7(),
+            StartsAt = DateTimeOffset.UtcNow.AddDays(7),
+        };
         var @event = new Event
         {
             Id = Guid.CreateVersion7(),
@@ -59,7 +95,15 @@ public class CastVotesEndpointTests(ApiFixture fixture)
             Title = "Test Picnic",
             Token = token,
             CreatedAt = DateTimeOffset.UtcNow,
-            DateOptions = [dateOption, new DateOption { Id = Guid.CreateVersion7(), StartsAt = DateTimeOffset.UtcNow.AddDays(8) }]
+            DateOptions =
+            [
+                dateOption,
+                new DateOption
+                {
+                    Id = Guid.CreateVersion7(),
+                    StartsAt = DateTimeOffset.UtcNow.AddDays(8),
+                },
+            ],
         };
         db.Events.Add(@event);
 
@@ -69,7 +113,7 @@ public class CastVotesEndpointTests(ApiFixture fixture)
             EventId = @event.Id,
             DisplayName = "Alice",
             Attendance = AttendanceStatus.Undecided,
-            CreatedAt = DateTimeOffset.UtcNow
+            CreatedAt = DateTimeOffset.UtcNow,
         };
         db.Participants.Add(participant);
 

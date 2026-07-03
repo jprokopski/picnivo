@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -14,7 +13,11 @@
     <Compile Remove="Client/**" />
   </ItemGroup>
 
-  <Target Name="GenerateApiClient" BeforeTargets="CoreCompile" Condition="Exists('$(_PicnivoApiSpec)')">
+  <Target
+    Name="GenerateApiClient"
+    BeforeTargets="CoreCompile"
+    Condition="Exists('$(_PicnivoApiSpec)')"
+  >
     <MakeDir Directories="$(MSBuildProjectDirectory)/Client" />
     <Exec Command="dotnet nswag run nswag.json" WorkingDirectory="$(MSBuildProjectDirectory)" />
     <ItemGroup>
@@ -23,7 +26,11 @@
   </Target>
 
   <!-- On incremental builds the spec is unchanged, so also include the already-generated file -->
-  <Target Name="IncludeGeneratedClient" BeforeTargets="CoreCompile" Condition="!Exists('$(_PicnivoApiSpec)') And Exists('$(_GeneratedClient)')">
+  <Target
+    Name="IncludeGeneratedClient"
+    BeforeTargets="CoreCompile"
+    Condition="!Exists('$(_PicnivoApiSpec)') And Exists('$(_GeneratedClient)')"
+  >
     <ItemGroup>
       <Compile Include="$(_GeneratedClient)" />
     </ItemGroup>
@@ -52,5 +59,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Picnivo.API\Picnivo.API.csproj" />
   </ItemGroup>
-
 </Project>

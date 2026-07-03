@@ -15,8 +15,9 @@ public class CreateEventEndpointTests(ApiFixture fixture)
         await using var ctx = await fixture.CheckOutAsync();
 
         // Act
-        var ex = await Should.ThrowAsync<ApiException>(
-            () => ctx.ApiClient.CreateEventAsync(DefaultCreateRequest()));
+        var ex = await Should.ThrowAsync<ApiException>(() =>
+            ctx.ApiClient.CreateEventAsync(DefaultCreateRequest())
+        );
 
         // Assert
         ex.StatusCode.ShouldBe(401);
@@ -32,12 +33,13 @@ public class CreateEventEndpointTests(ApiFixture fixture)
         {
             Title = "",
             DateOptions = [DateTimeOffset.UtcNow.AddDays(7)],
-            Items = []
+            Items = [],
         };
 
         // Act
-        var ex = await Should.ThrowAsync<ApiException<Client.HttpValidationProblemDetails>>(
-            () => ctx.AuthedApiClient(organizerId).CreateEventAsync(req));
+        var ex = await Should.ThrowAsync<ApiException<Client.HttpValidationProblemDetails>>(() =>
+            ctx.AuthedApiClient(organizerId).CreateEventAsync(req)
+        );
 
         // Assert
         ex.StatusCode.ShouldBe(400);
@@ -52,7 +54,8 @@ public class CreateEventEndpointTests(ApiFixture fixture)
         var organizerId = await ArrangeOrganizerAsync(ctx.Services);
 
         // Act
-        var response = await ctx.AuthedApiClient(organizerId).CreateEventAsync(DefaultCreateRequest());
+        var response = await ctx.AuthedApiClient(organizerId)
+            .CreateEventAsync(DefaultCreateRequest());
 
         // Assert
         response.ShouldNotBeNull();
@@ -66,19 +69,28 @@ public class CreateEventEndpointTests(ApiFixture fixture)
         var id = Guid.NewGuid();
         using var scope = services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<PicnivoDbContext>();
-        db.Organizers.Add(new Organizer { Id = id, DisplayName = "Test Organizer", CreatedAt = DateTimeOffset.UtcNow });
+        db.Organizers.Add(
+            new Organizer
+            {
+                Id = id,
+                DisplayName = "Test Organizer",
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
         await db.SaveChangesAsync();
         return id;
     }
 
-    private static CreateEventRequest DefaultCreateRequest(int dateCount = 2) => new()
-    {
-        Title = "Test Picnic",
-        Description = "A lovely picnic",
-        Location = "Central Park",
-        DateOptions = Enumerable.Range(1, dateCount)
-            .Select(i => DateTimeOffset.UtcNow.AddDays(7 + i))
-            .ToList(),
-        Items = ["Sandwiches", "Drinks"]
-    };
+    private static CreateEventRequest DefaultCreateRequest(int dateCount = 2) =>
+        new()
+        {
+            Title = "Test Picnic",
+            Description = "A lovely picnic",
+            Location = "Central Park",
+            DateOptions = Enumerable
+                .Range(1, dateCount)
+                .Select(i => DateTimeOffset.UtcNow.AddDays(7 + i))
+                .ToList(),
+            Items = ["Sandwiches", "Drinks"],
+        };
 }

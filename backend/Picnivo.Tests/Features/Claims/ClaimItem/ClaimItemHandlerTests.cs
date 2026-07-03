@@ -1,9 +1,9 @@
-using ClaimItemHandler = Picnivo.API.Features.Claims.ClaimItem.ClaimItem;
 using EntityFramework.Exceptions.Common;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
+using ClaimItemHandler = Picnivo.API.Features.Claims.ClaimItem.ClaimItem;
 
 namespace Picnivo.Tests.Features.Claims.ClaimItem;
 
@@ -17,7 +17,13 @@ public class ClaimItemHandlerTests
         var (token, participantId, itemId, _, _) = await SeedEventAsync(db, dateOptionCount: 2);
 
         // Act
-        var result = await ClaimItemHandler.Handle(token, itemId, participantId, db, CancellationToken.None);
+        var result = await ClaimItemHandler.Handle(
+            token,
+            itemId,
+            participantId,
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<StatusCodeHttpResult>().StatusCode.ShouldBe(403);
@@ -28,10 +34,20 @@ public class ClaimItemHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
-        var (token, participantId, itemId, _, _) = await SeedEventAsync(db, dateOptionCount: 2, attendance: AttendanceStatus.Coming);
+        var (token, participantId, itemId, _, _) = await SeedEventAsync(
+            db,
+            dateOptionCount: 2,
+            attendance: AttendanceStatus.Coming
+        );
 
         // Act
-        var result = await ClaimItemHandler.Handle(token, itemId, participantId, db, CancellationToken.None);
+        var result = await ClaimItemHandler.Handle(
+            token,
+            itemId,
+            participantId,
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<NoContent>();
@@ -44,22 +60,33 @@ public class ClaimItemHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
-        var (token, participantId, itemId, eventId, dateOptionIds) = await SeedEventAsync(db, dateOptionCount: 2);
+        var (token, participantId, itemId, eventId, dateOptionIds) = await SeedEventAsync(
+            db,
+            dateOptionCount: 2
+        );
         var chosenDateOptionId = dateOptionIds[0];
         var @event = await db.Events.SingleAsync(e => e.Id == eventId);
         @event.ChosenDateOptionId = chosenDateOptionId;
-        db.DateVotes.Add(new DateVote
-        {
-            Id = Guid.CreateVersion7(),
-            ParticipantId = participantId,
-            DateOptionId = chosenDateOptionId,
-            Choice = VoteChoice.Yes
-        });
+        db.DateVotes.Add(
+            new DateVote
+            {
+                Id = Guid.CreateVersion7(),
+                ParticipantId = participantId,
+                DateOptionId = chosenDateOptionId,
+                Choice = VoteChoice.Yes,
+            }
+        );
         await db.SaveChangesAsync();
         db.ChangeTracker.Clear();
 
         // Act
-        var result = await ClaimItemHandler.Handle(token, itemId, participantId, db, CancellationToken.None);
+        var result = await ClaimItemHandler.Handle(
+            token,
+            itemId,
+            participantId,
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<NoContent>();
@@ -70,10 +97,20 @@ public class ClaimItemHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
-        var (token, participantId, itemId, _, _) = await SeedEventAsync(db, dateOptionCount: 1, attendance: AttendanceStatus.Coming);
+        var (token, participantId, itemId, _, _) = await SeedEventAsync(
+            db,
+            dateOptionCount: 1,
+            attendance: AttendanceStatus.Coming
+        );
 
         // Act
-        var result = await ClaimItemHandler.Handle(token, itemId, participantId, db, CancellationToken.None);
+        var result = await ClaimItemHandler.Handle(
+            token,
+            itemId,
+            participantId,
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<NoContent>();
@@ -84,14 +121,18 @@ public class ClaimItemHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
-        var (token, participantId, itemId, eventId, _) = await SeedEventAsync(db, dateOptionCount: 1, attendance: AttendanceStatus.Coming);
+        var (token, participantId, itemId, eventId, _) = await SeedEventAsync(
+            db,
+            dateOptionCount: 1,
+            attendance: AttendanceStatus.Coming
+        );
         var priorHolder = new Participant
         {
             Id = Guid.CreateVersion7(),
             EventId = eventId,
             DisplayName = "Bob",
             Attendance = AttendanceStatus.Out,
-            CreatedAt = DateTimeOffset.UtcNow
+            CreatedAt = DateTimeOffset.UtcNow,
         };
         db.Participants.Add(priorHolder);
         var item = await db.EventItems.SingleAsync(i => i.Id == itemId);
@@ -100,7 +141,13 @@ public class ClaimItemHandlerTests
         db.ChangeTracker.Clear();
 
         // Act
-        var result = await ClaimItemHandler.Handle(token, itemId, participantId, db, CancellationToken.None);
+        var result = await ClaimItemHandler.Handle(
+            token,
+            itemId,
+            participantId,
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<NoContent>();
@@ -113,14 +160,20 @@ public class ClaimItemHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
-        var (token, participantId, itemId, eventId, _) = await SeedEventAsync(db, dateOptionCount: 1, attendance: AttendanceStatus.Coming);
-        db.ItemClaims.Add(new ItemClaim
-        {
-            Id = Guid.CreateVersion7(),
-            EventItemId = itemId,
-            ParticipantId = participantId,
-            ClaimedAt = DateTimeOffset.UtcNow
-        });
+        var (token, participantId, itemId, eventId, _) = await SeedEventAsync(
+            db,
+            dateOptionCount: 1,
+            attendance: AttendanceStatus.Coming
+        );
+        db.ItemClaims.Add(
+            new ItemClaim
+            {
+                Id = Guid.CreateVersion7(),
+                EventItemId = itemId,
+                ParticipantId = participantId,
+                ClaimedAt = DateTimeOffset.UtcNow,
+            }
+        );
         await db.SaveChangesAsync();
         db.ChangeTracker.Clear();
 
@@ -130,7 +183,7 @@ public class ClaimItemHandlerTests
             EventId = eventId,
             DisplayName = "Bob",
             Attendance = AttendanceStatus.Coming,
-            CreatedAt = DateTimeOffset.UtcNow
+            CreatedAt = DateTimeOffset.UtcNow,
         };
         db.Participants.Add(otherParticipant);
         await db.SaveChangesAsync();
@@ -138,7 +191,8 @@ public class ClaimItemHandlerTests
 
         // Act & Assert
         await Should.ThrowAsync<UniqueConstraintException>(() =>
-            ClaimItemHandler.Handle(token, itemId, otherParticipant.Id, db, CancellationToken.None));
+            ClaimItemHandler.Handle(token, itemId, otherParticipant.Id, db, CancellationToken.None)
+        );
     }
 
     [Fact]
@@ -146,26 +200,55 @@ public class ClaimItemHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
-        var (token, participantId, _, _, _) = await SeedEventAsync(db, dateOptionCount: 1, attendance: AttendanceStatus.Coming);
+        var (token, participantId, _, _, _) = await SeedEventAsync(
+            db,
+            dateOptionCount: 1,
+            attendance: AttendanceStatus.Coming
+        );
 
         // Act
-        var result = await ClaimItemHandler.Handle(token, Guid.NewGuid(), participantId, db, CancellationToken.None);
+        var result = await ClaimItemHandler.Handle(
+            token,
+            Guid.NewGuid(),
+            participantId,
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<NotFound>();
     }
 
-    private static async Task<(string Token, Guid ParticipantId, Guid ItemId, Guid EventId, List<Guid> DateOptionIds)> SeedEventAsync(
+    private static async Task<(
+        string Token,
+        Guid ParticipantId,
+        Guid ItemId,
+        Guid EventId,
+        List<Guid> DateOptionIds
+    )> SeedEventAsync(
         PicnivoDbContext db,
         int dateOptionCount,
         AttendanceStatus attendance = AttendanceStatus.Undecided,
-        string token = "testtoken01")
+        string token = "testtoken01"
+    )
     {
         var organizerId = Guid.NewGuid();
-        db.Organizers.Add(new Organizer { Id = organizerId, DisplayName = "Organizer", CreatedAt = DateTimeOffset.UtcNow });
+        db.Organizers.Add(
+            new Organizer
+            {
+                Id = organizerId,
+                DisplayName = "Organizer",
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
 
-        var dateOptions = Enumerable.Range(1, dateOptionCount)
-            .Select(i => new DateOption { Id = Guid.CreateVersion7(), StartsAt = DateTimeOffset.UtcNow.AddDays(7 + i) })
+        var dateOptions = Enumerable
+            .Range(1, dateOptionCount)
+            .Select(i => new DateOption
+            {
+                Id = Guid.CreateVersion7(),
+                StartsAt = DateTimeOffset.UtcNow.AddDays(7 + i),
+            })
             .ToList();
         var item = new EventItem { Id = Guid.CreateVersion7(), Label = "Sandwiches" };
 
@@ -177,7 +260,7 @@ public class ClaimItemHandlerTests
             Token = token,
             CreatedAt = DateTimeOffset.UtcNow,
             DateOptions = dateOptions,
-            Items = [item]
+            Items = [item],
         };
         db.Events.Add(@event);
 
@@ -187,7 +270,7 @@ public class ClaimItemHandlerTests
             EventId = @event.Id,
             DisplayName = "Alice",
             Attendance = attendance,
-            CreatedAt = DateTimeOffset.UtcNow
+            CreatedAt = DateTimeOffset.UtcNow,
         };
         db.Participants.Add(participant);
 

@@ -10,10 +10,11 @@ public static class ReleaseClaim
         Guid itemId,
         Guid participantId,
         PicnivoDbContext db,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
-        var @event = await db.Events
-            .Where(e => e.Token == token)
+        var @event = await db
+            .Events.Where(e => e.Token == token)
             .Select(e => new { e.Id })
             .FirstOrDefaultAsync(ct);
 
@@ -22,16 +23,20 @@ public static class ReleaseClaim
             return Results.NotFound();
         }
 
-        var itemBelongs = await db.EventItems
-            .AnyAsync(i => i.Id == itemId && i.EventId == @event.Id, ct);
+        var itemBelongs = await db.EventItems.AnyAsync(
+            i => i.Id == itemId && i.EventId == @event.Id,
+            ct
+        );
 
         if (!itemBelongs)
         {
             return Results.NotFound();
         }
 
-        var claim = await db.ItemClaims
-            .FirstOrDefaultAsync(c => c.EventItemId == itemId && c.ParticipantId == participantId, ct);
+        var claim = await db.ItemClaims.FirstOrDefaultAsync(
+            c => c.EventItemId == itemId && c.ParticipantId == participantId,
+            ct
+        );
 
         if (claim is null)
         {

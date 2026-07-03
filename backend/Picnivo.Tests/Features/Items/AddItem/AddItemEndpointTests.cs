@@ -15,8 +15,12 @@ public class AddItemEndpointTests(ApiFixture fixture)
         await using var ctx = await fixture.CheckOutAsync();
 
         // Act
-        var ex = await Should.ThrowAsync<ApiException>(() => ctx.ApiClient.AddItemAsync(
-            "unknowntokenxyz", new AddItemRequest { ParticipantId = Guid.NewGuid(), Label = "Drinks" }));
+        var ex = await Should.ThrowAsync<ApiException>(() =>
+            ctx.ApiClient.AddItemAsync(
+                "unknowntokenxyz",
+                new AddItemRequest { ParticipantId = Guid.NewGuid(), Label = "Drinks" }
+            )
+        );
 
         // Assert
         ex.StatusCode.ShouldBe(404);
@@ -31,7 +35,9 @@ public class AddItemEndpointTests(ApiFixture fixture)
 
         // Act
         var response = await ctx.ApiClient.AddItemAsync(
-            token, new AddItemRequest { ParticipantId = participantId, Label = "Drinks" });
+            token,
+            new AddItemRequest { ParticipantId = participantId, Label = "Drinks" }
+        );
 
         // Assert
         response.ShouldNotBeNull();
@@ -39,12 +45,21 @@ public class AddItemEndpointTests(ApiFixture fixture)
     }
 
     private static async Task<(string Token, Guid ParticipantId)> SeedEventWithParticipantAsync(
-        IServiceProvider services, string token = "testtoken01")
+        IServiceProvider services,
+        string token = "testtoken01"
+    )
     {
         using var scope = services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<PicnivoDbContext>();
         var organizerId = Guid.NewGuid();
-        db.Organizers.Add(new Organizer { Id = organizerId, DisplayName = "Organizer", CreatedAt = DateTimeOffset.UtcNow });
+        db.Organizers.Add(
+            new Organizer
+            {
+                Id = organizerId,
+                DisplayName = "Organizer",
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
         var @event = new Event
         {
             Id = Guid.CreateVersion7(),
@@ -52,7 +67,14 @@ public class AddItemEndpointTests(ApiFixture fixture)
             Title = "Test Picnic",
             Token = token,
             CreatedAt = DateTimeOffset.UtcNow,
-            DateOptions = [new DateOption { Id = Guid.CreateVersion7(), StartsAt = DateTimeOffset.UtcNow.AddDays(7) }]
+            DateOptions =
+            [
+                new DateOption
+                {
+                    Id = Guid.CreateVersion7(),
+                    StartsAt = DateTimeOffset.UtcNow.AddDays(7),
+                },
+            ],
         };
         db.Events.Add(@event);
 
@@ -61,7 +83,7 @@ public class AddItemEndpointTests(ApiFixture fixture)
             Id = Guid.CreateVersion7(),
             EventId = @event.Id,
             DisplayName = "Alice",
-            CreatedAt = DateTimeOffset.UtcNow
+            CreatedAt = DateTimeOffset.UtcNow,
         };
         db.Participants.Add(participant);
 

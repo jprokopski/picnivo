@@ -79,7 +79,7 @@ export function Haul({
             myVote={voteChoiceKeyFromValue(myVoteChoice)}
           />
         ))}
-      <div className="border-border bg-card overflow-hidden rounded-(--r-md) border">
+      <div className="overflow-hidden rounded-(--r-md) border border-border bg-card">
         {items.map((item, index) => (
           <ItemRow
             key={item.id}

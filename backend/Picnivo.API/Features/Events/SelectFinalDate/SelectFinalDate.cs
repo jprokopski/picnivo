@@ -11,20 +11,21 @@ public static class SelectFinalDate
         SelectFinalDateRequest req,
         ClaimsPrincipal user,
         PicnivoDbContext db,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         if (!Guid.TryParse(user.FindFirstValue("sub"), out var organizerId))
         {
             return Results.Unauthorized();
         }
 
-        var @event = await db.Events
-            .Where(e => e.Token == token)
+        var @event = await db
+            .Events.Where(e => e.Token == token)
             .Select(e => new
             {
                 e.Id,
                 e.OrganizerId,
-                DateOptionIds = e.DateOptions.Select(d => d.Id).ToList()
+                DateOptionIds = e.DateOptions.Select(d => d.Id).ToList(),
             })
             .FirstOrDefaultAsync(ct);
 

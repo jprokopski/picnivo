@@ -6,7 +6,7 @@ public class ReleaseClaimEndpoint : IEndpoint
 {
     public void Map(IEndpointRouteBuilder app) =>
         app.MapDelete("/api/events/{token}/items/{itemId}/claim", ReleaseClaim.Handle)
-           .WithName("ReleaseClaim")
-           .Produces(StatusCodes.Status204NoContent)
-           .Produces(StatusCodes.Status404NotFound);
+            .WithName("ReleaseClaim")
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status404NotFound);
 }

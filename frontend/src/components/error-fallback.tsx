@@ -19,7 +19,7 @@ export function ErrorFallback({ reset }: ErrorComponentProps) {
           reset();
           router.invalidate();
         }}
-        className="bg-primary mt-1 inline-flex cursor-pointer appearance-none items-center justify-center gap-2 rounded-full border-0 px-4 py-2.5 font-sans text-[14px] leading-none font-bold whitespace-nowrap text-white no-underline shadow-(--sh-pop) transition-[transform,box-shadow,background] duration-160 hover:-translate-y-0.5 hover:bg-(--accent-deep) active:translate-y-0"
+        className="mt-1 inline-flex cursor-pointer appearance-none items-center justify-center gap-2 rounded-full border-0 bg-primary px-4 py-2.5 font-sans text-[14px] leading-none font-bold whitespace-nowrap text-white no-underline shadow-(--sh-pop) transition-[transform,box-shadow,background] duration-160 hover:-translate-y-0.5 hover:bg-(--accent-deep) active:translate-y-0"
       >
         <Trans>Try again</Trans>
       </button>

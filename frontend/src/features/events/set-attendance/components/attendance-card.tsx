@@ -44,10 +44,10 @@ export function AttendanceCard({
   if (status === "in") {
     return (
       <div className="rounded-(--r-lg) border-[1.5px] border-(--yes) bg-(--yes-tint) px-6.5 py-6 shadow-(--sh-md)">
-        <span className="bg-card inline-flex items-center rounded-full px-2.5 py-1 text-[13px] font-bold text-(--yes)">
+        <span className="inline-flex items-center rounded-full bg-card px-2.5 py-1 text-[13px] font-bold text-(--yes)">
           <Trans>You're in</Trans>
         </span>
-        <h3 className="font-display mt-3 text-[24px] font-bold">
+        <h3 className="mt-3 font-display text-[24px] font-bold">
           <Trans>
             See you {parts.dow}, {parts.mon} {parts.day} 🎉
           </Trans>
@@ -74,10 +74,10 @@ export function AttendanceCard({
   if (status === "out" && isExplicitOut) {
     return (
       <div className="rounded-(--r-lg) border-[1.5px] border-(--no) bg-(--no-tint) px-6.5 py-6 shadow-(--sh-md)">
-        <span className="bg-card inline-flex items-center rounded-full px-2.5 py-1 text-[13px] font-bold text-(--no)">
+        <span className="inline-flex items-center rounded-full bg-card px-2.5 py-1 text-[13px] font-bold text-(--no)">
           <Trans>You're marked: can't make it</Trans>
         </span>
-        <h3 className="font-display mt-3 text-[24px] font-bold">
+        <h3 className="mt-3 font-display text-[24px] font-bold">
           <Trans>No worries — we'll catch you next time 🌅</Trans>
         </h3>
         <p className="mt-2 text-(--ink-soft)">
@@ -137,12 +137,12 @@ export function AttendanceCard({
     );
 
   return (
-    <div className="border-border bg-card rounded-(--r-lg) border-2 px-6.5 py-6 shadow-(--sh-md)">
+    <div className="rounded-(--r-lg) border-2 border-border bg-card px-6.5 py-6 shadow-(--sh-md)">
       <span className="inline-flex items-center gap-1.5 rounded-full bg-(--marigold-tint) px-2.5 py-1 text-[13px] font-bold text-(--accent-deep)">
         <SparklesIcon size={13} />
         <Trans>Heads up</Trans>
       </span>
-      <h3 className="font-display mt-3 text-[24px] font-bold">{heading}</h3>
+      <h3 className="mt-3 font-display text-[24px] font-bold">{heading}</h3>
       <p className="mt-2 text-(--ink-soft)">{body}</p>
       {myClaim && (
         <div className="mt-3.5 flex items-center gap-2.5 rounded-(--r-sm) border border-(--line) bg-(--card-2) px-3.5 py-2.75">

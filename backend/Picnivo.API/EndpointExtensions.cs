@@ -8,9 +8,11 @@ public static class EndpointExtensions
         {
             var group = app.MapGroup("").AddEndpointFilter<ValidationEndpointFilter>();
 
-            var types = typeof(Program).Assembly
-                .GetTypes()
-                .Where(t => t is { IsClass: true, IsAbstract: false } && t.IsAssignableTo(typeof(IEndpoint)));
+            var types = typeof(Program)
+                .Assembly.GetTypes()
+                .Where(t =>
+                    t is { IsClass: true, IsAbstract: false } && t.IsAssignableTo(typeof(IEndpoint))
+                );
 
             foreach (var type in types)
             {

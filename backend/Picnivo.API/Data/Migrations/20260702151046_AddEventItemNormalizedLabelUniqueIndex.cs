@@ -10,9 +10,7 @@ namespace Picnivo.API.Data.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_EventItems_EventId",
-                table: "EventItems");
+            migrationBuilder.DropIndex(name: "IX_EventItems_EventId", table: "EventItems");
 
             migrationBuilder.AddColumn<string>(
                 name: "NormalizedLabel",
@@ -20,13 +18,15 @@ namespace Picnivo.API.Data.Migrations
                 type: "text",
                 nullable: true,
                 computedColumnSql: "lower(\"Label\")",
-                stored: true);
+                stored: true
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_EventItems_Event_NormalizedLabel",
                 table: "EventItems",
                 columns: new[] { "EventId", "NormalizedLabel" },
-                unique: true);
+                unique: true
+            );
         }
 
         /// <inheritdoc />
@@ -34,16 +34,16 @@ namespace Picnivo.API.Data.Migrations
         {
             migrationBuilder.DropIndex(
                 name: "IX_EventItems_Event_NormalizedLabel",
-                table: "EventItems");
+                table: "EventItems"
+            );
 
-            migrationBuilder.DropColumn(
-                name: "NormalizedLabel",
-                table: "EventItems");
+            migrationBuilder.DropColumn(name: "NormalizedLabel", table: "EventItems");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EventItems_EventId",
                 table: "EventItems",
-                column: "EventId");
+                column: "EventId"
+            );
         }
     }
 }

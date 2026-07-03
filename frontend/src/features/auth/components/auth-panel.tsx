@@ -117,27 +117,27 @@ export function AuthPanel({ mode, redirect, onToggleMode }: AuthPanelProps) {
   }
 
   return (
-    <div className="grid w-full max-w-[1000px] grid-cols-[1.02fr_0.98fr] overflow-hidden rounded-(--r-xl) border border-(--line) bg-(--card) shadow-(--sh-lg) max-[820px]:max-w-[460px] max-[820px]:grid-cols-1 max-[480px]:min-h-screen max-[480px]:rounded-none max-[480px]:border-0 max-[480px]:shadow-none">
+    <div className="grid w-full max-w-250 grid-cols-[1.02fr_0.98fr] overflow-hidden rounded-(--r-xl) border border-(--line) bg-card shadow-(--sh-lg) max-[820px]:max-w-115 max-[820px]:grid-cols-1 max-[480px]:min-h-screen max-[480px]:rounded-none max-[480px]:border-0 max-[480px]:shadow-none">
       {/* brand panel */}
-      <aside className="relative flex min-h-[580px] flex-col justify-start gap-7 overflow-hidden bg-[linear-gradient(168deg,#ffd58a_0%,#ff9d6b_30%,#f1633f_60%,#e0492a_100%)] p-10 text-white max-[820px]:hidden">
+      <aside className="relative flex min-h-145 flex-col justify-start gap-7 overflow-hidden bg-[linear-gradient(168deg,#ffd58a_0%,#ff9d6b_30%,#f1633f_60%,#e0492a_100%)] p-10 text-white max-[820px]:hidden">
         <AuthScene />
-        <div className="relative z-[2]">
+        <div className="relative z-2">
           <Logo size={22} tone="light" />
-          <h2 className="font-display mt-7.5 text-[32px] leading-[1.04] font-extrabold tracking-[-0.025em] text-balance [text-shadow:0_2px_14px_rgba(120,42,18,0.28)]">
+          <h2 className="mt-7.5 font-display text-[32px] leading-[1.04] font-extrabold tracking-tight text-balance [text-shadow:0_2px_14px_rgba(120,42,18,0.28)]">
             {isSignup ? (
               <Trans>Plan the hang — together.</Trans>
             ) : (
               <Trans>Welcome back to the picnic.</Trans>
             )}
           </h2>
-          <p className="mt-3.5 max-w-[30ch] text-[15.5px] leading-[1.5] font-medium text-[rgba(255,250,243,0.92)] [text-shadow:0_1px_8px_rgba(120,42,18,0.22)]">
+          <p className="mt-3.5 max-w-[30ch] text-[15.5px] leading-normal font-medium text-[rgba(255,250,243,0.92)] [text-shadow:0_1px_8px_rgba(120,42,18,0.22)]">
             <Trans>
               From scattered group chat to a ready-to-go plan — pick a date,
               claim what to bring, all on one shared page.
             </Trans>
           </p>
         </div>
-        <div className="relative z-[2] mt-1 flex items-center gap-3">
+        <div className="relative z-2 mt-1 flex items-center gap-3">
           <AvatarStack
             names={["Maya", "Leo", "Priya", "Sam", "Noah"]}
             size={30}
@@ -154,14 +154,14 @@ export function AuthPanel({ mode, redirect, onToggleMode }: AuthPanelProps) {
           <span className="font-mono text-[11px] font-medium tracking-[0.14em] text-(--accent-deep) uppercase">
             {isSignup ? <Trans>Create account</Trans> : <Trans>Sign in</Trans>}
           </span>
-          <h1 className="font-display mt-2 text-[30px] leading-[1.02] font-extrabold tracking-[-0.025em] text-balance text-(--ink)">
+          <h1 className="mt-2 font-display text-[30px] leading-[1.02] font-extrabold tracking-tight text-balance text-(--ink)">
             {isSignup ? (
               <Trans>Join Picnivo</Trans>
             ) : (
               <Trans>Welcome back</Trans>
             )}
           </h1>
-          <p className="mt-2 text-[15px] leading-[1.5] text-(--ink-soft)">
+          <p className="mt-2 text-[15px] leading-normal text-(--ink-soft)">
             {isSignup ? (
               <Trans>
                 Start planning get-togethers everyone actually shows up to.
@@ -182,7 +182,7 @@ export function AuthPanel({ mode, redirect, onToggleMode }: AuthPanelProps) {
           type="button"
           variant="outline"
           onClick={handleGoogleSignIn}
-          className="h-13 w-full gap-2.75 rounded-full border-[1.5px] border-(--line) bg-(--card) text-[15.5px] font-bold text-(--ink) shadow-(--sh-sm) hover:bg-(--card-2)"
+          className="h-13 w-full gap-2.75 rounded-full border-[1.5px] border-(--line) bg-card text-[15.5px] font-bold text-(--ink) shadow-(--sh-sm) hover:bg-(--card-2)"
         >
           <GoogleIcon />
           <Trans>Continue with Google</Trans>

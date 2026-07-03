@@ -112,7 +112,7 @@ export default function Header() {
 
                 {menuOpen && (
                   <div
-                    className="absolute top-[calc(100%+10px)] right-0 z-60 min-w-58 origin-top-right animate-[web-sheet-in_140ms_cubic-bezier(0.16,1,0.3,1)_both] rounded-(--r-md) border border-(--line) bg-(--card) p-2 shadow-(--sh-lg)"
+                    className="absolute top-[calc(100%+10px)] right-0 z-60 min-w-58 origin-top-right animate-[web-sheet-in_140ms_cubic-bezier(0.16,1,0.3,1)_both] rounded-(--r-md) border border-(--line) bg-card p-2 shadow-(--sh-lg)"
                     role="menu"
                   >
                     <div className="flex items-center gap-2.75 px-2.5 pt-2 pb-3">

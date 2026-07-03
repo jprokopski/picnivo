@@ -25,17 +25,17 @@ export function EventBand({
       <div className="relative h-57.5 overflow-hidden bg-[linear-gradient(180deg,#ffd58a_0%,#ff9d6b_38%,#f1633f_74%,#e0492a_100%)] max-[720px]:h-37.5">
         <PicnicScene variant="sunset" slot="wide" />
       </div>
-      <div className="bg-card flex flex-wrap items-end justify-between gap-6 px-8.5 pt-6 pb-6.5 max-[720px]:gap-4 max-[720px]:px-5.5 max-[720px]:pt-5.5 max-[720px]:pb-6">
+      <div className="flex flex-wrap items-end justify-between gap-6 bg-card px-8.5 pt-6 pb-6.5 max-[720px]:gap-4 max-[720px]:px-5.5 max-[720px]:pt-5.5 max-[720px]:pb-6">
         <div className="min-w-0">
           <p className="font-mono text-[11px] font-medium tracking-[0.14em] wrap-anywhere text-(--accent-deep) uppercase">
             <Trans>{organizerName} is hosting</Trans>
             {location && <> · {location}</>}
           </p>
-          <h1 className="font-display text-foreground m-0 mt-1.5 text-[38px] leading-[1.05] font-extrabold tracking-tight wrap-break-word max-[900px]:text-[32px] max-[720px]:text-[27px]">
+          <h1 className="m-0 mt-1.5 font-display text-[38px] leading-[1.05] font-extrabold tracking-tight wrap-break-word text-foreground max-[900px]:text-[32px] max-[720px]:text-[27px]">
             {title}
           </h1>
           {description && (
-            <p className="text-muted-foreground mt-2 max-w-[54ch] wrap-break-word max-[720px]:text-[15px]">
+            <p className="mt-2 max-w-[54ch] wrap-break-word text-muted-foreground max-[720px]:text-[15px]">
               {description}
             </p>
           )}

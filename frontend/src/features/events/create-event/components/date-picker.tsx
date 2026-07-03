@@ -114,17 +114,17 @@ function DateTile({
             <div className="font-mono text-[10px] tracking-[0.08em] text-(--accent-deep) uppercase">
               {info.dow}
             </div>
-            <div className="font-display text-foreground my-0.5 text-2xl leading-[1.02] font-extrabold tracking-tight text-balance">
+            <div className="my-0.5 font-display text-2xl leading-[1.02] font-extrabold tracking-tight text-balance text-foreground">
               {info.day}
             </div>
-            <div className="text-muted-foreground font-mono text-[10px]">
+            <div className="font-mono text-[10px] text-muted-foreground">
               {info.mon}
             </div>
           </div>
 
           {/* Label + time chip */}
           <div>
-            <div className="text-foreground text-[15px] font-bold">
+            <div className="text-[15px] font-bold text-foreground">
               {info.dow}, {info.mon} {info.day}
             </div>
             {selected && editable && time && (
@@ -134,7 +134,7 @@ function DateTile({
                   e.stopPropagation();
                   setShowTimePicker((v) => !v);
                 }}
-                className="border-border bg-card text-foreground mt-1.75 inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold"
+                className="mt-1.75 inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-border bg-card px-2.5 py-1 text-xs font-semibold text-foreground"
               >
                 <ClockIcon size={12} />
                 {formatTime12h(time)}
@@ -152,12 +152,12 @@ function DateTile({
               e.stopPropagation();
               onToggle();
             }}
-            className="bg-primary flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-full border-0 p-0"
+            className="flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-full border-0 bg-primary p-0"
           >
             <CheckIcon size={15} color="#fff" />
           </button>
         ) : (
-          <div className="border-border size-6 shrink-0 rounded-full border-2" />
+          <div className="size-6 shrink-0 rounded-full border-2 border-border" />
         )}
       </div>
 
@@ -165,7 +165,7 @@ function DateTile({
       {showTimePicker && selected && (
         <div
           onClick={(e) => e.stopPropagation()}
-          className="border-border mt-2.75 border-t pt-2.75"
+          className="mt-2.75 border-t border-border pt-2.75"
         >
           <div className="flex flex-wrap gap-1.5">
             {PRESET_TIMES.map((pt) => (
@@ -212,7 +212,7 @@ function DateTile({
                 onChange={(e) => {
                   if (e.target.value) onTime?.(e.target.value);
                 }}
-                className="border-border bg-card text-foreground rounded-(--r-sm) border-[1.5px] px-3 py-2 font-mono text-[13px]"
+                className="rounded-(--r-sm) border-[1.5px] border-border bg-card px-3 py-2 font-mono text-[13px] text-foreground"
               />
             </div>
           )}
@@ -290,7 +290,7 @@ function CustomDatePicker({ selectedIds, onPick }: CustomDatePickerProps) {
       </button>
 
       {open && (
-        <div className="border-border bg-card mt-3 max-w-80 rounded-(--r-md) border-[1.5px] p-4 shadow-(--sh-md)">
+        <div className="mt-3 max-w-80 rounded-(--r-md) border-[1.5px] border-border bg-card p-4 shadow-(--sh-md)">
           {/* Month navigation */}
           <div className="mb-3 flex items-center justify-between">
             <button
@@ -313,14 +313,14 @@ function CustomDatePicker({ selectedIds, onPick }: CustomDatePickerProps) {
                 />
               </svg>
             </button>
-            <div className="text-foreground text-[15px] font-bold">
+            <div className="text-[15px] font-bold text-foreground">
               {MON_SHORT[view.m]} {view.y}
             </div>
             <button
               type="button"
               onClick={() => shift(1)}
               aria-label={t`Next month`}
-              className="border-border bg-card flex size-7.5 shrink-0 cursor-pointer items-center justify-center rounded-(--r-sm) border-[1.5px]"
+              className="flex size-7.5 shrink-0 cursor-pointer items-center justify-center rounded-(--r-sm) border-[1.5px] border-border bg-card"
             >
               <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
                 <path
@@ -385,13 +385,13 @@ function CustomDatePicker({ selectedIds, onPick }: CustomDatePickerProps) {
 
           {/* Pending date — pick a time and confirm */}
           {pending && (
-            <div className="border-border mt-3.5 border-t pt-3.5">
+            <div className="mt-3.5 border-t border-border pt-3.5">
               <div className="mb-2.5 flex items-center justify-between">
-                <div className="text-foreground text-sm font-bold">
+                <div className="text-sm font-bold text-foreground">
                   {DOW_SHORT[pending.getDay()]}, {MON_SHORT[pending.getMonth()]}{" "}
                   {pending.getDate()}
                 </div>
-                <span className="border-border bg-card inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-xs font-semibold text-(--accent-deep)">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-2.5 py-1 font-mono text-xs font-semibold text-(--accent-deep)">
                   <ClockIcon size={12} />
                   {formatTime12h(time)}
                 </span>
@@ -422,12 +422,12 @@ function CustomDatePicker({ selectedIds, onPick }: CustomDatePickerProps) {
                   onChange={(e) => {
                     if (e.target.value) setTime(e.target.value);
                   }}
-                  className="border-border bg-card text-foreground rounded-(--r-sm) border-[1.5px] px-3 py-2 font-mono text-[13px]"
+                  className="rounded-(--r-sm) border-[1.5px] border-border bg-card px-3 py-2 font-mono text-[13px] text-foreground"
                 />
                 <button
                   type="button"
                   onClick={commit}
-                  className="bg-primary inline-flex flex-1 cursor-pointer appearance-none items-center justify-center gap-2.25 rounded-full border-0 px-4 py-2.5 font-sans text-[13px] leading-none font-bold whitespace-nowrap text-white shadow-(--sh-pop) transition-[transform,box-shadow,background] duration-160 hover:-translate-y-0.5 hover:bg-(--accent-deep) active:translate-y-0"
+                  className="inline-flex flex-1 cursor-pointer appearance-none items-center justify-center gap-2.25 rounded-full border-0 bg-primary px-4 py-2.5 font-sans text-[13px] leading-none font-bold whitespace-nowrap text-white shadow-(--sh-pop) transition-[transform,box-shadow,background] duration-160 hover:-translate-y-0.5 hover:bg-(--accent-deep) active:translate-y-0"
                 >
                   <PlusIcon size={14} />
                   <Trans>Add this date</Trans>

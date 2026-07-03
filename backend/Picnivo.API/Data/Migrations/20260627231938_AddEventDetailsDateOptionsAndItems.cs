@@ -23,21 +23,24 @@ namespace Picnivo.API.Data.Migrations
                 table: "Events",
                 type: "character varying(2000)",
                 maxLength: 2000,
-                nullable: true);
+                nullable: true
+            );
 
             migrationBuilder.AddColumn<string>(
                 name: "Location",
                 table: "Events",
                 type: "character varying(200)",
                 maxLength: 200,
-                nullable: true);
+                nullable: true
+            );
 
             migrationBuilder.AddColumn<Guid>(
                 name: "OrganizerId",
                 table: "Events",
                 type: "uuid",
                 nullable: false,
-                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
+                defaultValue: new Guid("00000000-0000-0000-0000-000000000000")
+            );
 
             migrationBuilder.AddColumn<string>(
                 name: "Token",
@@ -45,7 +48,8 @@ namespace Picnivo.API.Data.Migrations
                 type: "character varying(32)",
                 maxLength: 32,
                 nullable: false,
-                defaultValue: "");
+                defaultValue: ""
+            );
 
             migrationBuilder.CreateTable(
                 name: "DateOptions",
@@ -53,7 +57,10 @@ namespace Picnivo.API.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     EventId = table.Column<Guid>(type: "uuid", nullable: false),
-                    StartsAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
+                    StartsAt = table.Column<DateTimeOffset>(
+                        type: "timestamp with time zone",
+                        nullable: false
+                    ),
                 },
                 constraints: table =>
                 {
@@ -63,8 +70,10 @@ namespace Picnivo.API.Data.Migrations
                         column: x => x.EventId,
                         principalTable: "Events",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "EventItems",
@@ -72,7 +81,11 @@ namespace Picnivo.API.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     EventId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Label = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false)
+                    Label = table.Column<string>(
+                        type: "character varying(200)",
+                        maxLength: 200,
+                        nullable: false
+                    ),
                 },
                 constraints: table =>
                 {
@@ -82,29 +95,35 @@ namespace Picnivo.API.Data.Migrations
                         column: x => x.EventId,
                         principalTable: "Events",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_Events_OrganizerId",
                 table: "Events",
-                column: "OrganizerId");
+                column: "OrganizerId"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_Events_Token",
                 table: "Events",
                 column: "Token",
-                unique: true);
+                unique: true
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_DateOptions_EventId",
                 table: "DateOptions",
-                column: "EventId");
+                column: "EventId"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_EventItems_EventId",
                 table: "EventItems",
-                column: "EventId");
+                column: "EventId"
+            );
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Events_Organizers_OrganizerId",
@@ -112,7 +131,8 @@ namespace Picnivo.API.Data.Migrations
                 column: "OrganizerId",
                 principalTable: "Organizers",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Cascade
+            );
         }
 
         /// <inheritdoc />
@@ -120,37 +140,24 @@ namespace Picnivo.API.Data.Migrations
         {
             migrationBuilder.DropForeignKey(
                 name: "FK_Events_Organizers_OrganizerId",
-                table: "Events");
+                table: "Events"
+            );
 
-            migrationBuilder.DropTable(
-                name: "DateOptions");
+            migrationBuilder.DropTable(name: "DateOptions");
 
-            migrationBuilder.DropTable(
-                name: "EventItems");
+            migrationBuilder.DropTable(name: "EventItems");
 
-            migrationBuilder.DropIndex(
-                name: "IX_Events_OrganizerId",
-                table: "Events");
+            migrationBuilder.DropIndex(name: "IX_Events_OrganizerId", table: "Events");
 
-            migrationBuilder.DropIndex(
-                name: "IX_Events_Token",
-                table: "Events");
+            migrationBuilder.DropIndex(name: "IX_Events_Token", table: "Events");
 
-            migrationBuilder.DropColumn(
-                name: "Description",
-                table: "Events");
+            migrationBuilder.DropColumn(name: "Description", table: "Events");
 
-            migrationBuilder.DropColumn(
-                name: "Location",
-                table: "Events");
+            migrationBuilder.DropColumn(name: "Location", table: "Events");
 
-            migrationBuilder.DropColumn(
-                name: "OrganizerId",
-                table: "Events");
+            migrationBuilder.DropColumn(name: "OrganizerId", table: "Events");
 
-            migrationBuilder.DropColumn(
-                name: "Token",
-                table: "Events");
+            migrationBuilder.DropColumn(name: "Token", table: "Events");
         }
     }
 }

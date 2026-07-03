@@ -10,48 +10,45 @@ public class EventConfiguration : IEntityTypeConfiguration<Event>
     {
         builder.HasKey(e => e.Id);
 
-        builder.Property(e => e.Title)
-            .IsRequired()
-            .HasMaxLength(200);
+        builder.Property(e => e.Title).IsRequired().HasMaxLength(200);
 
-        builder.Property(e => e.Description)
-            .HasMaxLength(2000);
+        builder.Property(e => e.Description).HasMaxLength(2000);
 
-        builder.Property(e => e.Location)
-            .HasMaxLength(200);
+        builder.Property(e => e.Location).HasMaxLength(200);
 
-        builder.Property(e => e.Token)
-            .IsRequired()
-            .HasMaxLength(32);
+        builder.Property(e => e.Token).IsRequired().HasMaxLength(32);
 
-        builder.HasIndex(e => e.Token)
-            .IsUnique();
+        builder.HasIndex(e => e.Token).IsUnique();
 
-        builder.Property(e => e.CreatedAt)
-            .HasDefaultValueSql("now()");
+        builder.Property(e => e.CreatedAt).HasDefaultValueSql("now()");
 
-        builder.HasOne(e => e.Organizer)
+        builder
+            .HasOne(e => e.Organizer)
             .WithMany()
             .HasForeignKey(e => e.OrganizerId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasMany(e => e.DateOptions)
+        builder
+            .HasMany(e => e.DateOptions)
             .WithOne(d => d.Event)
             .HasForeignKey(d => d.EventId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasMany(e => e.Items)
+        builder
+            .HasMany(e => e.Items)
             .WithOne(i => i.Event)
             .HasForeignKey(i => i.EventId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasMany(e => e.Participants)
+        builder
+            .HasMany(e => e.Participants)
             .WithOne(p => p.Event)
             .HasForeignKey(p => p.EventId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(e => e.ChosenDateOption)
+        builder
+            .HasOne(e => e.ChosenDateOption)
             .WithMany()
             .HasForeignKey(e => e.ChosenDateOptionId)
             .OnDelete(DeleteBehavior.NoAction);

@@ -10,14 +10,12 @@ public class ItemClaimConfiguration : IEntityTypeConfiguration<ItemClaim>
     {
         builder.HasKey(c => c.Id);
 
-        builder.Property(c => c.ClaimedAt)
-            .HasDefaultValueSql("now()");
+        builder.Property(c => c.ClaimedAt).HasDefaultValueSql("now()");
 
-        builder.HasIndex(c => c.EventItemId)
-            .IsUnique()
-            .HasDatabaseName("IX_ItemClaims_EventItem");
+        builder.HasIndex(c => c.EventItemId).IsUnique().HasDatabaseName("IX_ItemClaims_EventItem");
 
-        builder.HasOne(c => c.EventItem)
+        builder
+            .HasOne(c => c.EventItem)
             .WithOne(i => i.Claim)
             .HasForeignKey<ItemClaim>(c => c.EventItemId)
             .OnDelete(DeleteBehavior.Cascade);

@@ -7,8 +7,6 @@ public class SetAttendanceValidator : AbstractValidator<SetAttendanceRequest>
 {
     public SetAttendanceValidator()
     {
-        RuleFor(x => x.Status)
-            .IsInEnum()
-            .NotEqual(AttendanceStatus.Invalid);
+        RuleFor(x => x.Status).IsInEnum().NotEqual(AttendanceStatus.Invalid);
     }
 }

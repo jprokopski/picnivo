@@ -6,8 +6,6 @@ public class AddItemValidator : AbstractValidator<AddItemRequest>
 {
     public AddItemValidator()
     {
-        RuleFor(x => x.Label)
-            .NotEmpty()
-            .MaximumLength(200);
+        RuleFor(x => x.Label).NotEmpty().MaximumLength(200);
     }
 }

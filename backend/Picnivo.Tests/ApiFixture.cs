@@ -1,3 +1,4 @@
+using System.Threading.Channels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -6,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using Picnivo.API.Data;
 using Picnivo.Tests.Client;
-using System.Threading.Channels;
 using Testcontainers.PostgreSql;
 
 namespace Picnivo.Tests;
@@ -18,15 +18,20 @@ public class ApiFixture : IAsyncLifetime
 {
     private const int PoolSize = 10;
 
-    private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder("postgres:16-alpine").Build();
-    private readonly Channel<PooledDatabase> _pool = Channel.CreateBounded<PooledDatabase>(PoolSize);
+    private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder(
+        "postgres:16-alpine"
+    ).Build();
+    private readonly Channel<PooledDatabase> _pool = Channel.CreateBounded<PooledDatabase>(
+        PoolSize
+    );
 
     public async Task InitializeAsync()
     {
         await _postgres.StartAsync();
 
         var databases = await Task.WhenAll(
-            Enumerable.Range(0, PoolSize).Select(_ => CreateDatabaseAsync()));
+            Enumerable.Range(0, PoolSize).Select(_ => CreateDatabaseAsync())
+        );
 
         foreach (var db in databases)
             await _pool.Writer.WriteAsync(db);
@@ -45,7 +50,10 @@ public class ApiFixture : IAsyncLifetime
             await cmd.ExecuteNonQueryAsync();
         }
 
-        var testConnStr = new NpgsqlConnectionStringBuilder(masterConnStr) { Database = dbName }.ConnectionString;
+        var testConnStr = new NpgsqlConnectionStringBuilder(masterConnStr)
+        {
+            Database = dbName,
+        }.ConnectionString;
 
         await using var setupConn = new NpgsqlConnection(testConnStr);
         await setupConn.OpenAsync();
@@ -71,7 +79,8 @@ public class ApiFixture : IAsyncLifetime
         // Drop the auth.users FK so tests can insert Organizers directly without auth.users rows.
         await using (var cmd = setupConn.CreateCommand())
         {
-            cmd.CommandText = """ALTER TABLE "Organizers" DROP CONSTRAINT IF EXISTS fk_organizers_auth_users""";
+            cmd.CommandText =
+                """ALTER TABLE "Organizers" DROP CONSTRAINT IF EXISTS fk_organizers_auth_users""";
             await cmd.ExecuteNonQueryAsync();
         }
 
@@ -103,7 +112,8 @@ internal sealed class PooledDatabase(
     CustomWebApplicationFactory factory,
     string masterConnStr,
     string testConnStr,
-    string dbName)
+    string dbName
+)
 {
     public HttpClient Client { get; } = factory.CreateClient();
     public PicnivoApiClient ApiClient { get; } = new(factory.CreateClient());
@@ -162,16 +172,20 @@ public class CustomWebApplicationFactory(string connectionString) : WebApplicati
     {
         builder.ConfigureServices(services =>
         {
-            var descriptor = services.SingleOrDefault(
-                d => d.ServiceType == typeof(DbContextOptions<PicnivoDbContext>));
+            var descriptor = services.SingleOrDefault(d =>
+                d.ServiceType == typeof(DbContextOptions<PicnivoDbContext>)
+            );
             if (descriptor is not null)
                 services.Remove(descriptor);
 
-            services.AddDbContext<PicnivoDbContext>(options =>
-                options.UseNpgsql(connectionString));
+            services.AddDbContext<PicnivoDbContext>(options => options.UseNpgsql(connectionString));
 
-            services.AddAuthentication(TestAuthHandler.SchemeName)
-                .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(TestAuthHandler.SchemeName, _ => { });
+            services
+                .AddAuthentication(TestAuthHandler.SchemeName)
+                .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
+                    TestAuthHandler.SchemeName,
+                    _ => { }
+                );
         });
     }
 }

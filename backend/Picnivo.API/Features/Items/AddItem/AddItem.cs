@@ -12,10 +12,11 @@ public static class AddItem
         string token,
         AddItemRequest req,
         PicnivoDbContext db,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
-        var @event = await db.Events
-            .Where(e => e.Token == token)
+        var @event = await db
+            .Events.Where(e => e.Token == token)
             .Select(e => new { e.Id })
             .FirstOrDefaultAsync(ct);
 
@@ -24,8 +25,10 @@ public static class AddItem
             return Results.NotFound();
         }
 
-        var participantBelongs = await db.Participants
-            .AnyAsync(p => p.Id == req.ParticipantId && p.EventId == @event.Id, ct);
+        var participantBelongs = await db.Participants.AnyAsync(
+            p => p.Id == req.ParticipantId && p.EventId == @event.Id,
+            ct
+        );
 
         if (!participantBelongs)
         {
@@ -40,8 +43,10 @@ public static class AddItem
             return Results.BadRequest();
         }
 
-        var duplicate = await db.EventItems
-            .AnyAsync(i => i.EventId == @event.Id && i.Label.ToLower() == label.ToLower(), ct);
+        var duplicate = await db.EventItems.AnyAsync(
+            i => i.EventId == @event.Id && i.Label.ToLower() == label.ToLower(),
+            ct
+        );
 
         if (duplicate)
         {
@@ -53,12 +58,15 @@ public static class AddItem
             Id = Guid.CreateVersion7(),
             EventId = @event.Id,
             Label = label,
-            AddedByParticipantId = req.ParticipantId
+            AddedByParticipantId = req.ParticipantId,
         };
 
         db.EventItems.Add(item);
         await db.SaveChangesAsync(ct);
 
-        return Results.Created($"/api/events/{token}/items/{item.Id}", new AddItemResponse(item.Id));
+        return Results.Created(
+            $"/api/events/{token}/items/{item.Id}",
+            new AddItemResponse(item.Id)
+        );
     }
 }

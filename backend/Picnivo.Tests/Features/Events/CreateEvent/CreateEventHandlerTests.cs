@@ -1,10 +1,10 @@
 using System.Security.Claims;
-using CreateEventHandler = Picnivo.API.Features.Events.CreateEvent.CreateEvent;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
 using Picnivo.API.Features.Events.CreateEvent;
+using CreateEventHandler = Picnivo.API.Features.Events.CreateEvent.CreateEvent;
 
 namespace Picnivo.Tests.Features.Events.CreateEvent;
 
@@ -21,7 +21,8 @@ public class CreateEventHandlerTests
             Description: null,
             Location: null,
             DateOptions: [DateTimeOffset.UtcNow.AddDays(7), DateTimeOffset.UtcNow.AddDays(8)],
-            Items: ["Sandwiches", "Drinks"]);
+            Items: ["Sandwiches", "Drinks"]
+        );
 
         // Act
         await CreateEventHandler.Handle(req, UserWith(organizerId), db, CancellationToken.None);
@@ -44,7 +45,8 @@ public class CreateEventHandlerTests
             Description: null,
             Location: null,
             DateOptions: [DateTimeOffset.UtcNow.AddDays(7)],
-            Items: []);
+            Items: []
+        );
 
         // Act
         await CreateEventHandler.Handle(req, UserWith(organizerId), db, CancellationToken.None);
@@ -66,10 +68,16 @@ public class CreateEventHandlerTests
             Description: null,
             Location: null,
             DateOptions: [DateTimeOffset.UtcNow.AddDays(7)],
-            Items: []);
+            Items: []
+        );
 
         // Act
-        var result = await CreateEventHandler.Handle(req, UserWith(Guid.NewGuid()), db, CancellationToken.None);
+        var result = await CreateEventHandler.Handle(
+            req,
+            UserWith(Guid.NewGuid()),
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<UnauthorizedHttpResult>();
@@ -88,7 +96,8 @@ public class CreateEventHandlerTests
             Description: null,
             Location: null,
             DateOptions: [DateTimeOffset.UtcNow.AddDays(7)],
-            Items: []);
+            Items: []
+        );
 
         // Act
         for (var i = 0; i < 5; i++)
@@ -109,12 +118,14 @@ public class CreateEventHandlerTests
     private static async Task<PicnivoDbContext> SeedDbAsync(Guid organizerId)
     {
         var db = TestDb.Create();
-        db.Organizers.Add(new Organizer
-        {
-            Id = organizerId,
-            DisplayName = "Test Organizer",
-            CreatedAt = DateTimeOffset.UtcNow
-        });
+        db.Organizers.Add(
+            new Organizer
+            {
+                Id = organizerId,
+                DisplayName = "Test Organizer",
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
         await db.SaveChangesAsync();
         db.ChangeTracker.Clear();
         return db;

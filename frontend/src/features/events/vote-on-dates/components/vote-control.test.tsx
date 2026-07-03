@@ -5,6 +5,7 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from "@testing-library/react";
 import { I18nProvider } from "@lingui/react";
 import { i18n } from "../../../../lib/i18n";
@@ -30,13 +31,19 @@ function Wrapper({ children }: { children: React.ReactNode }) {
   return <I18nProvider i18n={i18n}>{children}</I18nProvider>;
 }
 
-function mockMatchMedia(matches: boolean) {
-  window.matchMedia = vi.fn().mockImplementation((query: string) => ({
-    matches,
-    media: query,
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-  })) as unknown as typeof window.matchMedia;
+// The wide (desktop) and narrow (mobile) variants both render in the DOM;
+// which one is visible is decided by CSS media queries, not React state, so
+// jsdom always exposes both. Grab the wide one by its distinguishing class.
+function getWideGroup() {
+  return screen
+    .getAllByRole("group", { name: "Vote" })
+    .find((group) => group.className.includes("max-[720px]:hidden"))!;
+}
+
+function getNarrowGroup() {
+  return screen
+    .getAllByRole("group", { name: "Vote" })
+    .find((group) => group.className.includes("max-[720px]:flex"))!;
 }
 
 afterEach(() => {
@@ -47,35 +54,34 @@ beforeEach(() => {
   vi.mocked(castVotesFn).mockReset().mockResolvedValue({ error: null });
   vi.mocked(toast.error).mockClear();
   invalidate.mockClear();
-  mockMatchMedia(false);
 });
 
 describe("VoteControl", () => {
-  it("renders the reaction control for each vote choice", () => {
+  it("renders both the desktop and mobile variants for each vote choice", () => {
     render(
       <Wrapper>
         <VoteControl token="tok1" dateOptionId="d1" />
       </Wrapper>,
     );
 
-    expect(screen.getByRole("button", { name: "Yes" })).toBeDefined();
-    expect(screen.getByRole("button", { name: "Maybe" })).toBeDefined();
-    expect(screen.getByRole("button", { name: "No" })).toBeDefined();
+    expect(screen.getAllByRole("button", { name: "Yes" })).toHaveLength(2);
+    expect(screen.getAllByRole("button", { name: "Maybe" })).toHaveLength(2);
+    expect(screen.getAllByRole("button", { name: "No" })).toHaveLength(2);
   });
 
-  it("pre-selects the current vote", () => {
+  it("pre-selects the current vote in both variants", () => {
     render(
       <Wrapper>
         <VoteControl token="tok1" dateOptionId="d1" value="yes" />
       </Wrapper>,
     );
 
-    expect(
-      screen.getByRole("button", { name: "Yes" }).getAttribute("aria-pressed"),
-    ).toBe("true");
-    expect(
-      screen.getByRole("button", { name: "No" }).getAttribute("aria-pressed"),
-    ).toBe("false");
+    for (const button of screen.getAllByRole("button", { name: "Yes" })) {
+      expect(button.getAttribute("aria-pressed")).toBe("true");
+    }
+    for (const button of screen.getAllByRole("button", { name: "No" })) {
+      expect(button.getAttribute("aria-pressed")).toBe("false");
+    }
   });
 
   it("calls castVotesFn and invalidates the router on change", async () => {
@@ -85,7 +91,9 @@ describe("VoteControl", () => {
       </Wrapper>,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Yes" }));
+    fireEvent.click(
+      within(getWideGroup()).getByRole("button", { name: "Yes" }),
+    );
 
     await waitFor(() => {
       expect(castVotesFn).toHaveBeenCalledWith({
@@ -107,7 +115,9 @@ describe("VoteControl", () => {
       </Wrapper>,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Yes" }));
+    fireEvent.click(
+      within(getWideGroup()).getByRole("button", { name: "Yes" }),
+    );
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith("Join the event before voting.");
@@ -122,20 +132,25 @@ describe("VoteControl", () => {
       </Wrapper>,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Yes" }));
+    fireEvent.click(
+      within(getWideGroup()).getByRole("button", { name: "Yes" }),
+    );
 
     expect(castVotesFn).not.toHaveBeenCalled();
   });
 
-  it("renders the narrow segmented fallback under the mobile breakpoint", () => {
-    mockMatchMedia(true);
+  it("hides the mobile segmented fallback by default, showing it only under the mobile breakpoint", () => {
     render(
       <Wrapper>
         <VoteControl token="tok1" dateOptionId="d1" />
       </Wrapper>,
     );
 
-    const group = screen.getByRole("group", { name: "Vote" });
-    expect(group.className).toContain("w-full");
+    const narrowGroup = getNarrowGroup();
+    expect(narrowGroup.className).toContain("hidden");
+    expect(narrowGroup.className).toContain("max-[720px]:flex");
+
+    const wideGroup = getWideGroup();
+    expect(wideGroup.className).toContain("max-[720px]:hidden");
   });
 });

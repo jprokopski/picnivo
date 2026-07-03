@@ -12,10 +12,11 @@ public static class RemoveItem
         Guid? participantId,
         ClaimsPrincipal user,
         PicnivoDbContext db,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
-        var @event = await db.Events
-            .Where(e => e.Token == token)
+        var @event = await db
+            .Events.Where(e => e.Token == token)
             .Select(e => new { e.Id, e.OrganizerId })
             .FirstOrDefaultAsync(ct);
 
@@ -24,15 +25,18 @@ public static class RemoveItem
             return Results.NotFound();
         }
 
-        var item = await db.EventItems
-            .FirstOrDefaultAsync(i => i.Id == itemId && i.EventId == @event.Id, ct);
+        var item = await db.EventItems.FirstOrDefaultAsync(
+            i => i.Id == itemId && i.EventId == @event.Id,
+            ct
+        );
 
         if (item is null)
         {
             return Results.NotFound();
         }
 
-        var isOrganizer = Guid.TryParse(user.FindFirstValue("sub"), out var organizerId)
+        var isOrganizer =
+            Guid.TryParse(user.FindFirstValue("sub"), out var organizerId)
             && organizerId == @event.OrganizerId;
         var isAdder = participantId is { } pid && item.AddedByParticipantId == pid;
 

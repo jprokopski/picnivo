@@ -1,9 +1,9 @@
 using System.Security.Claims;
-using RemoveItemHandler = Picnivo.API.Features.Items.RemoveItem.RemoveItem;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
+using RemoveItemHandler = Picnivo.API.Features.Items.RemoveItem.RemoveItem;
 
 namespace Picnivo.Tests.Features.Items.RemoveItem;
 
@@ -18,7 +18,13 @@ public class RemoveItemHandlerTests
 
         // Act
         var result = await RemoveItemHandler.Handle(
-            token, itemId, participantId, AnonymousUser(), db, CancellationToken.None);
+            token,
+            itemId,
+            participantId,
+            AnonymousUser(),
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<NoContent>();
@@ -34,7 +40,13 @@ public class RemoveItemHandlerTests
 
         // Act
         var result = await RemoveItemHandler.Handle(
-            token, itemId, null, UserWith(organizerId), db, CancellationToken.None);
+            token,
+            itemId,
+            null,
+            UserWith(organizerId),
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<NoContent>();
@@ -50,7 +62,13 @@ public class RemoveItemHandlerTests
 
         // Act
         var result = await RemoveItemHandler.Handle(
-            token, itemId, Guid.NewGuid(), AnonymousUser(), db, CancellationToken.None);
+            token,
+            itemId,
+            Guid.NewGuid(),
+            AnonymousUser(),
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<StatusCodeHttpResult>().StatusCode.ShouldBe(403);
@@ -62,19 +80,27 @@ public class RemoveItemHandlerTests
         // Arrange
         await using var db = TestDb.Create();
         var (token, itemId, participantId, _) = await SeedEventAsync(db);
-        db.ItemClaims.Add(new ItemClaim
-        {
-            Id = Guid.CreateVersion7(),
-            EventItemId = itemId,
-            ParticipantId = participantId,
-            ClaimedAt = DateTimeOffset.UtcNow
-        });
+        db.ItemClaims.Add(
+            new ItemClaim
+            {
+                Id = Guid.CreateVersion7(),
+                EventItemId = itemId,
+                ParticipantId = participantId,
+                ClaimedAt = DateTimeOffset.UtcNow,
+            }
+        );
         await db.SaveChangesAsync();
         db.ChangeTracker.Clear();
 
         // Act
         var result = await RemoveItemHandler.Handle(
-            token, itemId, participantId, AnonymousUser(), db, CancellationToken.None);
+            token,
+            itemId,
+            participantId,
+            AnonymousUser(),
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<NoContent>();
@@ -86,21 +112,37 @@ public class RemoveItemHandlerTests
     private static ClaimsPrincipal UserWith(Guid organizerId) =>
         new(new ClaimsIdentity([new Claim("sub", organizerId.ToString())]));
 
-    private static async Task<(string Token, Guid ItemId, Guid ParticipantId, Guid OrganizerId)> SeedEventAsync(
-        PicnivoDbContext db, string token = "testtoken01")
+    private static async Task<(
+        string Token,
+        Guid ItemId,
+        Guid ParticipantId,
+        Guid OrganizerId
+    )> SeedEventAsync(PicnivoDbContext db, string token = "testtoken01")
     {
         var organizerId = Guid.NewGuid();
-        db.Organizers.Add(new Organizer { Id = organizerId, DisplayName = "Organizer", CreatedAt = DateTimeOffset.UtcNow });
+        db.Organizers.Add(
+            new Organizer
+            {
+                Id = organizerId,
+                DisplayName = "Organizer",
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
 
         var participant = new Participant
         {
             Id = Guid.CreateVersion7(),
             DisplayName = "Alice",
             Attendance = AttendanceStatus.Coming,
-            CreatedAt = DateTimeOffset.UtcNow
+            CreatedAt = DateTimeOffset.UtcNow,
         };
 
-        var item = new EventItem { Id = Guid.CreateVersion7(), Label = "Sandwiches", AddedByParticipant = participant };
+        var item = new EventItem
+        {
+            Id = Guid.CreateVersion7(),
+            Label = "Sandwiches",
+            AddedByParticipant = participant,
+        };
 
         var @event = new Event
         {
@@ -109,9 +151,16 @@ public class RemoveItemHandlerTests
             Title = "Test Picnic",
             Token = token,
             CreatedAt = DateTimeOffset.UtcNow,
-            DateOptions = [new DateOption { Id = Guid.CreateVersion7(), StartsAt = DateTimeOffset.UtcNow.AddDays(7) }],
+            DateOptions =
+            [
+                new DateOption
+                {
+                    Id = Guid.CreateVersion7(),
+                    StartsAt = DateTimeOffset.UtcNow.AddDays(7),
+                },
+            ],
             Items = [item],
-            Participants = [participant]
+            Participants = [participant],
         };
         db.Events.Add(@event);
 

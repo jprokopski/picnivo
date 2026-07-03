@@ -16,8 +16,9 @@ public class ClaimItemEndpointTests(ApiFixture fixture)
         await using var ctx = await fixture.CheckOutAsync();
 
         // Act
-        var ex = await Should.ThrowAsync<ApiException>(
-            () => ctx.ApiClient.ClaimItemAsync("unknowntokenxyz", Guid.NewGuid(), Guid.NewGuid()));
+        var ex = await Should.ThrowAsync<ApiException>(() =>
+            ctx.ApiClient.ClaimItemAsync("unknowntokenxyz", Guid.NewGuid(), Guid.NewGuid())
+        );
 
         // Assert
         ex.StatusCode.ShouldBe(404);
@@ -28,12 +29,15 @@ public class ClaimItemEndpointTests(ApiFixture fixture)
     {
         // Arrange
         await using var ctx = await fixture.CheckOutAsync();
-        var (token, itemId, aliceId, bobId) = await SeedEventWithTwoComingParticipantsAsync(ctx.Services);
+        var (token, itemId, aliceId, bobId) = await SeedEventWithTwoComingParticipantsAsync(
+            ctx.Services
+        );
 
         // Act
         var results = await Task.WhenAll(
             SafeClaimAsync(ctx.ApiClient, token, itemId, aliceId),
-            SafeClaimAsync(ctx.ApiClient, token, itemId, bobId));
+            SafeClaimAsync(ctx.ApiClient, token, itemId, bobId)
+        );
 
         // Assert
         results.Count(r => r == 204).ShouldBe(1);
@@ -49,7 +53,9 @@ public class ClaimItemEndpointTests(ApiFixture fixture)
     {
         // Arrange
         await using var ctx = await fixture.CheckOutAsync();
-        var (token, itemId, aliceId, _) = await SeedEventWithTwoComingParticipantsAsync(ctx.Services);
+        var (token, itemId, aliceId, _) = await SeedEventWithTwoComingParticipantsAsync(
+            ctx.Services
+        );
         await ctx.ApiClient.ClaimItemAsync(token, itemId, aliceId);
 
         // Act
@@ -61,7 +67,12 @@ public class ClaimItemEndpointTests(ApiFixture fixture)
         (await db.ItemClaims.AnyAsync(c => c.EventItemId == itemId)).ShouldBeFalse();
     }
 
-    private static async Task<int> SafeClaimAsync(PicnivoApiClient client, string token, Guid itemId, Guid participantId)
+    private static async Task<int> SafeClaimAsync(
+        PicnivoApiClient client,
+        string token,
+        Guid itemId,
+        Guid participantId
+    )
     {
         try
         {
@@ -74,13 +85,27 @@ public class ClaimItemEndpointTests(ApiFixture fixture)
         }
     }
 
-    private static async Task<(string Token, Guid ItemId, Guid AliceId, Guid BobId)> SeedEventWithTwoComingParticipantsAsync(
-        IServiceProvider services, string token = "testtoken01")
+    private static async Task<(
+        string Token,
+        Guid ItemId,
+        Guid AliceId,
+        Guid BobId
+    )> SeedEventWithTwoComingParticipantsAsync(
+        IServiceProvider services,
+        string token = "testtoken01"
+    )
     {
         using var scope = services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<PicnivoDbContext>();
         var organizerId = Guid.NewGuid();
-        db.Organizers.Add(new Organizer { Id = organizerId, DisplayName = "Organizer", CreatedAt = DateTimeOffset.UtcNow });
+        db.Organizers.Add(
+            new Organizer
+            {
+                Id = organizerId,
+                DisplayName = "Organizer",
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
 
         var item = new EventItem { Id = Guid.CreateVersion7(), Label = "Sandwiches" };
         var @event = new Event
@@ -90,8 +115,15 @@ public class ClaimItemEndpointTests(ApiFixture fixture)
             Title = "Test Picnic",
             Token = token,
             CreatedAt = DateTimeOffset.UtcNow,
-            DateOptions = [new DateOption { Id = Guid.CreateVersion7(), StartsAt = DateTimeOffset.UtcNow.AddDays(7) }],
-            Items = [item]
+            DateOptions =
+            [
+                new DateOption
+                {
+                    Id = Guid.CreateVersion7(),
+                    StartsAt = DateTimeOffset.UtcNow.AddDays(7),
+                },
+            ],
+            Items = [item],
         };
         db.Events.Add(@event);
 
@@ -101,7 +133,7 @@ public class ClaimItemEndpointTests(ApiFixture fixture)
             EventId = @event.Id,
             DisplayName = "Alice",
             Attendance = AttendanceStatus.Coming,
-            CreatedAt = DateTimeOffset.UtcNow
+            CreatedAt = DateTimeOffset.UtcNow,
         };
         var bob = new Participant
         {
@@ -109,7 +141,7 @@ public class ClaimItemEndpointTests(ApiFixture fixture)
             EventId = @event.Id,
             DisplayName = "Bob",
             Attendance = AttendanceStatus.Coming,
-            CreatedAt = DateTimeOffset.UtcNow
+            CreatedAt = DateTimeOffset.UtcNow,
         };
         db.Participants.AddRange(alice, bob);
 

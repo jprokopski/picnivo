@@ -1,9 +1,9 @@
-using SetAttendanceHandler = Picnivo.API.Features.Participants.SetAttendance.SetAttendance;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
 using Picnivo.API.Features.Participants.SetAttendance;
+using SetAttendanceHandler = Picnivo.API.Features.Participants.SetAttendance.SetAttendance;
 
 namespace Picnivo.Tests.Features.Participants.SetAttendance;
 
@@ -18,7 +18,12 @@ public class SetAttendanceHandlerTests
 
         // Act
         var result = await SetAttendanceHandler.Handle(
-            token, participantId, new SetAttendanceRequest(AttendanceStatus.Coming), db, CancellationToken.None);
+            token,
+            participantId,
+            new SetAttendanceRequest(AttendanceStatus.Coming),
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<NoContent>();
@@ -32,19 +37,26 @@ public class SetAttendanceHandlerTests
         // Arrange
         await using var db = TestDb.Create();
         var (token, participantId, itemId) = await SeedEventWithParticipantAsync(db);
-        db.ItemClaims.Add(new ItemClaim
-        {
-            Id = Guid.CreateVersion7(),
-            EventItemId = itemId,
-            ParticipantId = participantId,
-            ClaimedAt = DateTimeOffset.UtcNow
-        });
+        db.ItemClaims.Add(
+            new ItemClaim
+            {
+                Id = Guid.CreateVersion7(),
+                EventItemId = itemId,
+                ParticipantId = participantId,
+                ClaimedAt = DateTimeOffset.UtcNow,
+            }
+        );
         await db.SaveChangesAsync();
         db.ChangeTracker.Clear();
 
         // Act
         var result = await SetAttendanceHandler.Handle(
-            token, participantId, new SetAttendanceRequest(AttendanceStatus.Out), db, CancellationToken.None);
+            token,
+            participantId,
+            new SetAttendanceRequest(AttendanceStatus.Out),
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<NoContent>();
@@ -64,7 +76,12 @@ public class SetAttendanceHandlerTests
 
         // Act
         var result = await SetAttendanceHandler.Handle(
-            token, participantId, new SetAttendanceRequest(AttendanceStatus.Out), db, CancellationToken.None);
+            token,
+            participantId,
+            new SetAttendanceRequest(AttendanceStatus.Out),
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<NoContent>();
@@ -81,7 +98,12 @@ public class SetAttendanceHandlerTests
 
         // Act
         var result = await SetAttendanceHandler.Handle(
-            token, Guid.NewGuid(), new SetAttendanceRequest(AttendanceStatus.Coming), db, CancellationToken.None);
+            token,
+            Guid.NewGuid(),
+            new SetAttendanceRequest(AttendanceStatus.Coming),
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<NotFound>();
@@ -95,17 +117,32 @@ public class SetAttendanceHandlerTests
 
         // Act
         var result = await SetAttendanceHandler.Handle(
-            "unknowntoken", Guid.NewGuid(), new SetAttendanceRequest(AttendanceStatus.Coming), db, CancellationToken.None);
+            "unknowntoken",
+            Guid.NewGuid(),
+            new SetAttendanceRequest(AttendanceStatus.Coming),
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<NotFound>();
     }
 
-    private static async Task<(string Token, Guid ParticipantId, Guid ItemId)> SeedEventWithParticipantAsync(
-        PicnivoDbContext db, string token = "testtoken01")
+    private static async Task<(
+        string Token,
+        Guid ParticipantId,
+        Guid ItemId
+    )> SeedEventWithParticipantAsync(PicnivoDbContext db, string token = "testtoken01")
     {
         var organizerId = Guid.NewGuid();
-        db.Organizers.Add(new Organizer { Id = organizerId, DisplayName = "Organizer", CreatedAt = DateTimeOffset.UtcNow });
+        db.Organizers.Add(
+            new Organizer
+            {
+                Id = organizerId,
+                DisplayName = "Organizer",
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
 
         var item = new EventItem { Id = Guid.CreateVersion7(), Label = "Sandwiches" };
         var @event = new Event
@@ -115,8 +152,15 @@ public class SetAttendanceHandlerTests
             Title = "Test Picnic",
             Token = token,
             CreatedAt = DateTimeOffset.UtcNow,
-            DateOptions = [new DateOption { Id = Guid.CreateVersion7(), StartsAt = DateTimeOffset.UtcNow.AddDays(7) }],
-            Items = [item]
+            DateOptions =
+            [
+                new DateOption
+                {
+                    Id = Guid.CreateVersion7(),
+                    StartsAt = DateTimeOffset.UtcNow.AddDays(7),
+                },
+            ],
+            Items = [item],
         };
         db.Events.Add(@event);
 
@@ -126,7 +170,7 @@ public class SetAttendanceHandlerTests
             EventId = @event.Id,
             DisplayName = "Alice",
             Attendance = AttendanceStatus.Undecided,
-            CreatedAt = DateTimeOffset.UtcNow
+            CreatedAt = DateTimeOffset.UtcNow,
         };
         db.Participants.Add(participant);
 

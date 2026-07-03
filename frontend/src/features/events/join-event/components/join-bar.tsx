@@ -77,7 +77,7 @@ export function JoinBar({ eventToken, participantNames }: JoinBarProps) {
         </p>
       )}
       {error && (
-        <p role="alert" className="text-destructive w-full text-[13px]">
+        <p role="alert" className="w-full text-[13px] text-destructive">
           {error}
         </p>
       )}

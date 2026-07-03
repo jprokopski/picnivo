@@ -1,10 +1,10 @@
 using System.Security.Claims;
+using EntityFramework.Exceptions.PostgreSQL;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using EntityFramework.Exceptions.PostgreSQL;
 using Microsoft.EntityFrameworkCore;
-using Picnivo.API.Data;
 using Picnivo.API;
+using Picnivo.API.Data;
 using Picnivo.API.ExceptionHandling;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,7 +14,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddOpenApi();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddDbContext<PicnivoDbContext>(options =>
-    options.UseNpgsql(connectionString).UseExceptionProcessor());
+    options.UseNpgsql(connectionString).UseExceptionProcessor()
+);
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
@@ -30,14 +31,12 @@ builder.Services.AddCors(options =>
             origins.Add(frontendUrl);
         }
 
-        policy.WithOrigins(origins.ToArray())
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
+        policy.WithOrigins(origins.ToArray()).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
     });
 });
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder
+    .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.Authority = builder.Configuration["Supabase:Authority"];
@@ -66,8 +65,7 @@ app.UseAuthorization();
 
 app.MapGet("/healthz", () => Results.Ok("healthy"));
 
-app.MapGet("/api/me", (ClaimsPrincipal user) =>
-    Results.Ok(new { id = user.FindFirstValue("sub") }))
+app.MapGet("/api/me", (ClaimsPrincipal user) => Results.Ok(new { id = user.FindFirstValue("sub") }))
     .RequireAuthorization();
 
 app.MapEndpoints();

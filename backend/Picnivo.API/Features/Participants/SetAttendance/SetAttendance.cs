@@ -11,10 +11,11 @@ public static class SetAttendance
         Guid participantId,
         SetAttendanceRequest req,
         PicnivoDbContext db,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
-        var @event = await db.Events
-            .Where(e => e.Token == token)
+        var @event = await db
+            .Events.Where(e => e.Token == token)
             .Select(e => new { e.Id })
             .FirstOrDefaultAsync(ct);
 
@@ -23,8 +24,10 @@ public static class SetAttendance
             return Results.NotFound();
         }
 
-        var participant = await db.Participants
-            .FirstOrDefaultAsync(p => p.Id == participantId && p.EventId == @event.Id, ct);
+        var participant = await db.Participants.FirstOrDefaultAsync(
+            p => p.Id == participantId && p.EventId == @event.Id,
+            ct
+        );
 
         if (participant is null)
         {
@@ -35,16 +38,14 @@ public static class SetAttendance
 
         if (req.Status == AttendanceStatus.Out)
         {
-            var claims = await db.ItemClaims
-                .Where(c => c.ParticipantId == participantId)
+            var claims = await db
+                .ItemClaims.Where(c => c.ParticipantId == participantId)
                 .ToListAsync(ct);
 
             if (claims.Count > 0)
             {
                 var itemIds = claims.Select(c => c.EventItemId).ToList();
-                var items = await db.EventItems
-                    .Where(i => itemIds.Contains(i.Id))
-                    .ToListAsync(ct);
+                var items = await db.EventItems.Where(i => itemIds.Contains(i.Id)).ToListAsync(ct);
 
                 foreach (var item in items)
                 {

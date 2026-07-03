@@ -37,7 +37,7 @@ export function HaulGated({
         {items.map((item) => (
           <span
             key={item.id}
-            className="border-border bg-card text-foreground rounded-full border px-3.25 py-1.75 text-[13px] font-semibold wrap-break-word"
+            className="rounded-full border border-border bg-card px-3.25 py-1.75 text-[13px] font-semibold wrap-break-word text-foreground"
           >
             {item.label}
           </span>

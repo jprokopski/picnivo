@@ -22,6 +22,7 @@ public class Event
     /// effective chosen date even before the organizer explicitly locks one.
     /// </summary>
     public static Guid? ResolveEffectiveChosenDateOptionId(
-        Guid? chosenDateOptionId, IReadOnlyCollection<Guid> dateOptionIds) =>
-        chosenDateOptionId ?? (dateOptionIds.Count == 1 ? dateOptionIds.Single() : null);
+        Guid? chosenDateOptionId,
+        IReadOnlyCollection<Guid> dateOptionIds
+    ) => chosenDateOptionId ?? (dateOptionIds.Count == 1 ? dateOptionIds.Single() : null);
 }

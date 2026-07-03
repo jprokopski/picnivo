@@ -1,10 +1,10 @@
 using System.Security.Claims;
-using SelectFinalDateHandler = Picnivo.API.Features.Events.SelectFinalDate.SelectFinalDate;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
 using Picnivo.API.Features.Events.SelectFinalDate;
+using SelectFinalDateHandler = Picnivo.API.Features.Events.SelectFinalDate.SelectFinalDate;
 
 namespace Picnivo.Tests.Features.Events.SelectFinalDate;
 
@@ -19,7 +19,12 @@ public class SelectFinalDateHandlerTests
 
         // Act
         var result = await SelectFinalDateHandler.Handle(
-            token, new SelectFinalDateRequest(dateOptionIds[0]), UserWith(organizerId), db, CancellationToken.None);
+            token,
+            new SelectFinalDateRequest(dateOptionIds[0]),
+            UserWith(organizerId),
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<NoContent>();
@@ -36,7 +41,12 @@ public class SelectFinalDateHandlerTests
 
         // Act
         var result = await SelectFinalDateHandler.Handle(
-            token, new SelectFinalDateRequest(dateOptionIds[0]), UserWith(Guid.NewGuid()), db, CancellationToken.None);
+            token,
+            new SelectFinalDateRequest(dateOptionIds[0]),
+            UserWith(Guid.NewGuid()),
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<StatusCodeHttpResult>().StatusCode.ShouldBe(403);
@@ -51,7 +61,12 @@ public class SelectFinalDateHandlerTests
 
         // Act
         var result = await SelectFinalDateHandler.Handle(
-            token, new SelectFinalDateRequest(Guid.NewGuid()), UserWith(organizerId), db, CancellationToken.None);
+            token,
+            new SelectFinalDateRequest(Guid.NewGuid()),
+            UserWith(organizerId),
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<BadRequest>();
@@ -64,12 +79,22 @@ public class SelectFinalDateHandlerTests
         await using var db = TestDb.Create();
         var (token, eventId, organizerId, dateOptionIds) = await SeedEventAsync(db);
         await SelectFinalDateHandler.Handle(
-            token, new SelectFinalDateRequest(dateOptionIds[0]), UserWith(organizerId), db, CancellationToken.None);
+            token,
+            new SelectFinalDateRequest(dateOptionIds[0]),
+            UserWith(organizerId),
+            db,
+            CancellationToken.None
+        );
         db.ChangeTracker.Clear();
 
         // Act
         var result = await SelectFinalDateHandler.Handle(
-            token, new SelectFinalDateRequest(null), UserWith(organizerId), db, CancellationToken.None);
+            token,
+            new SelectFinalDateRequest(null),
+            UserWith(organizerId),
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<NoContent>();
@@ -80,16 +105,27 @@ public class SelectFinalDateHandlerTests
     private static ClaimsPrincipal UserWith(Guid organizerId) =>
         new(new ClaimsIdentity([new Claim("sub", organizerId.ToString())]));
 
-    private static async Task<(string Token, Guid EventId, Guid OrganizerId, List<Guid> DateOptionIds)> SeedEventAsync(
-        PicnivoDbContext db, string token = "testtoken01")
+    private static async Task<(
+        string Token,
+        Guid EventId,
+        Guid OrganizerId,
+        List<Guid> DateOptionIds
+    )> SeedEventAsync(PicnivoDbContext db, string token = "testtoken01")
     {
         var organizerId = Guid.NewGuid();
-        db.Organizers.Add(new Organizer { Id = organizerId, DisplayName = "Organizer", CreatedAt = DateTimeOffset.UtcNow });
+        db.Organizers.Add(
+            new Organizer
+            {
+                Id = organizerId,
+                DisplayName = "Organizer",
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
 
         var dateOptions = new List<DateOption>
         {
             new() { Id = Guid.CreateVersion7(), StartsAt = DateTimeOffset.UtcNow.AddDays(7) },
-            new() { Id = Guid.CreateVersion7(), StartsAt = DateTimeOffset.UtcNow.AddDays(8) }
+            new() { Id = Guid.CreateVersion7(), StartsAt = DateTimeOffset.UtcNow.AddDays(8) },
         };
 
         var @event = new Event
@@ -99,7 +135,7 @@ public class SelectFinalDateHandlerTests
             Title = "Test Picnic",
             Token = token,
             CreatedAt = DateTimeOffset.UtcNow,
-            DateOptions = dateOptions
+            DateOptions = dateOptions,
         };
         db.Events.Add(@event);
 

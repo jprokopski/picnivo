@@ -1,10 +1,10 @@
 using System.Security.Claims;
-using ListEventsHandler = Picnivo.API.Features.Events.ListEvents.ListEvents;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
 using Picnivo.API.Features.Events.ListEvents;
+using ListEventsHandler = Picnivo.API.Features.Events.ListEvents.ListEvents;
 
 namespace Picnivo.Tests.Features.Events.ListEvents;
 
@@ -18,8 +18,19 @@ public class ListEventsHandlerTests
         var orgA = Guid.NewGuid();
         var orgB = Guid.NewGuid();
         db.Organizers.AddRange(
-            new Organizer { Id = orgA, DisplayName = "A", CreatedAt = DateTimeOffset.UtcNow },
-            new Organizer { Id = orgB, DisplayName = "B", CreatedAt = DateTimeOffset.UtcNow });
+            new Organizer
+            {
+                Id = orgA,
+                DisplayName = "A",
+                CreatedAt = DateTimeOffset.UtcNow,
+            },
+            new Organizer
+            {
+                Id = orgB,
+                DisplayName = "B",
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
         await db.SaveChangesAsync();
         db.ChangeTracker.Clear();
         var tokenA = await SeedEventAsync(db, orgA, "A's picnic", token: "tokenorgA01");
@@ -40,10 +51,23 @@ public class ListEventsHandlerTests
         // Arrange
         await using var db = TestDb.Create();
         var orgId = Guid.NewGuid();
-        db.Organizers.Add(new Organizer { Id = orgId, DisplayName = "Test", CreatedAt = DateTimeOffset.UtcNow });
+        db.Organizers.Add(
+            new Organizer
+            {
+                Id = orgId,
+                DisplayName = "Test",
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
         await db.SaveChangesAsync();
         db.ChangeTracker.Clear();
-        var token = await SeedEventAsync(db, orgId, "Count Test", dateCount: 3, items: ["A", "B", "C", "D"]);
+        var token = await SeedEventAsync(
+            db,
+            orgId,
+            "Count Test",
+            dateCount: 3,
+            items: ["A", "B", "C", "D"]
+        );
 
         // Act
         var result = await ListEventsHandler.Handle(UserWith(orgId), db, CancellationToken.None);
@@ -62,11 +86,22 @@ public class ListEventsHandlerTests
         // Arrange
         await using var db = TestDb.Create();
         var orgId = Guid.NewGuid();
-        db.Organizers.Add(new Organizer { Id = orgId, DisplayName = "Test", CreatedAt = DateTimeOffset.UtcNow });
+        db.Organizers.Add(
+            new Organizer
+            {
+                Id = orgId,
+                DisplayName = "Test",
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
         await db.SaveChangesAsync();
         db.ChangeTracker.Clear();
 
-        var dateOptionA = new DateOption { Id = Guid.CreateVersion7(), StartsAt = DateTimeOffset.UtcNow.AddDays(8) };
+        var dateOptionA = new DateOption
+        {
+            Id = Guid.CreateVersion7(),
+            StartsAt = DateTimeOffset.UtcNow.AddDays(8),
+        };
         var itemA = new EventItem { Id = Guid.CreateVersion7(), Label = "Sandwiches" };
         var itemB = new EventItem { Id = Guid.CreateVersion7(), Label = "Drinks" };
         var @event = new Event
@@ -77,7 +112,7 @@ public class ListEventsHandlerTests
             Token = "dashboardtoken1",
             CreatedAt = DateTimeOffset.UtcNow,
             DateOptions = [dateOptionA],
-            Items = [itemA, itemB]
+            Items = [itemA, itemB],
         };
         db.Events.Add(@event);
         await db.SaveChangesAsync();
@@ -85,10 +120,30 @@ public class ListEventsHandlerTests
         await db.SaveChangesAsync();
         db.ChangeTracker.Clear();
 
-        var alice = new Participant { Id = Guid.CreateVersion7(), EventId = @event.Id, DisplayName = "Alice", CreatedAt = DateTimeOffset.UtcNow };
-        var bob = new Participant { Id = Guid.CreateVersion7(), EventId = @event.Id, DisplayName = "Bob", CreatedAt = DateTimeOffset.UtcNow.AddMinutes(1) };
+        var alice = new Participant
+        {
+            Id = Guid.CreateVersion7(),
+            EventId = @event.Id,
+            DisplayName = "Alice",
+            CreatedAt = DateTimeOffset.UtcNow,
+        };
+        var bob = new Participant
+        {
+            Id = Guid.CreateVersion7(),
+            EventId = @event.Id,
+            DisplayName = "Bob",
+            CreatedAt = DateTimeOffset.UtcNow.AddMinutes(1),
+        };
         db.Participants.AddRange(alice, bob);
-        db.ItemClaims.Add(new ItemClaim { Id = Guid.CreateVersion7(), EventItemId = itemA.Id, ParticipantId = alice.Id, ClaimedAt = DateTimeOffset.UtcNow });
+        db.ItemClaims.Add(
+            new ItemClaim
+            {
+                Id = Guid.CreateVersion7(),
+                EventItemId = itemA.Id,
+                ParticipantId = alice.Id,
+                ClaimedAt = DateTimeOffset.UtcNow,
+            }
+        );
         await db.SaveChangesAsync();
         db.ChangeTracker.Clear();
 
@@ -111,7 +166,14 @@ public class ListEventsHandlerTests
         // Arrange
         await using var db = TestDb.Create();
         var orgId = Guid.NewGuid();
-        db.Organizers.Add(new Organizer { Id = orgId, DisplayName = "Test", CreatedAt = DateTimeOffset.UtcNow });
+        db.Organizers.Add(
+            new Organizer
+            {
+                Id = orgId,
+                DisplayName = "Test",
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
         await db.SaveChangesAsync();
         db.ChangeTracker.Clear();
         var token = await SeedEventAsync(db, orgId, "Host Picnic");
@@ -152,20 +214,33 @@ public class ListEventsHandlerTests
         // Arrange
         await using var db = TestDb.Create();
         var orgId = Guid.NewGuid();
-        db.Organizers.Add(new Organizer { Id = orgId, DisplayName = "Test", CreatedAt = DateTimeOffset.UtcNow });
+        db.Organizers.Add(
+            new Organizer
+            {
+                Id = orgId,
+                DisplayName = "Test",
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
         await db.SaveChangesAsync();
         db.ChangeTracker.Clear();
 
-        var lone = new DateOption { Id = Guid.CreateVersion7(), StartsAt = DateTimeOffset.UtcNow.AddDays(3) };
-        db.Events.Add(new Event
+        var lone = new DateOption
         {
             Id = Guid.CreateVersion7(),
-            OrganizerId = orgId,
-            Title = "Announcement Picnic",
-            Token = "announcetoken1",
-            CreatedAt = DateTimeOffset.UtcNow,
-            DateOptions = [lone]
-        });
+            StartsAt = DateTimeOffset.UtcNow.AddDays(3),
+        };
+        db.Events.Add(
+            new Event
+            {
+                Id = Guid.CreateVersion7(),
+                OrganizerId = orgId,
+                Title = "Announcement Picnic",
+                Token = "announcetoken1",
+                CreatedAt = DateTimeOffset.UtcNow,
+                DateOptions = [lone],
+            }
+        );
         await db.SaveChangesAsync();
         db.ChangeTracker.Clear();
 
@@ -185,7 +260,14 @@ public class ListEventsHandlerTests
         // Arrange
         await using var db = TestDb.Create();
         var orgId = Guid.NewGuid();
-        db.Organizers.Add(new Organizer { Id = orgId, DisplayName = "Test", CreatedAt = DateTimeOffset.UtcNow });
+        db.Organizers.Add(
+            new Organizer
+            {
+                Id = orgId,
+                DisplayName = "Test",
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
         await db.SaveChangesAsync();
         db.ChangeTracker.Clear();
         var token = await SeedEventAsync(db, orgId, "Undecided Picnic", dateCount: 2);
@@ -209,22 +291,30 @@ public class ListEventsHandlerTests
         string title,
         int dateCount = 2,
         string[]? items = null,
-        string token = "testtoken01")
+        string token = "testtoken01"
+    )
     {
-        db.Events.Add(new Event
-        {
-            Id = Guid.CreateVersion7(),
-            OrganizerId = organizerId,
-            Title = title,
-            Token = token,
-            CreatedAt = DateTimeOffset.UtcNow,
-            DateOptions = Enumerable.Range(1, dateCount)
-                .Select(i => new DateOption { Id = Guid.CreateVersion7(), StartsAt = DateTimeOffset.UtcNow.AddDays(7 + i) })
-                .ToList(),
-            Items = (items ?? [])
-                .Select(l => new EventItem { Id = Guid.CreateVersion7(), Label = l })
-                .ToList()
-        });
+        db.Events.Add(
+            new Event
+            {
+                Id = Guid.CreateVersion7(),
+                OrganizerId = organizerId,
+                Title = title,
+                Token = token,
+                CreatedAt = DateTimeOffset.UtcNow,
+                DateOptions = Enumerable
+                    .Range(1, dateCount)
+                    .Select(i => new DateOption
+                    {
+                        Id = Guid.CreateVersion7(),
+                        StartsAt = DateTimeOffset.UtcNow.AddDays(7 + i),
+                    })
+                    .ToList(),
+                Items = (items ?? [])
+                    .Select(l => new EventItem { Id = Guid.CreateVersion7(), Label = l })
+                    .ToList(),
+            }
+        );
         await db.SaveChangesAsync();
         db.ChangeTracker.Clear();
         return token;

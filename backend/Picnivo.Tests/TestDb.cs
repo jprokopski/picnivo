@@ -14,7 +14,10 @@ internal static class TestDb
     {
         var conn = new SqliteConnection($"Data Source={Guid.NewGuid():N};Mode=Memory;Cache=Shared");
         conn.Open();
-        var opts = new DbContextOptionsBuilder<PicnivoDbContext>().UseSqlite(conn).UseExceptionProcessor().Options;
+        var opts = new DbContextOptionsBuilder<PicnivoDbContext>()
+            .UseSqlite(conn)
+            .UseExceptionProcessor()
+            .Options;
         var db = new SqlitePicnivoDbContext(opts, conn);
         db.Database.EnsureCreated();
         return db;
@@ -22,7 +25,8 @@ internal static class TestDb
 
     private sealed class SqlitePicnivoDbContext(
         DbContextOptions<PicnivoDbContext> opts,
-        SqliteConnection conn) : PicnivoDbContext(opts)
+        SqliteConnection conn
+    ) : PicnivoDbContext(opts)
     {
         protected override void OnModelCreating(ModelBuilder mb)
         {

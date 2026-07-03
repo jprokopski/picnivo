@@ -161,7 +161,7 @@ export function EventDetailView({
                 )
               }
               right={
-                <span className="border-border rounded-full border bg-(--card-2) px-2.75 py-0.75 text-[13px] font-semibold">
+                <span className="rounded-full border border-border bg-(--card-2) px-2.75 py-0.75 text-[13px] font-semibold">
                   <Trans>{event.participants.length} voted</Trans>
                 </span>
               }
@@ -191,7 +191,7 @@ export function EventDetailView({
             title={<Trans>Who brings what</Trans>}
             right={
               locked && (
-                <span className="border-border rounded-full border bg-(--card-2) px-2.75 py-0.75 text-[13px] font-semibold">
+                <span className="rounded-full border border-border bg-(--card-2) px-2.75 py-0.75 text-[13px] font-semibold">
                   <Trans>
                     {claimedCount}/{event.items.length} covered
                   </Trans>

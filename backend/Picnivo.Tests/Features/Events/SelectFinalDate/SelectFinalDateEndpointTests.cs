@@ -17,8 +17,12 @@ public class SelectFinalDateEndpointTests(ApiFixture fixture)
         var (token, _, dateOptionIds) = await SeedEventAsync(ctx.Services);
 
         // Act
-        var ex = await Should.ThrowAsync<ApiException>(() => ctx.ApiClient.SelectFinalDateAsync(
-            token, new SelectFinalDateRequest { DateOptionId = dateOptionIds[0] }));
+        var ex = await Should.ThrowAsync<ApiException>(() =>
+            ctx.ApiClient.SelectFinalDateAsync(
+                token,
+                new SelectFinalDateRequest { DateOptionId = dateOptionIds[0] }
+            )
+        );
 
         // Assert
         ex.StatusCode.ShouldBe(401);
@@ -32,8 +36,13 @@ public class SelectFinalDateEndpointTests(ApiFixture fixture)
         var (token, _, dateOptionIds) = await SeedEventAsync(ctx.Services);
 
         // Act
-        var ex = await Should.ThrowAsync<ApiException>(() => ctx.AuthedApiClient(Guid.NewGuid()).SelectFinalDateAsync(
-            token, new SelectFinalDateRequest { DateOptionId = dateOptionIds[0] }));
+        var ex = await Should.ThrowAsync<ApiException>(() =>
+            ctx.AuthedApiClient(Guid.NewGuid())
+                .SelectFinalDateAsync(
+                    token,
+                    new SelectFinalDateRequest { DateOptionId = dateOptionIds[0] }
+                )
+        );
 
         // Assert
         ex.StatusCode.ShouldBe(403);
@@ -47,8 +56,11 @@ public class SelectFinalDateEndpointTests(ApiFixture fixture)
         var (token, organizerId, dateOptionIds) = await SeedEventAsync(ctx.Services);
 
         // Act
-        await ctx.AuthedApiClient(organizerId).SelectFinalDateAsync(
-            token, new SelectFinalDateRequest { DateOptionId = dateOptionIds[0] });
+        await ctx.AuthedApiClient(organizerId)
+            .SelectFinalDateAsync(
+                token,
+                new SelectFinalDateRequest { DateOptionId = dateOptionIds[0] }
+            );
 
         // Assert
         using var scope = ctx.Services.CreateScope();
@@ -65,25 +77,40 @@ public class SelectFinalDateEndpointTests(ApiFixture fixture)
         var (token, organizerId, _) = await SeedEventAsync(ctx.Services);
 
         // Act
-        var ex = await Should.ThrowAsync<ApiException>(() => ctx.AuthedApiClient(organizerId).SelectFinalDateAsync(
-            token, new SelectFinalDateRequest { DateOptionId = Guid.NewGuid() }));
+        var ex = await Should.ThrowAsync<ApiException>(() =>
+            ctx.AuthedApiClient(organizerId)
+                .SelectFinalDateAsync(
+                    token,
+                    new SelectFinalDateRequest { DateOptionId = Guid.NewGuid() }
+                )
+        );
 
         // Assert
         ex.StatusCode.ShouldBe(400);
     }
 
-    private static async Task<(string Token, Guid OrganizerId, List<Guid> DateOptionIds)> SeedEventAsync(
-        IServiceProvider services, string token = "testtoken01")
+    private static async Task<(
+        string Token,
+        Guid OrganizerId,
+        List<Guid> DateOptionIds
+    )> SeedEventAsync(IServiceProvider services, string token = "testtoken01")
     {
         using var scope = services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<PicnivoDbContext>();
         var organizerId = Guid.NewGuid();
-        db.Organizers.Add(new Organizer { Id = organizerId, DisplayName = "Organizer", CreatedAt = DateTimeOffset.UtcNow });
+        db.Organizers.Add(
+            new Organizer
+            {
+                Id = organizerId,
+                DisplayName = "Organizer",
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
 
         var dateOptions = new List<DateOption>
         {
             new() { Id = Guid.CreateVersion7(), StartsAt = DateTimeOffset.UtcNow.AddDays(7) },
-            new() { Id = Guid.CreateVersion7(), StartsAt = DateTimeOffset.UtcNow.AddDays(8) }
+            new() { Id = Guid.CreateVersion7(), StartsAt = DateTimeOffset.UtcNow.AddDays(8) },
         };
         var @event = new Event
         {
@@ -92,7 +119,7 @@ public class SelectFinalDateEndpointTests(ApiFixture fixture)
             Title = "Test Picnic",
             Token = token,
             CreatedAt = DateTimeOffset.UtcNow,
-            DateOptions = dateOptions
+            DateOptions = dateOptions,
         };
         db.Events.Add(@event);
 

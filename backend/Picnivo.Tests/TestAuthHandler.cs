@@ -9,16 +9,18 @@ namespace Picnivo.Tests;
 public class TestAuthHandler(
     IOptionsMonitor<AuthenticationSchemeOptions> options,
     ILoggerFactory logger,
-    UrlEncoder encoder)
-    : AuthenticationHandler<AuthenticationSchemeOptions>(options, logger, encoder)
+    UrlEncoder encoder
+) : AuthenticationHandler<AuthenticationSchemeOptions>(options, logger, encoder)
 {
     public const string SchemeName = "TestScheme";
     public const string OrganizerIdHeader = "X-Test-Organizer-Id";
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        if (!Request.Headers.TryGetValue(OrganizerIdHeader, out var values)
-            || string.IsNullOrEmpty(values.FirstOrDefault()))
+        if (
+            !Request.Headers.TryGetValue(OrganizerIdHeader, out var values)
+            || string.IsNullOrEmpty(values.FirstOrDefault())
+        )
         {
             return Task.FromResult(AuthenticateResult.NoResult());
         }
