@@ -239,17 +239,17 @@ None — no schema change, no data migration. Existing events benefit immediatel
 
 #### Automated
 
-- [x] 2.1 Type check passes: `pnpm exec tsc --noEmit`
-- [x] 2.2 Lint passes: `pnpm lint`
-- [x] 2.3 Unit tests pass: `pnpm test`
-- [x] 2.4 New server-fn test covers cookie-hit / account-resolve / guest / 404 paths
+- [x] 2.1 Type check passes: `pnpm exec tsc --noEmit` — 7e507ad
+- [x] 2.2 Lint passes: `pnpm lint` — 7e507ad
+- [x] 2.3 Unit tests pass: `pnpm test` — 7e507ad
+- [x] 2.4 New server-fn test covers cookie-hit / account-resolve / guest / 404 paths — 7e507ad
 
 #### Manual
 
-- [x] 2.5 Repro fixed: device-B attendance card renders and RSVP submit succeeds
-- [x] 2.6 `pv_p_<token>` cookie present after first device-B load (votes/claims work)
-- [x] 2.7 Guest on a new device still sees no `you`/attendance card
-- [x] 2.8 Organizer with existing cookie sees no behavior change / no extra call
+- [x] 2.5 Repro fixed: device-B attendance card renders and RSVP submit succeeds — 7e507ad
+- [x] 2.6 `pv_p_<token>` cookie present after first device-B load (votes/claims work) — 7e507ad
+- [x] 2.7 Guest on a new device still sees no `you`/attendance card — 7e507ad
+- [x] 2.8 Organizer with existing cookie sees no behavior change / no extra call — 7e507ad
 
 ### Phase 3: Bundled fix — OAuth redirect threading
 
