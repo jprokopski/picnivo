@@ -42,17 +42,26 @@ public static class GetEventByToken
         }
 
         var dateOptionIds = raw.DateOptions.Select(d => d.Id).ToList();
-        var voteCounts = await db.DateVotes
+        var chosenDateOptionId = Event.ResolveEffectiveChosenDateOptionId(
+            raw.ChosenDateOptionId, dateOptionIds);
+        var allVotes = await db.DateVotes
             .Where(v => dateOptionIds.Contains(v.DateOptionId))
-            .GroupBy(v => new { v.DateOptionId, v.Choice })
-            .Select(g => new { g.Key.DateOptionId, g.Key.Choice, Count = g.Count() })
+            .Select(v => new { v.ParticipantId, v.DateOptionId, v.Choice })
             .ToListAsync(ct);
 
-        int CountFor(Guid dateOptionId, VoteChoice choice) =>
-            voteCounts
-                .Where(v => v.DateOptionId == dateOptionId && v.Choice == choice)
-                .Select(v => v.Count)
-                .FirstOrDefault();
+        var isAnnouncement = dateOptionIds.Count == 1;
+
+        int CountFor(Guid dateOptionId, VoteChoice choice)
+        {
+            var count = allVotes.Count(v => v.DateOptionId == dateOptionId && v.Choice == choice);
+            if (isAnnouncement && choice == VoteChoice.Yes)
+            {
+                // Single-date events are a de-facto announcement (FR-004): no vote UI is
+                // shown, so the organizer who set the date implicitly counts as attending.
+                count++;
+            }
+            return count;
+        }
 
         var bestDateOptionId = raw.DateOptions
             .OrderByDescending(d => CountFor(d.Id, VoteChoice.Yes))
@@ -64,10 +73,10 @@ public static class GetEventByToken
         YouDto? you = null;
         if (participantId is { } pid && raw.Participants.Any(p => p.Id == pid))
         {
-            var votes = await db.DateVotes
+            var votes = allVotes
                 .Where(v => v.ParticipantId == pid)
                 .Select(v => new YouVoteDto(v.DateOptionId, v.Choice))
-                .ToListAsync(ct);
+                .ToList();
             var claimedItemIds = raw.Items
                 .Where(i => i.ClaimedByParticipantId == pid)
                 .Select(i => i.Id)
@@ -83,7 +92,7 @@ public static class GetEventByToken
             raw.OrganizerId,
             raw.OrganizerName,
             bestDateOptionId,
-            raw.ChosenDateOptionId,
+            chosenDateOptionId,
             [.. raw.DateOptions
                 .OrderBy(d => d.StartsAt)
                 .Select(d => new DateOptionDto(
@@ -93,7 +102,11 @@ public static class GetEventByToken
                     CountFor(d.Id, VoteChoice.No)))],
             [.. raw.Items.Select(i => new EventItemDto(
                 i.Id, i.Label, i.ClaimedByParticipantId, i.ClaimedByName, i.AddedByParticipantId, i.OrphanedFromName))],
-            [.. raw.Participants.Select(p => new ParticipantDto(p.Id, p.DisplayName, p.Attendance))],
+            [.. raw.Participants.Select(p => new ParticipantDto(
+                p.Id, p.DisplayName, p.Attendance,
+                [.. allVotes
+                    .Where(v => v.ParticipantId == p.Id)
+                    .Select(v => new ParticipantVoteDto(v.DateOptionId, v.Choice))]))],
             you));
     }
 }

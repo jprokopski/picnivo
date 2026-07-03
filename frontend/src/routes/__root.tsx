@@ -6,6 +6,7 @@ import {
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { I18nProvider } from "@lingui/react";
+import { Toaster } from "../components/ui/sonner";
 import { i18n } from "../lib/i18n";
 import { getSessionFn } from "../lib/supabase/session";
 import type { RouterContext } from "../router";
@@ -40,6 +41,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body>
         <I18nProvider i18n={i18n}>
           {children}
+          <Toaster />
           <TanStackDevtools
             config={{ position: "bottom-right" }}
             plugins={[

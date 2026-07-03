@@ -92,6 +92,134 @@ public class GetEventByTokenHandlerTests
     }
 
     [Fact]
+    public async Task ReturnsEachParticipantsOwnVotes()
+    {
+        // Arrange
+        await using var db = TestDb.Create();
+        var organizerId = Guid.NewGuid();
+        db.Organizers.Add(new Organizer { Id = organizerId, DisplayName = "Organizer A", CreatedAt = DateTimeOffset.UtcNow });
+        await db.SaveChangesAsync();
+        db.ChangeTracker.Clear();
+        var token = await SeedEventAsync(db, organizerId,
+            title: "Participant Votes Test",
+            dateOptions: [DateTimeOffset.UtcNow.AddDays(10), DateTimeOffset.UtcNow.AddDays(11)]);
+
+        var @event = await db.Events.Include(e => e.DateOptions).SingleAsync(e => e.Token == token);
+        var dateA = @event.DateOptions.First();
+        var dateB = @event.DateOptions.Last();
+
+        var alice = new Participant { Id = Guid.CreateVersion7(), EventId = @event.Id, DisplayName = "Alice", CreatedAt = DateTimeOffset.UtcNow };
+        var bob = new Participant { Id = Guid.CreateVersion7(), EventId = @event.Id, DisplayName = "Bob", CreatedAt = DateTimeOffset.UtcNow };
+        db.Participants.AddRange(alice, bob);
+        db.DateVotes.AddRange(
+            new DateVote { Id = Guid.CreateVersion7(), ParticipantId = alice.Id, DateOptionId = dateA.Id, Choice = VoteChoice.Yes },
+            new DateVote { Id = Guid.CreateVersion7(), ParticipantId = alice.Id, DateOptionId = dateB.Id, Choice = VoteChoice.No },
+            new DateVote { Id = Guid.CreateVersion7(), ParticipantId = bob.Id, DateOptionId = dateA.Id, Choice = VoteChoice.Maybe });
+        await db.SaveChangesAsync();
+        db.ChangeTracker.Clear();
+
+        // Act
+        var result = await GetEventByTokenHandler.Handle(token, null, db, CancellationToken.None);
+
+        // Assert
+        var ok = result.ShouldBeOfType<Ok<EventDetailResponse>>();
+        var aliceDto = ok.Value!.Participants.Single(p => p.Id == alice.Id);
+        aliceDto.Votes.Count.ShouldBe(2);
+        aliceDto.Votes.Single(v => v.DateOptionId == dateA.Id).Choice.ShouldBe(VoteChoice.Yes);
+        aliceDto.Votes.Single(v => v.DateOptionId == dateB.Id).Choice.ShouldBe(VoteChoice.No);
+        var bobDto = ok.Value.Participants.Single(p => p.Id == bob.Id);
+        bobDto.Votes.ShouldHaveSingleItem();
+        bobDto.Votes[0].Choice.ShouldBe(VoteChoice.Maybe);
+    }
+
+    [Fact]
+    public async Task WithSingleDateEvent_TreatsLoneDateAsChosen()
+    {
+        // Arrange
+        await using var db = TestDb.Create();
+        var organizerId = Guid.NewGuid();
+        db.Organizers.Add(new Organizer { Id = organizerId, DisplayName = "Organizer A", CreatedAt = DateTimeOffset.UtcNow });
+        await db.SaveChangesAsync();
+        db.ChangeTracker.Clear();
+        var token = await SeedEventAsync(db, organizerId,
+            title: "Announcement Test",
+            dateOptions: [DateTimeOffset.UtcNow.AddDays(10)]);
+        var dateOption = await db.DateOptions.Include(d => d.Event).SingleAsync(d => d.Event!.Token == token);
+
+        // Act
+        var result = await GetEventByTokenHandler.Handle(token, null, db, CancellationToken.None);
+
+        // Assert
+        var ok = result.ShouldBeOfType<Ok<EventDetailResponse>>();
+        ok.Value!.ChosenDateOptionId.ShouldBe(dateOption.Id);
+    }
+
+    [Fact]
+    public async Task WithSingleDateEvent_YesCountIncludesOrganizerAsImplicitYes()
+    {
+        // Arrange
+        await using var db = TestDb.Create();
+        var organizerId = Guid.NewGuid();
+        db.Organizers.Add(new Organizer { Id = organizerId, DisplayName = "Organizer A", CreatedAt = DateTimeOffset.UtcNow });
+        await db.SaveChangesAsync();
+        db.ChangeTracker.Clear();
+        var token = await SeedEventAsync(db, organizerId,
+            title: "Announcement Yes Count Test",
+            dateOptions: [DateTimeOffset.UtcNow.AddDays(10)]);
+
+        // Act
+        var result = await GetEventByTokenHandler.Handle(token, null, db, CancellationToken.None);
+
+        // Assert
+        var ok = result.ShouldBeOfType<Ok<EventDetailResponse>>();
+        ok.Value!.DateOptions.ShouldHaveSingleItem();
+        ok.Value.DateOptions[0].YesCount.ShouldBe(1);
+        ok.Value.DateOptions[0].NoCount.ShouldBe(0);
+    }
+
+    [Fact]
+    public async Task WithMultipleDates_YesCountDoesNotIncludeOrganizer()
+    {
+        // Arrange
+        await using var db = TestDb.Create();
+        var organizerId = Guid.NewGuid();
+        db.Organizers.Add(new Organizer { Id = organizerId, DisplayName = "Organizer A", CreatedAt = DateTimeOffset.UtcNow });
+        await db.SaveChangesAsync();
+        db.ChangeTracker.Clear();
+        var token = await SeedEventAsync(db, organizerId,
+            title: "Multi Date Yes Count Test",
+            dateOptions: [DateTimeOffset.UtcNow.AddDays(10), DateTimeOffset.UtcNow.AddDays(11)]);
+
+        // Act
+        var result = await GetEventByTokenHandler.Handle(token, null, db, CancellationToken.None);
+
+        // Assert
+        var ok = result.ShouldBeOfType<Ok<EventDetailResponse>>();
+        ok.Value!.DateOptions.ShouldAllBe(d => d.YesCount == 0);
+    }
+
+    [Fact]
+    public async Task WithMultipleDatesAndNoLock_ChosenDateOptionIdIsNull()
+    {
+        // Arrange
+        await using var db = TestDb.Create();
+        var organizerId = Guid.NewGuid();
+        db.Organizers.Add(new Organizer { Id = organizerId, DisplayName = "Organizer A", CreatedAt = DateTimeOffset.UtcNow });
+        await db.SaveChangesAsync();
+        db.ChangeTracker.Clear();
+        var token = await SeedEventAsync(db, organizerId,
+            title: "Multi Date Test",
+            dateOptions: [DateTimeOffset.UtcNow.AddDays(10), DateTimeOffset.UtcNow.AddDays(11)]);
+
+        // Act
+        var result = await GetEventByTokenHandler.Handle(token, null, db, CancellationToken.None);
+
+        // Assert
+        var ok = result.ShouldBeOfType<Ok<EventDetailResponse>>();
+        ok.Value!.ChosenDateOptionId.ShouldBeNull();
+    }
+
+    [Fact]
     public async Task WithParticipantId_ReturnsYou()
     {
         // Arrange

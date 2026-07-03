@@ -1,63 +1,70 @@
 import { Trans } from "@lingui/react/macro";
-import { ClockIcon } from "lucide-react";
-import { PicnicScene } from "@/components/picnic-scene";
 import type { EventDetailResponse } from "@/api/picnivo-api";
-import { formatInstantParts } from "@/lib/format-instant";
 import { JoinBar } from "../../join-event/components/join-bar";
+import { DateRow } from "../../vote-on-dates/components/date-row";
+import {
+  VOTE_CHOICE_VALUES,
+  voteChoiceKeyFromValue,
+} from "../../vote-on-dates/schema";
+import { BestHero } from "./best-hero";
+import { CrewList } from "./crew-list";
+import { EventBand } from "./event-band";
+import { SectionCard } from "./section-card";
+import { ShareAside } from "./share-aside";
 
 interface EventDetailViewProps {
   event: EventDetailResponse;
   token: string;
   isOrganizer: boolean;
+  shareUrl: string;
 }
 
 export function EventDetailView({
   event,
   token,
   isOrganizer,
+  shareUrl,
 }: EventDetailViewProps) {
+  const joined = !!event.you;
+  const locked = !!event.chosenDateOptionId;
+  const isAnnouncement = event.dateOptions.length === 1;
+  const claimedCount = event.items.filter(
+    (i) => i.claimedByParticipantId,
+  ).length;
+
+  const heroDateId = event.chosenDateOptionId ?? event.bestDateOptionId;
+  const heroDate =
+    event.dateOptions.find((d) => d.id === heroDateId) ?? event.dateOptions[0];
+
+  function yesVoterNamesFor(dateOptionId: string): string[] {
+    const participantNames = event.participants
+      .filter((p) =>
+        p.votes.some(
+          (v) =>
+            v.dateOptionId === dateOptionId &&
+            v.choice === VOTE_CHOICE_VALUES.yes,
+        ),
+      )
+      .map((p) => p.displayName);
+    // Single-date events are an announcement (no vote UI) — the organizer who
+    // set the date implicitly counts as attending, matching the backend tally.
+    if (isAnnouncement) {
+      return [event.organizerName, ...participantNames];
+    }
+    return participantNames;
+  }
+
   return (
     <div className="mx-auto max-w-295 animate-[pv-fade_420ms_cubic-bezier(0.16,1,0.3,1)_both] pt-12 pr-[max(var(--web-gutter),env(safe-area-inset-right))] pb-24 pl-[max(var(--web-gutter),env(safe-area-inset-left))] max-[720px]:pt-7 max-[720px]:pb-16">
-      {/* Band */}
-      <div className="mb-7 overflow-hidden rounded-(--r-xl) shadow-(--sh-lg) max-[720px]:mb-5.5 max-[720px]:rounded-(--r-lg)">
-        <div className="relative h-57.5 overflow-hidden bg-[linear-gradient(180deg,#ffd58a_0%,#ff9d6b_38%,#f1633f_74%,#e0492a_100%)] max-[720px]:h-37.5">
-          <PicnicScene variant="sunset" slot="wide" />
-        </div>
-        <div className="bg-card flex flex-wrap items-end justify-between gap-6 px-8.5 pt-6 pb-6.5 max-[720px]:gap-4 max-[720px]:px-5.5 max-[720px]:pt-5.5 max-[720px]:pb-6">
-          <div className="min-w-0">
-            <p className="font-mono text-[11px] font-medium tracking-[0.14em] wrap-anywhere text-(--accent-deep) uppercase">
-              <Trans>{event.organizerName} is hosting</Trans>
-              {event.location && <> · {event.location}</>}
-            </p>
-            <h1 className="font-display text-foreground m-0 mt-1.5 text-[38px] leading-[1.05] font-extrabold tracking-tight wrap-break-word max-[900px]:text-[32px] max-[720px]:text-[27px]">
-              {event.title}
-            </h1>
-            {event.description && (
-              <p className="text-muted-foreground mt-2 max-w-[54ch] wrap-break-word max-[720px]:text-[15px]">
-                {event.description}
-              </p>
-            )}
-          </div>
-          <div className="flex shrink-0 gap-6.5">
-            <div className="flex flex-col gap-0.5">
-              <span className="font-display text-[26px] leading-none font-extrabold max-[720px]:text-[22px]">
-                {event.dateOptions.length}
-              </span>
-              <span className="text-[12px] font-semibold text-(--ink-soft)">
-                <Trans>dates</Trans>
-              </span>
-            </div>
-            <div className="flex flex-col gap-0.5">
-              <span className="font-display text-[26px] leading-none font-extrabold max-[720px]:text-[22px]">
-                {event.items.length}
-              </span>
-              <span className="text-[12px] font-semibold text-(--ink-soft)">
-                <Trans>items</Trans>
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <EventBand
+        title={event.title}
+        description={event.description}
+        organizerName={event.organizerName}
+        location={event.location}
+        goingCount={event.participants.length}
+        claimedCount={claimedCount}
+        itemCount={event.items.length}
+      />
 
       {!event.you && !isOrganizer && (
         <JoinBar
@@ -66,77 +73,88 @@ export function EventDetailView({
         />
       )}
 
-      <div className="flex flex-col gap-6.5 max-[720px]:gap-5">
-        {/* When */}
-        <section className="border-border bg-card rounded-(--r-lg) border px-7 py-6.5 shadow-(--sh-md) max-[720px]:px-5 max-[720px]:py-5.5">
-          <div className="mb-4">
-            <p className="font-mono text-[11px] font-medium tracking-[0.14em] text-(--accent-deep) uppercase">
-              <Trans>When works?</Trans>
-            </p>
-            <h2 className="font-display m-0 mt-1 text-[21px] font-bold tracking-[-0.01em]">
-              <Trans>Proposed dates</Trans>
-            </h2>
-          </div>
-          <div className="flex flex-col gap-3">
-            {event.dateOptions.map((d) => {
-              const parts = formatInstantParts(d.startsAt);
-              return (
-                <div
-                  key={d.id}
-                  className="border-border bg-card flex items-center gap-5 rounded-(--r-md) border px-5 py-4 max-[720px]:gap-3.5 max-[720px]:px-4 max-[720px]:py-3.5"
-                >
-                  <div className="w-14.5 shrink-0 text-center leading-none">
-                    <div className="font-mono text-[11px] text-(--accent-deep)">
-                      {parts.dow.toUpperCase()}
-                    </div>
-                    <div className="font-display my-0.5 text-[30px]">
-                      {parts.day}
-                    </div>
-                    <div className="font-mono text-[10px] text-(--ink-soft)">
-                      {parts.mon}
-                    </div>
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <span className="font-display text-[16px] font-extrabold">
-                      {parts.dow}, {parts.mon} {parts.day}
-                    </span>
-                    <span className="ml-2.5 inline-flex items-center gap-1.5 font-mono text-[13px] text-(--ink-soft)">
-                      <ClockIcon size={13} />
-                      {parts.time}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
+      <div className="grid grid-cols-[1fr_340px] gap-6.5 max-[940px]:grid-cols-1 max-[720px]:gap-5">
+        <div className="flex flex-col gap-5.5 max-[720px]:gap-4.5">
+          {heroDate && (
+            <BestHero
+              token={token}
+              heroDate={heroDate}
+              location={event.location}
+              organizerName={event.organizerName}
+              isOrganizer={isOrganizer}
+              locked={locked}
+              yesVoterNames={yesVoterNamesFor(heroDate.id)}
+              totalParticipants={event.participants.length}
+            />
+          )}
 
-        {/* What to bring */}
-        {event.items.length > 0 && (
-          <section className="border-border bg-card rounded-(--r-lg) border px-7 py-6.5 shadow-(--sh-md) max-[720px]:px-5 max-[720px]:py-5.5">
-            <div className="mb-4">
-              <p className="font-mono text-[11px] font-medium tracking-[0.14em] text-(--accent-deep) uppercase">
-                <Trans>The haul</Trans>
-              </p>
-              <h2 className="font-display m-0 mt-1 text-[21px] font-bold tracking-[-0.01em]">
-                <Trans>What to bring</Trans>
-              </h2>
-            </div>
-            <div className="flex flex-col gap-2.5">
-              {event.items.map((item) => (
-                <div
-                  key={item.id}
-                  className="border-border bg-card flex items-center gap-3.5 rounded-(--r-md) border px-4.5 py-3.5"
-                >
-                  <span className="border-border size-2.25 shrink-0 rounded-full border-2" />
-                  <span className="text-[15px] font-semibold wrap-break-word">
-                    {item.label}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
+          {!isAnnouncement && (
+            <SectionCard
+              kicker={<Trans>When works?</Trans>}
+              title={
+                locked ? (
+                  <Trans>How everyone voted</Trans>
+                ) : (
+                  <Trans>Vote on the dates</Trans>
+                )
+              }
+              right={
+                <span className="border-border rounded-full border bg-(--card-2) px-2.75 py-0.75 text-[13px] font-semibold">
+                  <Trans>{event.participants.length} voted</Trans>
+                </span>
+              }
+            >
+              <div className="flex flex-col gap-3">
+                {event.dateOptions.map((d) => (
+                  <DateRow
+                    key={d.id}
+                    token={token}
+                    date={d}
+                    isBest={d.id === heroDate?.id}
+                    locked={locked}
+                    joined={joined}
+                    myVote={voteChoiceKeyFromValue(
+                      event.you?.votes.find((v) => v.dateOptionId === d.id)
+                        ?.choice,
+                    )}
+                    yesVoterNames={yesVoterNamesFor(d.id)}
+                  />
+                ))}
+              </div>
+            </SectionCard>
+          )}
+
+          {event.items.length > 0 && (
+            <SectionCard
+              kicker={<Trans>The haul</Trans>}
+              title={<Trans>Who brings what</Trans>}
+            >
+              <div className="flex flex-col gap-2.5">
+                {event.items.map((item) => (
+                  <div
+                    key={item.id}
+                    className="border-border bg-card flex items-center gap-3.5 rounded-(--r-md) border px-4.5 py-3.5"
+                  >
+                    <span className="border-border size-2.25 shrink-0 rounded-full border-2" />
+                    <span className="text-[15px] font-semibold wrap-break-word">
+                      {item.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </SectionCard>
+          )}
+        </div>
+
+        <aside className="flex flex-col gap-4.5 max-[940px]:gap-4">
+          <SectionCard
+            kicker={<Trans>The crew</Trans>}
+            title={<Trans>{event.participants.length} invited</Trans>}
+          >
+            <CrewList participants={event.participants} />
+          </SectionCard>
+          <ShareAside shareUrl={shareUrl} />
+        </aside>
       </div>
     </div>
   );

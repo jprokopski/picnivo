@@ -44,8 +44,8 @@ public static class ClaimItem
             return Results.NotFound();
         }
 
-        var chosenDateOptionId = @event.ChosenDateOptionId
-            ?? (@event.DateOptionIds.Count == 1 ? @event.DateOptionIds[0] : (Guid?)null);
+        var chosenDateOptionId = Event.ResolveEffectiveChosenDateOptionId(
+            @event.ChosenDateOptionId, @event.DateOptionIds);
 
         var isComing = participant.Attendance == AttendanceStatus.Coming;
         if (!isComing && participant.Attendance == AttendanceStatus.Undecided && chosenDateOptionId is { } chosenId)

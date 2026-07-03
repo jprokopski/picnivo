@@ -12,7 +12,13 @@ public record EventItemDto(
     Guid? AddedByParticipantId,
     string? OrphanedFromName);
 
-public record ParticipantDto(Guid Id, string DisplayName, AttendanceStatus Attendance);
+public record ParticipantVoteDto(Guid DateOptionId, VoteChoice Choice);
+
+public record ParticipantDto(
+    Guid Id,
+    string DisplayName,
+    AttendanceStatus Attendance,
+    IReadOnlyList<ParticipantVoteDto> Votes);
 
 public record YouVoteDto(Guid DateOptionId, VoteChoice Choice);
 

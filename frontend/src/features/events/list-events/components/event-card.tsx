@@ -38,7 +38,6 @@ export function EventCard({ event, hostName }: EventCardProps) {
       <Link
         to="/e/$token"
         params={{ token: event.token }}
-        target="_blank"
         aria-label={t`Open ${event.title}`}
         className="focus-visible:outline-primary absolute inset-0 z-10 rounded-(--r-lg) focus-visible:outline-3 focus-visible:outline-offset-2"
       />

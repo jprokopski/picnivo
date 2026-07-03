@@ -4,10 +4,7 @@
  * Picnivo.API | v1
  * OpenAPI spec version: 1.0.0
  */
-import {
-  useMutation,
-  useQuery
-} from '@tanstack/react-query';
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -20,10 +17,10 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult
-} from '@tanstack/react-query';
+  UseQueryResult,
+} from "@tanstack/react-query";
 
-import { axiosInstance } from './axios-instance';
+import { axiosInstance } from "./axios-instance";
 export interface AddItemRequest {
   participantId: string;
   label: string;
@@ -185,7 +182,7 @@ export type HttpValidationProblemDetailsDetail = null | string;
 
 export type HttpValidationProblemDetailsInstance = null | string;
 
-export type HttpValidationProblemDetailsErrors = {[key: string]: string[]};
+export type HttpValidationProblemDetailsErrors = { [key: string]: string[] };
 
 export interface HttpValidationProblemDetails {
   type?: HttpValidationProblemDetailsType;
@@ -210,6 +207,12 @@ export interface ParticipantDto {
   id: string;
   displayName: string;
   attendance: AttendanceStatus;
+  votes: ParticipantVoteDto[];
+}
+
+export interface ParticipantVoteDto {
+  dateOptionId: string;
+  choice: VoteChoice;
 }
 
 export type SelectFinalDateRequestDateOptionId = null | string;
@@ -241,913 +244,1332 @@ export interface YouVoteDto {
 }
 
 export type RemoveItemParams = {
-participantId?: string;
+  participantId?: string;
 };
 
 export type GetEventByTokenParams = {
-participantId?: string;
+  participantId?: string;
 };
 
 export type ReleaseClaimParams = {
-participantId: string;
+  participantId: string;
 };
 
 export type ClaimItemParams = {
-participantId: string;
+  participantId: string;
 };
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-
-
 export const getHealthz = (
-    
- options?: SecondParameter<typeof axiosInstance>,signal?: AbortSignal
+  options?: SecondParameter<typeof axiosInstance>,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return axiosInstance<void>(
-      {url: `/healthz`, method: 'GET', signal
-    },
-      options);
-    }
-  
-
-
+  return axiosInstance<void>(
+    { url: `/healthz`, method: "GET", signal },
+    options,
+  );
+};
 
 export const getGetHealthzQueryKey = () => {
-    return [
-    `/healthz`
-    ] as const;
-    }
+  return [`/healthz`] as const;
+};
 
-    
-export const getGetHealthzQueryOptions = <TData = Awaited<ReturnType<typeof getHealthz>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getHealthz>>, TError, TData>>, request?: SecondParameter<typeof axiosInstance>}
-) => {
+export const getGetHealthzQueryOptions = <
+  TData = Awaited<ReturnType<typeof getHealthz>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof getHealthz>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof axiosInstance>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getGetHealthzQueryKey();
 
-  const queryKey =  queryOptions?.queryKey ?? getGetHealthzQueryKey();
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getHealthz>>> = ({
+    signal,
+  }) => getHealthz(requestOptions, signal);
 
-  
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getHealthz>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getHealthz>>> = ({ signal }) => getHealthz(requestOptions, signal);
+export type GetHealthzQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getHealthz>>
+>;
+export type GetHealthzQueryError = unknown;
 
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getHealthz>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetHealthzQueryResult = NonNullable<Awaited<ReturnType<typeof getHealthz>>>
-export type GetHealthzQueryError = unknown
-
-
-export function useGetHealthz<TData = Awaited<ReturnType<typeof getHealthz>>, TError = unknown>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getHealthz>>, TError, TData>> & Pick<
+export function useGetHealthz<
+  TData = Awaited<ReturnType<typeof getHealthz>>,
+  TError = unknown,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getHealthz>>, TError, TData>
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getHealthz>>,
           TError,
           Awaited<ReturnType<typeof getHealthz>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof axiosInstance>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetHealthz<TData = Awaited<ReturnType<typeof getHealthz>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getHealthz>>, TError, TData>> & Pick<
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetHealthz<
+  TData = Awaited<ReturnType<typeof getHealthz>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getHealthz>>, TError, TData>
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getHealthz>>,
           TError,
           Awaited<ReturnType<typeof getHealthz>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof axiosInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetHealthz<TData = Awaited<ReturnType<typeof getHealthz>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getHealthz>>, TError, TData>>, request?: SecondParameter<typeof axiosInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetHealthz<
+  TData = Awaited<ReturnType<typeof getHealthz>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getHealthz>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 
-export function useGetHealthz<TData = Awaited<ReturnType<typeof getHealthz>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getHealthz>>, TError, TData>>, request?: SecondParameter<typeof axiosInstance>}
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useGetHealthz<
+  TData = Awaited<ReturnType<typeof getHealthz>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getHealthz>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getGetHealthzQueryOptions(options);
 
-  const queryOptions = getGetHealthzQueryOptions(options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
-
 
 export const getApiMe = (
-    
- options?: SecondParameter<typeof axiosInstance>,signal?: AbortSignal
+  options?: SecondParameter<typeof axiosInstance>,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return axiosInstance<void>(
-      {url: `/api/me`, method: 'GET', signal
-    },
-      options);
-    }
-  
-
-
+  return axiosInstance<void>(
+    { url: `/api/me`, method: "GET", signal },
+    options,
+  );
+};
 
 export const getGetApiMeQueryKey = () => {
-    return [
-    `/api/me`
-    ] as const;
-    }
+  return [`/api/me`] as const;
+};
 
-    
-export const getGetApiMeQueryOptions = <TData = Awaited<ReturnType<typeof getApiMe>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiMe>>, TError, TData>>, request?: SecondParameter<typeof axiosInstance>}
-) => {
+export const getGetApiMeQueryOptions = <
+  TData = Awaited<ReturnType<typeof getApiMe>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof getApiMe>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof axiosInstance>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getGetApiMeQueryKey();
 
-  const queryKey =  queryOptions?.queryKey ?? getGetApiMeQueryKey();
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiMe>>> = ({
+    signal,
+  }) => getApiMe(requestOptions, signal);
 
-  
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getApiMe>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiMe>>> = ({ signal }) => getApiMe(requestOptions, signal);
+export type GetApiMeQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getApiMe>>
+>;
+export type GetApiMeQueryError = unknown;
 
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiMe>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetApiMeQueryResult = NonNullable<Awaited<ReturnType<typeof getApiMe>>>
-export type GetApiMeQueryError = unknown
-
-
-export function useGetApiMe<TData = Awaited<ReturnType<typeof getApiMe>>, TError = unknown>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiMe>>, TError, TData>> & Pick<
+export function useGetApiMe<
+  TData = Awaited<ReturnType<typeof getApiMe>>,
+  TError = unknown,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getApiMe>>, TError, TData>
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiMe>>,
           TError,
           Awaited<ReturnType<typeof getApiMe>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof axiosInstance>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiMe<TData = Awaited<ReturnType<typeof getApiMe>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiMe>>, TError, TData>> & Pick<
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetApiMe<
+  TData = Awaited<ReturnType<typeof getApiMe>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getApiMe>>, TError, TData>
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiMe>>,
           TError,
           Awaited<ReturnType<typeof getApiMe>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof axiosInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiMe<TData = Awaited<ReturnType<typeof getApiMe>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiMe>>, TError, TData>>, request?: SecondParameter<typeof axiosInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetApiMe<
+  TData = Awaited<ReturnType<typeof getApiMe>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getApiMe>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 
-export function useGetApiMe<TData = Awaited<ReturnType<typeof getApiMe>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiMe>>, TError, TData>>, request?: SecondParameter<typeof axiosInstance>}
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useGetApiMe<
+  TData = Awaited<ReturnType<typeof getApiMe>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getApiMe>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getGetApiMeQueryOptions(options);
 
-  const queryOptions = getGetApiMeQueryOptions(options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
-
 
 export const castVotes = (
-    token: string,
-    participantId: string,
-    castVotesRequest: CastVotesRequest,
- options?: SecondParameter<typeof axiosInstance>,) => {
-      
-      
-      return axiosInstance<void>(
-      {url: `/api/events/${token}/participants/${participantId}/votes`, method: 'PUT',
-      headers: {'Content-Type': 'application/json', },
-      data: castVotesRequest
+  token: string,
+  participantId: string,
+  castVotesRequest: CastVotesRequest,
+  options?: SecondParameter<typeof axiosInstance>,
+) => {
+  return axiosInstance<void>(
+    {
+      url: `/api/events/${token}/participants/${participantId}/votes`,
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      data: castVotesRequest,
     },
-      options);
-    }
-  
+    options,
+  );
+};
 
+export const getCastVotesMutationOptions = <
+  TError = HttpValidationProblemDetails | void,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof castVotes>>,
+    TError,
+    { token: string; participantId: string; data: CastVotesRequest },
+    TContext
+  >;
+  request?: SecondParameter<typeof axiosInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof castVotes>>,
+  TError,
+  { token: string; participantId: string; data: CastVotesRequest },
+  TContext
+> => {
+  const mutationKey = ["castVotes"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
-export const getCastVotesMutationOptions = <TError = HttpValidationProblemDetails | void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof castVotes>>, TError,{token: string;participantId: string;data: CastVotesRequest}, TContext>, request?: SecondParameter<typeof axiosInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof castVotes>>, TError,{token: string;participantId: string;data: CastVotesRequest}, TContext> => {
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof castVotes>>,
+    { token: string; participantId: string; data: CastVotesRequest }
+  > = (props) => {
+    const { token, participantId, data } = props ?? {};
 
-const mutationKey = ['castVotes'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
+    return castVotes(token, participantId, data, requestOptions);
+  };
 
-      
+  return { mutationFn, ...mutationOptions };
+};
 
+export type CastVotesMutationResult = NonNullable<
+  Awaited<ReturnType<typeof castVotes>>
+>;
+export type CastVotesMutationBody = CastVotesRequest;
+export type CastVotesMutationError = HttpValidationProblemDetails | void;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof castVotes>>, {token: string;participantId: string;data: CastVotesRequest}> = (props) => {
-          const {token,participantId,data} = props ?? {};
+export const useCastVotes = <
+  TError = HttpValidationProblemDetails | void,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof castVotes>>,
+      TError,
+      { token: string; participantId: string; data: CastVotesRequest },
+      TContext
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof castVotes>>,
+  TError,
+  { token: string; participantId: string; data: CastVotesRequest },
+  TContext
+> => {
+  const mutationOptions = getCastVotesMutationOptions(options);
 
-          return  castVotes(token,participantId,data,requestOptions)
-        }
+  return useMutation(mutationOptions, queryClient);
+};
 
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CastVotesMutationResult = NonNullable<Awaited<ReturnType<typeof castVotes>>>
-    export type CastVotesMutationBody = CastVotesRequest
-    export type CastVotesMutationError = HttpValidationProblemDetails | void
-
-    export const useCastVotes = <TError = HttpValidationProblemDetails | void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof castVotes>>, TError,{token: string;participantId: string;data: CastVotesRequest}, TContext>, request?: SecondParameter<typeof axiosInstance>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof castVotes>>,
-        TError,
-        {token: string;participantId: string;data: CastVotesRequest},
-        TContext
-      > => {
-
-      const mutationOptions = getCastVotesMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    
 export const setAttendance = (
-    token: string,
-    participantId: string,
-    setAttendanceRequest: SetAttendanceRequest,
- options?: SecondParameter<typeof axiosInstance>,) => {
-      
-      
-      return axiosInstance<void>(
-      {url: `/api/events/${token}/participants/${participantId}/attendance`, method: 'PUT',
-      headers: {'Content-Type': 'application/json', },
-      data: setAttendanceRequest
+  token: string,
+  participantId: string,
+  setAttendanceRequest: SetAttendanceRequest,
+  options?: SecondParameter<typeof axiosInstance>,
+) => {
+  return axiosInstance<void>(
+    {
+      url: `/api/events/${token}/participants/${participantId}/attendance`,
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      data: setAttendanceRequest,
     },
-      options);
-    }
-  
+    options,
+  );
+};
 
+export const getSetAttendanceMutationOptions = <
+  TError = HttpValidationProblemDetails | void,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof setAttendance>>,
+    TError,
+    { token: string; participantId: string; data: SetAttendanceRequest },
+    TContext
+  >;
+  request?: SecondParameter<typeof axiosInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof setAttendance>>,
+  TError,
+  { token: string; participantId: string; data: SetAttendanceRequest },
+  TContext
+> => {
+  const mutationKey = ["setAttendance"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
-export const getSetAttendanceMutationOptions = <TError = HttpValidationProblemDetails | void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof setAttendance>>, TError,{token: string;participantId: string;data: SetAttendanceRequest}, TContext>, request?: SecondParameter<typeof axiosInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof setAttendance>>, TError,{token: string;participantId: string;data: SetAttendanceRequest}, TContext> => {
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof setAttendance>>,
+    { token: string; participantId: string; data: SetAttendanceRequest }
+  > = (props) => {
+    const { token, participantId, data } = props ?? {};
 
-const mutationKey = ['setAttendance'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
+    return setAttendance(token, participantId, data, requestOptions);
+  };
 
-      
+  return { mutationFn, ...mutationOptions };
+};
 
+export type SetAttendanceMutationResult = NonNullable<
+  Awaited<ReturnType<typeof setAttendance>>
+>;
+export type SetAttendanceMutationBody = SetAttendanceRequest;
+export type SetAttendanceMutationError = HttpValidationProblemDetails | void;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof setAttendance>>, {token: string;participantId: string;data: SetAttendanceRequest}> = (props) => {
-          const {token,participantId,data} = props ?? {};
+export const useSetAttendance = <
+  TError = HttpValidationProblemDetails | void,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof setAttendance>>,
+      TError,
+      { token: string; participantId: string; data: SetAttendanceRequest },
+      TContext
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof setAttendance>>,
+  TError,
+  { token: string; participantId: string; data: SetAttendanceRequest },
+  TContext
+> => {
+  const mutationOptions = getSetAttendanceMutationOptions(options);
 
-          return  setAttendance(token,participantId,data,requestOptions)
-        }
+  return useMutation(mutationOptions, queryClient);
+};
 
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type SetAttendanceMutationResult = NonNullable<Awaited<ReturnType<typeof setAttendance>>>
-    export type SetAttendanceMutationBody = SetAttendanceRequest
-    export type SetAttendanceMutationError = HttpValidationProblemDetails | void
-
-    export const useSetAttendance = <TError = HttpValidationProblemDetails | void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof setAttendance>>, TError,{token: string;participantId: string;data: SetAttendanceRequest}, TContext>, request?: SecondParameter<typeof axiosInstance>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof setAttendance>>,
-        TError,
-        {token: string;participantId: string;data: SetAttendanceRequest},
-        TContext
-      > => {
-
-      const mutationOptions = getSetAttendanceMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    
 export const joinEvent = (
-    token: string,
-    joinEventRequest: JoinEventRequest,
- options?: SecondParameter<typeof axiosInstance>,signal?: AbortSignal
+  token: string,
+  joinEventRequest: JoinEventRequest,
+  options?: SecondParameter<typeof axiosInstance>,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return axiosInstance<JoinEventResponse>(
-      {url: `/api/events/${token}/participants`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: joinEventRequest, signal
+  return axiosInstance<JoinEventResponse>(
+    {
+      url: `/api/events/${token}/participants`,
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      data: joinEventRequest,
+      signal,
     },
-      options);
-    }
-  
+    options,
+  );
+};
 
+export const getJoinEventMutationOptions = <
+  TError = HttpValidationProblemDetails | void,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof joinEvent>>,
+    TError,
+    { token: string; data: JoinEventRequest },
+    TContext
+  >;
+  request?: SecondParameter<typeof axiosInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof joinEvent>>,
+  TError,
+  { token: string; data: JoinEventRequest },
+  TContext
+> => {
+  const mutationKey = ["joinEvent"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
-export const getJoinEventMutationOptions = <TError = HttpValidationProblemDetails | void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof joinEvent>>, TError,{token: string;data: JoinEventRequest}, TContext>, request?: SecondParameter<typeof axiosInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof joinEvent>>, TError,{token: string;data: JoinEventRequest}, TContext> => {
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof joinEvent>>,
+    { token: string; data: JoinEventRequest }
+  > = (props) => {
+    const { token, data } = props ?? {};
 
-const mutationKey = ['joinEvent'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
+    return joinEvent(token, data, requestOptions);
+  };
 
-      
+  return { mutationFn, ...mutationOptions };
+};
 
+export type JoinEventMutationResult = NonNullable<
+  Awaited<ReturnType<typeof joinEvent>>
+>;
+export type JoinEventMutationBody = JoinEventRequest;
+export type JoinEventMutationError = HttpValidationProblemDetails | void;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof joinEvent>>, {token: string;data: JoinEventRequest}> = (props) => {
-          const {token,data} = props ?? {};
+export const useJoinEvent = <
+  TError = HttpValidationProblemDetails | void,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof joinEvent>>,
+      TError,
+      { token: string; data: JoinEventRequest },
+      TContext
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof joinEvent>>,
+  TError,
+  { token: string; data: JoinEventRequest },
+  TContext
+> => {
+  const mutationOptions = getJoinEventMutationOptions(options);
 
-          return  joinEvent(token,data,requestOptions)
-        }
+  return useMutation(mutationOptions, queryClient);
+};
 
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type JoinEventMutationResult = NonNullable<Awaited<ReturnType<typeof joinEvent>>>
-    export type JoinEventMutationBody = JoinEventRequest
-    export type JoinEventMutationError = HttpValidationProblemDetails | void
-
-    export const useJoinEvent = <TError = HttpValidationProblemDetails | void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof joinEvent>>, TError,{token: string;data: JoinEventRequest}, TContext>, request?: SecondParameter<typeof axiosInstance>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof joinEvent>>,
-        TError,
-        {token: string;data: JoinEventRequest},
-        TContext
-      > => {
-
-      const mutationOptions = getJoinEventMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    
 export const removeItem = (
-    token: string,
-    itemId: string,
-    params?: RemoveItemParams,
- options?: SecondParameter<typeof axiosInstance>,) => {
-      
-      
-      return axiosInstance<void>(
-      {url: `/api/events/${token}/items/${itemId}`, method: 'DELETE',
-        params
-    },
-      options);
-    }
-  
+  token: string,
+  itemId: string,
+  params?: RemoveItemParams,
+  options?: SecondParameter<typeof axiosInstance>,
+) => {
+  return axiosInstance<void>(
+    { url: `/api/events/${token}/items/${itemId}`, method: "DELETE", params },
+    options,
+  );
+};
 
+export const getRemoveItemMutationOptions = <
+  TError = void,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof removeItem>>,
+    TError,
+    { token: string; itemId: string; params?: RemoveItemParams },
+    TContext
+  >;
+  request?: SecondParameter<typeof axiosInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof removeItem>>,
+  TError,
+  { token: string; itemId: string; params?: RemoveItemParams },
+  TContext
+> => {
+  const mutationKey = ["removeItem"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
-export const getRemoveItemMutationOptions = <TError = void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof removeItem>>, TError,{token: string;itemId: string;params?: RemoveItemParams}, TContext>, request?: SecondParameter<typeof axiosInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof removeItem>>, TError,{token: string;itemId: string;params?: RemoveItemParams}, TContext> => {
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof removeItem>>,
+    { token: string; itemId: string; params?: RemoveItemParams }
+  > = (props) => {
+    const { token, itemId, params } = props ?? {};
 
-const mutationKey = ['removeItem'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
+    return removeItem(token, itemId, params, requestOptions);
+  };
 
-      
+  return { mutationFn, ...mutationOptions };
+};
 
+export type RemoveItemMutationResult = NonNullable<
+  Awaited<ReturnType<typeof removeItem>>
+>;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof removeItem>>, {token: string;itemId: string;params?: RemoveItemParams}> = (props) => {
-          const {token,itemId,params} = props ?? {};
+export type RemoveItemMutationError = void;
 
-          return  removeItem(token,itemId,params,requestOptions)
-        }
+export const useRemoveItem = <TError = void, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof removeItem>>,
+      TError,
+      { token: string; itemId: string; params?: RemoveItemParams },
+      TContext
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof removeItem>>,
+  TError,
+  { token: string; itemId: string; params?: RemoveItemParams },
+  TContext
+> => {
+  const mutationOptions = getRemoveItemMutationOptions(options);
 
-        
+  return useMutation(mutationOptions, queryClient);
+};
 
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type RemoveItemMutationResult = NonNullable<Awaited<ReturnType<typeof removeItem>>>
-    
-    export type RemoveItemMutationError = void
-
-    export const useRemoveItem = <TError = void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof removeItem>>, TError,{token: string;itemId: string;params?: RemoveItemParams}, TContext>, request?: SecondParameter<typeof axiosInstance>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof removeItem>>,
-        TError,
-        {token: string;itemId: string;params?: RemoveItemParams},
-        TContext
-      > => {
-
-      const mutationOptions = getRemoveItemMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    
 export const addItem = (
-    token: string,
-    addItemRequest: AddItemRequest,
- options?: SecondParameter<typeof axiosInstance>,signal?: AbortSignal
+  token: string,
+  addItemRequest: AddItemRequest,
+  options?: SecondParameter<typeof axiosInstance>,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return axiosInstance<AddItemResponse>(
-      {url: `/api/events/${token}/items`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: addItemRequest, signal
+  return axiosInstance<AddItemResponse>(
+    {
+      url: `/api/events/${token}/items`,
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      data: addItemRequest,
+      signal,
     },
-      options);
-    }
-  
+    options,
+  );
+};
 
+export const getAddItemMutationOptions = <
+  TError = HttpValidationProblemDetails | void,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof addItem>>,
+    TError,
+    { token: string; data: AddItemRequest },
+    TContext
+  >;
+  request?: SecondParameter<typeof axiosInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof addItem>>,
+  TError,
+  { token: string; data: AddItemRequest },
+  TContext
+> => {
+  const mutationKey = ["addItem"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
-export const getAddItemMutationOptions = <TError = HttpValidationProblemDetails | void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof addItem>>, TError,{token: string;data: AddItemRequest}, TContext>, request?: SecondParameter<typeof axiosInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof addItem>>, TError,{token: string;data: AddItemRequest}, TContext> => {
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof addItem>>,
+    { token: string; data: AddItemRequest }
+  > = (props) => {
+    const { token, data } = props ?? {};
 
-const mutationKey = ['addItem'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
+    return addItem(token, data, requestOptions);
+  };
 
-      
+  return { mutationFn, ...mutationOptions };
+};
 
+export type AddItemMutationResult = NonNullable<
+  Awaited<ReturnType<typeof addItem>>
+>;
+export type AddItemMutationBody = AddItemRequest;
+export type AddItemMutationError = HttpValidationProblemDetails | void;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof addItem>>, {token: string;data: AddItemRequest}> = (props) => {
-          const {token,data} = props ?? {};
+export const useAddItem = <
+  TError = HttpValidationProblemDetails | void,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof addItem>>,
+      TError,
+      { token: string; data: AddItemRequest },
+      TContext
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof addItem>>,
+  TError,
+  { token: string; data: AddItemRequest },
+  TContext
+> => {
+  const mutationOptions = getAddItemMutationOptions(options);
 
-          return  addItem(token,data,requestOptions)
-        }
+  return useMutation(mutationOptions, queryClient);
+};
 
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type AddItemMutationResult = NonNullable<Awaited<ReturnType<typeof addItem>>>
-    export type AddItemMutationBody = AddItemRequest
-    export type AddItemMutationError = HttpValidationProblemDetails | void
-
-    export const useAddItem = <TError = HttpValidationProblemDetails | void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof addItem>>, TError,{token: string;data: AddItemRequest}, TContext>, request?: SecondParameter<typeof axiosInstance>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof addItem>>,
-        TError,
-        {token: string;data: AddItemRequest},
-        TContext
-      > => {
-
-      const mutationOptions = getAddItemMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    
 export const selectFinalDate = (
-    token: string,
-    selectFinalDateRequest: SelectFinalDateRequest,
- options?: SecondParameter<typeof axiosInstance>,) => {
-      
-      
-      return axiosInstance<void>(
-      {url: `/api/events/${token}/chosen-date`, method: 'PUT',
-      headers: {'Content-Type': 'application/json', },
-      data: selectFinalDateRequest
-    },
-      options);
-    }
-  
-
-
-export const getSelectFinalDateMutationOptions = <TError = void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof selectFinalDate>>, TError,{token: string;data: SelectFinalDateRequest}, TContext>, request?: SecondParameter<typeof axiosInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof selectFinalDate>>, TError,{token: string;data: SelectFinalDateRequest}, TContext> => {
-
-const mutationKey = ['selectFinalDate'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof selectFinalDate>>, {token: string;data: SelectFinalDateRequest}> = (props) => {
-          const {token,data} = props ?? {};
-
-          return  selectFinalDate(token,data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type SelectFinalDateMutationResult = NonNullable<Awaited<ReturnType<typeof selectFinalDate>>>
-    export type SelectFinalDateMutationBody = SelectFinalDateRequest
-    export type SelectFinalDateMutationError = void
-
-    export const useSelectFinalDate = <TError = void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof selectFinalDate>>, TError,{token: string;data: SelectFinalDateRequest}, TContext>, request?: SecondParameter<typeof axiosInstance>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof selectFinalDate>>,
-        TError,
-        {token: string;data: SelectFinalDateRequest},
-        TContext
-      > => {
-
-      const mutationOptions = getSelectFinalDateMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    
-export const listEvents = (
-    
- options?: SecondParameter<typeof axiosInstance>,signal?: AbortSignal
+  token: string,
+  selectFinalDateRequest: SelectFinalDateRequest,
+  options?: SecondParameter<typeof axiosInstance>,
 ) => {
-      
-      
-      return axiosInstance<EventSummaryResponse[]>(
-      {url: `/api/events`, method: 'GET', signal
+  return axiosInstance<void>(
+    {
+      url: `/api/events/${token}/chosen-date`,
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      data: selectFinalDateRequest,
     },
-      options);
-    }
-  
+    options,
+  );
+};
 
+export const getSelectFinalDateMutationOptions = <
+  TError = void,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof selectFinalDate>>,
+    TError,
+    { token: string; data: SelectFinalDateRequest },
+    TContext
+  >;
+  request?: SecondParameter<typeof axiosInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof selectFinalDate>>,
+  TError,
+  { token: string; data: SelectFinalDateRequest },
+  TContext
+> => {
+  const mutationKey = ["selectFinalDate"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof selectFinalDate>>,
+    { token: string; data: SelectFinalDateRequest }
+  > = (props) => {
+    const { token, data } = props ?? {};
+
+    return selectFinalDate(token, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SelectFinalDateMutationResult = NonNullable<
+  Awaited<ReturnType<typeof selectFinalDate>>
+>;
+export type SelectFinalDateMutationBody = SelectFinalDateRequest;
+export type SelectFinalDateMutationError = void;
+
+export const useSelectFinalDate = <TError = void, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof selectFinalDate>>,
+      TError,
+      { token: string; data: SelectFinalDateRequest },
+      TContext
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof selectFinalDate>>,
+  TError,
+  { token: string; data: SelectFinalDateRequest },
+  TContext
+> => {
+  const mutationOptions = getSelectFinalDateMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+export const listEvents = (
+  options?: SecondParameter<typeof axiosInstance>,
+  signal?: AbortSignal,
+) => {
+  return axiosInstance<EventSummaryResponse[]>(
+    { url: `/api/events`, method: "GET", signal },
+    options,
+  );
+};
 
 export const getListEventsQueryKey = () => {
-    return [
-    `/api/events`
-    ] as const;
-    }
+  return [`/api/events`] as const;
+};
 
-    
-export const getListEventsQueryOptions = <TData = Awaited<ReturnType<typeof listEvents>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listEvents>>, TError, TData>>, request?: SecondParameter<typeof axiosInstance>}
-) => {
+export const getListEventsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listEvents>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof listEvents>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof axiosInstance>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getListEventsQueryKey();
 
-  const queryKey =  queryOptions?.queryKey ?? getListEventsQueryKey();
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listEvents>>> = ({
+    signal,
+  }) => listEvents(requestOptions, signal);
 
-  
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listEvents>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listEvents>>> = ({ signal }) => listEvents(requestOptions, signal);
+export type ListEventsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listEvents>>
+>;
+export type ListEventsQueryError = unknown;
 
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listEvents>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type ListEventsQueryResult = NonNullable<Awaited<ReturnType<typeof listEvents>>>
-export type ListEventsQueryError = unknown
-
-
-export function useListEvents<TData = Awaited<ReturnType<typeof listEvents>>, TError = unknown>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listEvents>>, TError, TData>> & Pick<
+export function useListEvents<
+  TData = Awaited<ReturnType<typeof listEvents>>,
+  TError = unknown,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof listEvents>>, TError, TData>
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof listEvents>>,
           TError,
           Awaited<ReturnType<typeof listEvents>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof axiosInstance>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListEvents<TData = Awaited<ReturnType<typeof listEvents>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listEvents>>, TError, TData>> & Pick<
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useListEvents<
+  TData = Awaited<ReturnType<typeof listEvents>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof listEvents>>, TError, TData>
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof listEvents>>,
           TError,
           Awaited<ReturnType<typeof listEvents>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof axiosInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListEvents<TData = Awaited<ReturnType<typeof listEvents>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listEvents>>, TError, TData>>, request?: SecondParameter<typeof axiosInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useListEvents<
+  TData = Awaited<ReturnType<typeof listEvents>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof listEvents>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 
-export function useListEvents<TData = Awaited<ReturnType<typeof listEvents>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listEvents>>, TError, TData>>, request?: SecondParameter<typeof axiosInstance>}
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useListEvents<
+  TData = Awaited<ReturnType<typeof listEvents>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof listEvents>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getListEventsQueryOptions(options);
 
-  const queryOptions = getListEventsQueryOptions(options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
-
 
 export const createEvent = (
-    createEventRequest: CreateEventRequest,
- options?: SecondParameter<typeof axiosInstance>,signal?: AbortSignal
+  createEventRequest: CreateEventRequest,
+  options?: SecondParameter<typeof axiosInstance>,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return axiosInstance<CreateEventResponse>(
-      {url: `/api/events`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: createEventRequest, signal
+  return axiosInstance<CreateEventResponse>(
+    {
+      url: `/api/events`,
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      data: createEventRequest,
+      signal,
     },
-      options);
-    }
-  
+    options,
+  );
+};
 
+export const getCreateEventMutationOptions = <
+  TError = HttpValidationProblemDetails,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createEvent>>,
+    TError,
+    { data: CreateEventRequest },
+    TContext
+  >;
+  request?: SecondParameter<typeof axiosInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createEvent>>,
+  TError,
+  { data: CreateEventRequest },
+  TContext
+> => {
+  const mutationKey = ["createEvent"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
-export const getCreateEventMutationOptions = <TError = HttpValidationProblemDetails,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createEvent>>, TError,{data: CreateEventRequest}, TContext>, request?: SecondParameter<typeof axiosInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof createEvent>>, TError,{data: CreateEventRequest}, TContext> => {
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createEvent>>,
+    { data: CreateEventRequest }
+  > = (props) => {
+    const { data } = props ?? {};
 
-const mutationKey = ['createEvent'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
+    return createEvent(data, requestOptions);
+  };
 
-      
+  return { mutationFn, ...mutationOptions };
+};
 
+export type CreateEventMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createEvent>>
+>;
+export type CreateEventMutationBody = CreateEventRequest;
+export type CreateEventMutationError = HttpValidationProblemDetails;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createEvent>>, {data: CreateEventRequest}> = (props) => {
-          const {data} = props ?? {};
+export const useCreateEvent = <
+  TError = HttpValidationProblemDetails,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof createEvent>>,
+      TError,
+      { data: CreateEventRequest },
+      TContext
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof createEvent>>,
+  TError,
+  { data: CreateEventRequest },
+  TContext
+> => {
+  const mutationOptions = getCreateEventMutationOptions(options);
 
-          return  createEvent(data,requestOptions)
-        }
+  return useMutation(mutationOptions, queryClient);
+};
 
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CreateEventMutationResult = NonNullable<Awaited<ReturnType<typeof createEvent>>>
-    export type CreateEventMutationBody = CreateEventRequest
-    export type CreateEventMutationError = HttpValidationProblemDetails
-
-    export const useCreateEvent = <TError = HttpValidationProblemDetails,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createEvent>>, TError,{data: CreateEventRequest}, TContext>, request?: SecondParameter<typeof axiosInstance>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof createEvent>>,
-        TError,
-        {data: CreateEventRequest},
-        TContext
-      > => {
-
-      const mutationOptions = getCreateEventMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    
 export const getEventByToken = (
-    token: string,
-    params?: GetEventByTokenParams,
- options?: SecondParameter<typeof axiosInstance>,signal?: AbortSignal
+  token: string,
+  params?: GetEventByTokenParams,
+  options?: SecondParameter<typeof axiosInstance>,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return axiosInstance<EventDetailResponse>(
-      {url: `/api/events/${token}`, method: 'GET',
-        params, signal
-    },
-      options);
-    }
-  
+  return axiosInstance<EventDetailResponse>(
+    { url: `/api/events/${token}`, method: "GET", params, signal },
+    options,
+  );
+};
 
-
-
-export const getGetEventByTokenQueryKey = (token?: string,
-    params?: GetEventByTokenParams,) => {
-    return [
-    `/api/events/${token}`, ...(params ? [params]: [])
-    ] as const;
-    }
-
-    
-export const getGetEventByTokenQueryOptions = <TData = Awaited<ReturnType<typeof getEventByToken>>, TError = void>(token: string,
-    params?: GetEventByTokenParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEventByToken>>, TError, TData>>, request?: SecondParameter<typeof axiosInstance>}
+export const getGetEventByTokenQueryKey = (
+  token?: string,
+  params?: GetEventByTokenParams,
 ) => {
+  return [`/api/events/${token}`, ...(params ? [params] : [])] as const;
+};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+export const getGetEventByTokenQueryOptions = <
+  TData = Awaited<ReturnType<typeof getEventByToken>>,
+  TError = void,
+>(
+  token: string,
+  params?: GetEventByTokenParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getEventByToken>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetEventByTokenQueryKey(token,params);
+  const queryKey =
+    queryOptions?.queryKey ?? getGetEventByTokenQueryKey(token, params);
 
-  
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getEventByToken>>> = ({
+    signal,
+  }) => getEventByToken(token, params, requestOptions, signal);
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEventByToken>>> = ({ signal }) => getEventByToken(token,params, requestOptions, signal);
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!token,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getEventByToken>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-      
+export type GetEventByTokenQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getEventByToken>>
+>;
+export type GetEventByTokenQueryError = void;
 
-      
-
-   return  { queryKey, queryFn, enabled: !!(token), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getEventByToken>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetEventByTokenQueryResult = NonNullable<Awaited<ReturnType<typeof getEventByToken>>>
-export type GetEventByTokenQueryError = void
-
-
-export function useGetEventByToken<TData = Awaited<ReturnType<typeof getEventByToken>>, TError = void>(
- token: string,
-    params: undefined |  GetEventByTokenParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEventByToken>>, TError, TData>> & Pick<
+export function useGetEventByToken<
+  TData = Awaited<ReturnType<typeof getEventByToken>>,
+  TError = void,
+>(
+  token: string,
+  params: undefined | GetEventByTokenParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getEventByToken>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getEventByToken>>,
           TError,
           Awaited<ReturnType<typeof getEventByToken>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof axiosInstance>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetEventByToken<TData = Awaited<ReturnType<typeof getEventByToken>>, TError = void>(
- token: string,
-    params?: GetEventByTokenParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEventByToken>>, TError, TData>> & Pick<
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetEventByToken<
+  TData = Awaited<ReturnType<typeof getEventByToken>>,
+  TError = void,
+>(
+  token: string,
+  params?: GetEventByTokenParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getEventByToken>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getEventByToken>>,
           TError,
           Awaited<ReturnType<typeof getEventByToken>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof axiosInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetEventByToken<TData = Awaited<ReturnType<typeof getEventByToken>>, TError = void>(
- token: string,
-    params?: GetEventByTokenParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEventByToken>>, TError, TData>>, request?: SecondParameter<typeof axiosInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetEventByToken<
+  TData = Awaited<ReturnType<typeof getEventByToken>>,
+  TError = void,
+>(
+  token: string,
+  params?: GetEventByTokenParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getEventByToken>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 
-export function useGetEventByToken<TData = Awaited<ReturnType<typeof getEventByToken>>, TError = void>(
- token: string,
-    params?: GetEventByTokenParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEventByToken>>, TError, TData>>, request?: SecondParameter<typeof axiosInstance>}
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useGetEventByToken<
+  TData = Awaited<ReturnType<typeof getEventByToken>>,
+  TError = void,
+>(
+  token: string,
+  params?: GetEventByTokenParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getEventByToken>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getGetEventByTokenQueryOptions(token, params, options);
 
-  const queryOptions = getGetEventByTokenQueryOptions(token,params,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
 
-
-
-
-
 export const releaseClaim = (
-    token: string,
-    itemId: string,
-    params: ReleaseClaimParams,
- options?: SecondParameter<typeof axiosInstance>,) => {
-      
-      
-      return axiosInstance<void>(
-      {url: `/api/events/${token}/items/${itemId}/claim`, method: 'DELETE',
-        params
-    },
-      options);
-    }
-  
-
-
-export const getReleaseClaimMutationOptions = <TError = void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof releaseClaim>>, TError,{token: string;itemId: string;params: ReleaseClaimParams}, TContext>, request?: SecondParameter<typeof axiosInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof releaseClaim>>, TError,{token: string;itemId: string;params: ReleaseClaimParams}, TContext> => {
-
-const mutationKey = ['releaseClaim'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof releaseClaim>>, {token: string;itemId: string;params: ReleaseClaimParams}> = (props) => {
-          const {token,itemId,params} = props ?? {};
-
-          return  releaseClaim(token,itemId,params,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type ReleaseClaimMutationResult = NonNullable<Awaited<ReturnType<typeof releaseClaim>>>
-    
-    export type ReleaseClaimMutationError = void
-
-    export const useReleaseClaim = <TError = void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof releaseClaim>>, TError,{token: string;itemId: string;params: ReleaseClaimParams}, TContext>, request?: SecondParameter<typeof axiosInstance>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof releaseClaim>>,
-        TError,
-        {token: string;itemId: string;params: ReleaseClaimParams},
-        TContext
-      > => {
-
-      const mutationOptions = getReleaseClaimMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    
-export const claimItem = (
-    token: string,
-    itemId: string,
-    params: ClaimItemParams,
- options?: SecondParameter<typeof axiosInstance>,signal?: AbortSignal
+  token: string,
+  itemId: string,
+  params: ReleaseClaimParams,
+  options?: SecondParameter<typeof axiosInstance>,
 ) => {
-      
-      
-      return axiosInstance<void>(
-      {url: `/api/events/${token}/items/${itemId}/claim`, method: 'POST',
-        params, signal
+  return axiosInstance<void>(
+    {
+      url: `/api/events/${token}/items/${itemId}/claim`,
+      method: "DELETE",
+      params,
     },
-      options);
-    }
-  
+    options,
+  );
+};
 
+export const getReleaseClaimMutationOptions = <
+  TError = void,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof releaseClaim>>,
+    TError,
+    { token: string; itemId: string; params: ReleaseClaimParams },
+    TContext
+  >;
+  request?: SecondParameter<typeof axiosInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof releaseClaim>>,
+  TError,
+  { token: string; itemId: string; params: ReleaseClaimParams },
+  TContext
+> => {
+  const mutationKey = ["releaseClaim"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
-export const getClaimItemMutationOptions = <TError = void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof claimItem>>, TError,{token: string;itemId: string;params: ClaimItemParams}, TContext>, request?: SecondParameter<typeof axiosInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof claimItem>>, TError,{token: string;itemId: string;params: ClaimItemParams}, TContext> => {
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof releaseClaim>>,
+    { token: string; itemId: string; params: ReleaseClaimParams }
+  > = (props) => {
+    const { token, itemId, params } = props ?? {};
 
-const mutationKey = ['claimItem'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
+    return releaseClaim(token, itemId, params, requestOptions);
+  };
 
-      
+  return { mutationFn, ...mutationOptions };
+};
 
+export type ReleaseClaimMutationResult = NonNullable<
+  Awaited<ReturnType<typeof releaseClaim>>
+>;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof claimItem>>, {token: string;itemId: string;params: ClaimItemParams}> = (props) => {
-          const {token,itemId,params} = props ?? {};
+export type ReleaseClaimMutationError = void;
 
-          return  claimItem(token,itemId,params,requestOptions)
-        }
+export const useReleaseClaim = <TError = void, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof releaseClaim>>,
+      TError,
+      { token: string; itemId: string; params: ReleaseClaimParams },
+      TContext
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof releaseClaim>>,
+  TError,
+  { token: string; itemId: string; params: ReleaseClaimParams },
+  TContext
+> => {
+  const mutationOptions = getReleaseClaimMutationOptions(options);
 
-        
+  return useMutation(mutationOptions, queryClient);
+};
 
+export const claimItem = (
+  token: string,
+  itemId: string,
+  params: ClaimItemParams,
+  options?: SecondParameter<typeof axiosInstance>,
+  signal?: AbortSignal,
+) => {
+  return axiosInstance<void>(
+    {
+      url: `/api/events/${token}/items/${itemId}/claim`,
+      method: "POST",
+      params,
+      signal,
+    },
+    options,
+  );
+};
 
-  return  { mutationFn, ...mutationOptions }}
+export const getClaimItemMutationOptions = <
+  TError = void,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof claimItem>>,
+    TError,
+    { token: string; itemId: string; params: ClaimItemParams },
+    TContext
+  >;
+  request?: SecondParameter<typeof axiosInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof claimItem>>,
+  TError,
+  { token: string; itemId: string; params: ClaimItemParams },
+  TContext
+> => {
+  const mutationKey = ["claimItem"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
-    export type ClaimItemMutationResult = NonNullable<Awaited<ReturnType<typeof claimItem>>>
-    
-    export type ClaimItemMutationError = void
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof claimItem>>,
+    { token: string; itemId: string; params: ClaimItemParams }
+  > = (props) => {
+    const { token, itemId, params } = props ?? {};
 
-    export const useClaimItem = <TError = void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof claimItem>>, TError,{token: string;itemId: string;params: ClaimItemParams}, TContext>, request?: SecondParameter<typeof axiosInstance>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof claimItem>>,
-        TError,
-        {token: string;itemId: string;params: ClaimItemParams},
-        TContext
-      > => {
+    return claimItem(token, itemId, params, requestOptions);
+  };
 
-      const mutationOptions = getClaimItemMutationOptions(options);
+  return { mutationFn, ...mutationOptions };
+};
 
-      return useMutation(mutationOptions, queryClient);
-    }
+export type ClaimItemMutationResult = NonNullable<
+  Awaited<ReturnType<typeof claimItem>>
+>;
+
+export type ClaimItemMutationError = void;
+
+export const useClaimItem = <TError = void, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof claimItem>>,
+      TError,
+      { token: string; itemId: string; params: ClaimItemParams },
+      TContext
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof claimItem>>,
+  TError,
+  { token: string; itemId: string; params: ClaimItemParams },
+  TContext
+> => {
+  const mutationOptions = getClaimItemMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};

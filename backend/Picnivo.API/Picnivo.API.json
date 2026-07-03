@@ -988,7 +988,8 @@
         "required": [
           "id",
           "displayName",
-          "attendance"
+          "attendance",
+          "votes"
         ],
         "type": "object",
         "properties": {
@@ -1001,6 +1002,28 @@
           },
           "attendance": {
             "$ref": "#/components/schemas/AttendanceStatus"
+          },
+          "votes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ParticipantVoteDto"
+            }
+          }
+        }
+      },
+      "ParticipantVoteDto": {
+        "required": [
+          "dateOptionId",
+          "choice"
+        ],
+        "type": "object",
+        "properties": {
+          "dateOptionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "choice": {
+            "$ref": "#/components/schemas/VoteChoice"
           }
         }
       },

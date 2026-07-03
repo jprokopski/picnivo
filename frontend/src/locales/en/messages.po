@@ -13,12 +13,17 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#. placeholder {0}: event.organizerName
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:29
-msgid "{0} is hosting"
-msgstr "{0} is hosting"
+#. placeholder {0}: event.participants.length
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:152
+msgid "{0} invited"
+msgstr "{0} invited"
 
-#: src/features/events/create-event/components/date-picker.tsx:483
+#. placeholder {0}: event.participants.length
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:103
+msgid "{0} voted"
+msgstr "{0} voted"
+
+#: src/features/events/create-event/components/date-picker.tsx:489
 msgid "{count} days proposed · friends vote Yes / Maybe / No"
 msgstr "{count} days proposed · friends vote Yes / Maybe / No"
 
@@ -34,9 +39,41 @@ msgstr "{dateOptionCount} dates"
 msgid "{itemCount} items"
 msgstr "{itemCount} items"
 
-#: src/features/events/list-events/components/event-card.tsx:86
+#: src/features/events/list-events/components/event-card.tsx:85
 msgid "{itemCount} items on the list"
 msgstr "{itemCount} items on the list"
+
+#: src/features/events/vote-on-dates/components/date-row.tsx:102
+msgid "{maybe} maybe"
+msgstr "{maybe} maybe"
+
+#: src/features/events/vote-on-dates/components/date-row.tsx:105
+msgid "{no} no"
+msgstr "{no} no"
+
+#: src/features/events/get-event-by-token/components/event-band.tsx:31
+msgid "{organizerName} is hosting"
+msgstr "{organizerName} is hosting"
+
+#: src/features/events/get-event-by-token/components/best-hero.tsx:116
+msgid "{organizerName} picks the final date once everyone's voted."
+msgstr "{organizerName} picks the final date once everyone's voted."
+
+#: src/features/events/get-event-by-token/components/best-hero.tsx:99
+msgid "{yes} of {totalParticipants} can make it"
+msgstr "{yes} of {totalParticipants} can make it"
+
+#: src/features/events/vote-on-dates/components/date-row.tsx:99
+msgid "{yes} yes"
+msgstr "{yes} yes"
+
+#: src/features/events/get-event-by-token/components/best-hero.tsx:75
+msgid "✓ It's official"
+msgstr "✓ It's official"
+
+#: src/features/events/vote-on-dates/components/date-row.tsx:67
+msgid "✓ Locked"
+msgstr "✓ Locked"
 
 #: src/features/events/join-event/components/join-bar.tsx:49
 msgid "👋 Add your name to join in"
@@ -58,11 +95,11 @@ msgstr "Add an item…"
 msgid "Add item"
 msgstr "Add item"
 
-#: src/features/events/create-event/components/date-picker.tsx:517
+#: src/features/events/create-event/components/date-picker.tsx:523
 msgid "Add more days"
 msgstr "Add more days"
 
-#: src/features/events/create-event/components/date-picker.tsx:427
+#: src/features/events/create-event/components/date-picker.tsx:433
 msgid "Add this date"
 msgstr "Add this date"
 
@@ -86,6 +123,10 @@ msgstr "Back"
 msgid "Beach umbrella"
 msgstr "Beach umbrella"
 
+#: src/features/events/get-event-by-token/components/best-hero.tsx:79
+msgid "Best date so far"
+msgstr "Best date so far"
+
 #: src/features/events/create-event/components/create-event-form.tsx:174
 msgid "Bring a little something"
 msgstr "Bring a little something"
@@ -94,8 +135,8 @@ msgstr "Bring a little something"
 msgid "Bug spray"
 msgstr "Bug spray"
 
-#: src/components/ui/dialog.tsx:77
-#: src/components/ui/dialog.tsx:115
+#: src/components/ui/dialog.tsx:78
+#: src/components/ui/dialog.tsx:118
 msgid "Close"
 msgstr "Close"
 
@@ -112,8 +153,13 @@ msgid "Continue with Google"
 msgstr "Continue with Google"
 
 #: src/features/events/create-event/components/share-link-dialog.tsx:93
+#: src/features/events/get-event-by-token/components/share-aside.tsx:43
 msgid "Copied!"
 msgstr "Copied!"
+
+#: src/features/events/get-event-by-token/components/share-aside.tsx:48
+msgid "Copy invite link"
+msgstr "Copy invite link"
 
 #: src/features/events/create-event/components/share-link-dialog.tsx:98
 msgid "Copy link"
@@ -151,10 +197,6 @@ msgstr "Cups & plates"
 #: src/features/events/create-event/components/date-picker.tsx:203
 msgid "Custom"
 msgstr "Custom"
-
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:47
-msgid "dates"
-msgstr "dates"
 
 #: src/features/events/create-event/components/items-editor.tsx:17
 msgid "Dessert"
@@ -194,19 +236,31 @@ msgid "From scattered group chat to a ready-to-go plan — pick a date, claim "
 msgstr "From scattered group chat to a ready-to-go plan — pick a date, claim "
 "what to bring, all on one shared page."
 
+#: src/features/events/get-event-by-token/components/event-band.tsx:49
+msgid "going"
+msgstr "going"
+
 #: src/features/auth/components/auth-panel.tsx:255
 msgid "Hide"
 msgstr "Hide"
 
-#: src/features/events/list-events/components/event-card.tsx:67
+#: src/features/events/list-events/components/event-card.tsx:66
 msgid "Hosted by you"
 msgstr "Hosted by you"
 
-#: src/features/events/list-events/components/event-card.tsx:50
+#: src/features/events/list-events/components/event-card.tsx:49
 msgid "Hosting"
 msgstr "Hosting"
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:55
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:96
+msgid "How everyone voted"
+msgstr "How everyone voted"
+
+#: src/features/events/get-event-by-token/components/share-aside.tsx:27
+msgid "Invite more friends"
+msgstr "Invite more friends"
+
+#: src/features/events/get-event-by-token/components/event-band.tsx:57
 msgid "items"
 msgstr "items"
 
@@ -218,9 +272,17 @@ msgstr "Join"
 msgid "Join Picnivo"
 msgstr "Join Picnivo"
 
+#: src/features/events/vote-on-dates/components/date-row.tsx:67
+msgid "Leading"
+msgstr "Leading"
+
 #: src/features/events/create-event/components/create-event-form.tsx:290
 msgid "Live preview"
 msgstr "Live preview"
+
+#: src/features/events/get-event-by-token/components/best-hero.tsx:110
+msgid "Lock in this date"
+msgstr "Lock in this date"
 
 #: src/components/header.tsx:182
 msgid "Log in"
@@ -229,6 +291,10 @@ msgstr "Log in"
 #: src/features/auth/components/auth-panel.tsx:215
 msgid "Maya Chen"
 msgstr "Maya Chen"
+
+#: src/features/events/vote-on-dates/components/vote-control.tsx:42
+msgid "Maybe"
+msgstr "Maybe"
 
 #: src/components/header.tsx:72
 #: src/components/header.tsx:152
@@ -244,9 +310,13 @@ msgstr "New event"
 msgid "New to Picnivo?"
 msgstr "New to Picnivo?"
 
-#: src/features/events/create-event/components/date-picker.tsx:320
+#: src/features/events/create-event/components/date-picker.tsx:322
 msgid "Next month"
 msgstr "Next month"
+
+#: src/features/events/vote-on-dates/components/vote-control.tsx:43
+msgid "No"
+msgstr "No"
 
 #: src/features/events/create-event/components/create-event-form.tsx:300
 msgid "No account needed for guests — they just open the link."
@@ -278,11 +348,11 @@ msgid "Ongoing"
 msgstr "Ongoing"
 
 #. placeholder {0}: event.title
-#: src/features/events/list-events/components/event-card.tsx:42
+#: src/features/events/list-events/components/event-card.tsx:41
 msgid "Open {0}"
 msgstr "Open {0}"
 
-#: src/features/events/list-events/components/event-card.tsx:80
+#: src/features/events/list-events/components/event-card.tsx:79
 msgid "Open event"
 msgstr "Open event"
 
@@ -311,11 +381,11 @@ msgstr "Password"
 msgid "Past"
 msgstr "Past"
 
-#: src/features/events/create-event/components/date-picker.tsx:287
+#: src/features/events/create-event/components/date-picker.tsx:289
 msgid "Pick a custom date"
 msgstr "Pick a custom date"
 
-#: src/features/events/create-event/components/date-picker.tsx:480
+#: src/features/events/create-event/components/date-picker.tsx:486
 msgid "Pick at least one day to continue."
 msgstr "Pick at least one day to continue."
 
@@ -339,13 +409,9 @@ msgstr "Plan the hang — together."
 msgid "Please try again in a moment."
 msgstr "Please try again in a moment."
 
-#: src/features/events/create-event/components/date-picker.tsx:298
+#: src/features/events/create-event/components/date-picker.tsx:300
 msgid "Previous month"
 msgstr "Previous month"
-
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:77
-msgid "Proposed dates"
-msgstr "Proposed dates"
 
 #: src/features/events/create-event/components/items-editor.tsx:43
 msgid "Remove {item}"
@@ -400,9 +466,15 @@ msgstr "Something went wrong."
 #: src/features/auth/components/auth-panel.tsx:99
 #: src/features/events/create-event/components/create-event-form.tsx:73
 #: src/features/events/create-event/components/create-event-form.tsx:80
+#: src/features/events/get-event-by-token/components/best-hero.tsx:45
 #: src/features/events/join-event/components/join-bar.tsx:36
+#: src/features/events/vote-on-dates/components/vote-control.tsx:53
 msgid "Something went wrong. Please try again."
 msgstr "Something went wrong. Please try again."
+
+#: src/features/events/get-event-by-token/components/share-aside.tsx:26
+msgid "Spread the word"
+msgstr "Spread the word"
 
 #: src/features/auth/components/auth-panel.tsx:166
 msgid "Start planning get-togethers everyone actually shows up to."
@@ -413,7 +485,7 @@ msgstr "Start planning get-togethers everyone actually shows up to."
 msgid "Step {0} of {TOTAL_STEPS}"
 msgstr "Step {0} of {TOTAL_STEPS}"
 
-#: src/features/events/create-event/components/date-picker.tsx:519
+#: src/features/events/create-event/components/date-picker.tsx:525
 msgid "Suggested days"
 msgstr "Suggested days"
 
@@ -425,11 +497,15 @@ msgstr "Tap to add"
 msgid "The basics"
 msgstr "The basics"
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:119
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:151
+msgid "The crew"
+msgstr "The crew"
+
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:129
 msgid "The haul"
 msgstr "The haul"
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:152
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:170
 msgid "The link may be mistyped, or the event no longer exists."
 msgstr "The link may be mistyped, or the event no longer exists."
 
@@ -437,7 +513,7 @@ msgstr "The link may be mistyped, or the event no longer exists."
 msgid "The plans you've set up. Share the link and see who's in."
 msgstr "The plans you've set up. Share the link and see who's in."
 
-#: src/features/events/list-events/components/event-card.tsx:58
+#: src/features/events/list-events/components/event-card.tsx:57
 msgid "To be defined"
 msgstr "To be defined"
 
@@ -453,15 +529,24 @@ msgstr "Try again"
 msgid "Untitled event"
 msgstr "Untitled event"
 
+#: src/features/events/vote-on-dates/components/vote-control.tsx:66
+#: src/features/events/vote-on-dates/components/vote-control.tsx:102
+msgid "Vote"
+msgstr "Vote"
+
 #: src/features/events/join-event/components/join-bar.tsx:52
 msgid "Vote on dates and claim what you'll bring — no account needed."
 msgstr "Vote on dates and claim what you'll bring — no account needed."
+
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:98
+msgid "Vote on the dates"
+msgstr "Vote on the dates"
 
 #: src/features/events/create-event/components/items-editor.tsx:19
 msgid "Watermelon"
 msgstr "Watermelon"
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:149
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:167
 msgid "We couldn't find that event."
 msgstr "We couldn't find that event."
 
@@ -477,10 +562,6 @@ msgstr "Welcome back to the picnic."
 msgid "What do we need?"
 msgstr "What do we need?"
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:122
-msgid "What to bring"
-msgstr "What to bring"
-
 #: src/features/events/create-event/components/create-event-form.tsx:165
 msgid "What's the plan?"
 msgstr "What's the plan?"
@@ -489,7 +570,7 @@ msgstr "What's the plan?"
 msgid "When could it happen?"
 msgstr "When could it happen?"
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:74
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:93
 msgid "When works?"
 msgstr "When works?"
 
@@ -501,9 +582,17 @@ msgstr "Where"
 msgid "Where good hangs come together"
 msgstr "Where good hangs come together"
 
-#: src/features/events/create-event/components/date-picker.tsx:482
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:130
+msgid "Who brings what"
+msgstr "Who brings what"
+
+#: src/features/events/create-event/components/date-picker.tsx:488
 msgid "With one date this is an announcement — add more to open voting."
 msgstr "With one date this is an announcement — add more to open voting."
+
+#: src/features/events/vote-on-dates/components/vote-control.tsx:41
+msgid "Yes"
+msgstr "Yes"
 
 #: src/components/header.tsx:53
 msgid "You"

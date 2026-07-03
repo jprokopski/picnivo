@@ -16,4 +16,12 @@ public class Event
     public ICollection<DateOption> DateOptions { get; set; } = new List<DateOption>();
     public ICollection<EventItem> Items { get; set; } = new List<EventItem>();
     public ICollection<Participant> Participants { get; set; } = new List<Participant>();
+
+    /// <summary>
+    /// A 1-date event is a de-facto announcement (FR-004): its lone date is the
+    /// effective chosen date even before the organizer explicitly locks one.
+    /// </summary>
+    public static Guid? ResolveEffectiveChosenDateOptionId(
+        Guid? chosenDateOptionId, IReadOnlyCollection<Guid> dateOptionIds) =>
+        chosenDateOptionId ?? (dateOptionIds.Count == 1 ? dateOptionIds.Single() : null);
 }
