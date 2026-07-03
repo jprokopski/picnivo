@@ -155,7 +155,7 @@ public class GetEventByTokenHandlerTests
     }
 
     [Fact]
-    public async Task WithSingleDateEvent_YesCountIncludesOrganizerAsImplicitYes()
+    public async Task WithSingleDateEvent_YesCountHasNoImplicitOrganizerVote()
     {
         // Arrange
         await using var db = TestDb.Create();
@@ -173,7 +173,7 @@ public class GetEventByTokenHandlerTests
         // Assert
         var ok = result.ShouldBeOfType<Ok<EventDetailResponse>>();
         ok.Value!.DateOptions.ShouldHaveSingleItem();
-        ok.Value.DateOptions[0].YesCount.ShouldBe(1);
+        ok.Value.DateOptions[0].YesCount.ShouldBe(0);
         ok.Value.DateOptions[0].NoCount.ShouldBe(0);
     }
 

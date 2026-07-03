@@ -46,6 +46,7 @@ public static class CreateEvent
             Id = Guid.CreateVersion7(),
             DisplayName = organizerName,
             Attendance = AttendanceStatus.Undecided,
+            IsOrganizer = true,
             CreatedAt = DateTimeOffset.UtcNow
         };
 

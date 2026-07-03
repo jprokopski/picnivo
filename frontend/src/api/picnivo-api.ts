@@ -206,6 +206,7 @@ export interface JoinEventResponse {
 export interface ParticipantDto {
   id: string;
   displayName: string;
+  isOrganizer: boolean;
   attendance: AttendanceStatus;
   votes: ParticipantVoteDto[];
 }

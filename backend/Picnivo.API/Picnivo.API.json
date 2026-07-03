@@ -988,6 +988,7 @@
         "required": [
           "id",
           "displayName",
+          "isOrganizer",
           "attendance",
           "votes"
         ],
@@ -999,6 +1000,9 @@
           },
           "displayName": {
             "type": "string"
+          },
+          "isOrganizer": {
+            "type": "boolean"
           },
           "attendance": {
             "$ref": "#/components/schemas/AttendanceStatus"

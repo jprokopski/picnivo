@@ -1,13 +1,21 @@
 import { Trans } from "@lingui/react/macro";
 import type { EventDetailResponse } from "@/api/picnivo-api";
+import { Haul } from "../../claim-items/components/haul";
 import { JoinBar } from "../../join-event/components/join-bar";
+import {
+  ATTENDANCE_VALUES,
+  isEffectivelyComing,
+  isEffectivelyOut,
+} from "../../set-attendance/schema";
+import { AttendanceCard } from "../../set-attendance/components/attendance-card";
+import { Attendees } from "../../set-attendance/components/attendees";
 import { DateRow } from "../../vote-on-dates/components/date-row";
 import {
   VOTE_CHOICE_VALUES,
   voteChoiceKeyFromValue,
 } from "../../vote-on-dates/schema";
+import { AnnounceHero } from "./announce-hero";
 import { BestHero } from "./best-hero";
-import { CrewList } from "./crew-list";
 import { EventBand } from "./event-band";
 import { SectionCard } from "./section-card";
 import { ShareAside } from "./share-aside";
@@ -17,6 +25,7 @@ interface EventDetailViewProps {
   token: string;
   isOrganizer: boolean;
   shareUrl: string;
+  myParticipantId: string | null;
 }
 
 export function EventDetailView({
@@ -24,6 +33,7 @@ export function EventDetailView({
   token,
   isOrganizer,
   shareUrl,
+  myParticipantId,
 }: EventDetailViewProps) {
   const joined = !!event.you;
   const locked = !!event.chosenDateOptionId;
@@ -37,7 +47,7 @@ export function EventDetailView({
     event.dateOptions.find((d) => d.id === heroDateId) ?? event.dateOptions[0];
 
   function yesVoterNamesFor(dateOptionId: string): string[] {
-    const participantNames = event.participants
+    return event.participants
       .filter((p) =>
         p.votes.some(
           (v) =>
@@ -46,13 +56,43 @@ export function EventDetailView({
         ),
       )
       .map((p) => p.displayName);
-    // Single-date events are an announcement (no vote UI) — the organizer who
-    // set the date implicitly counts as attending, matching the backend tally.
-    if (isAnnouncement) {
-      return [event.organizerName, ...participantNames];
-    }
-    return participantNames;
   }
+
+  // Announcements have no vote UI at all, so "who's coming" can't be read off
+  // DateVotes — it's driven entirely by the attendance RSVP. The organizer is
+  // already one of `event.participants`, so they're included/excluded on the
+  // same footing as any guest — no implicit yes.
+  function comingNamesForAnnouncement(dateOptionId: string): string[] {
+    return event.participants
+      .filter((p) => isEffectivelyComing(p.attendance, p.votes, dateOptionId))
+      .map((p) => p.displayName);
+  }
+
+  function outNamesForAnnouncement(dateOptionId: string): string[] {
+    return event.participants
+      .filter((p) => isEffectivelyOut(p.attendance, p.votes, dateOptionId))
+      .map((p) => p.displayName);
+  }
+
+  const myClaimedItem = event.you
+    ? event.items.find((i) => event.you!.claimedItemIds.includes(i.id))
+    : undefined;
+  const myAttendanceStatus: "in" | "out" | "undecided" = !event.you
+    ? "undecided"
+    : isEffectivelyComing(
+          event.you.attendance,
+          event.you.votes,
+          event.chosenDateOptionId,
+        )
+      ? "in"
+      : isEffectivelyOut(
+            event.you.attendance,
+            event.you.votes,
+            event.chosenDateOptionId,
+          )
+        ? "out"
+        : "undecided";
+  const showAttendanceCard = joined && (isAnnouncement || locked);
 
   return (
     <div className="mx-auto max-w-295 animate-[pv-fade_420ms_cubic-bezier(0.16,1,0.3,1)_both] pt-12 pr-[max(var(--web-gutter),env(safe-area-inset-right))] pb-24 pl-[max(var(--web-gutter),env(safe-area-inset-left))] max-[720px]:pt-7 max-[720px]:pb-16">
@@ -75,18 +115,40 @@ export function EventDetailView({
 
       <div className="grid grid-cols-[1fr_340px] gap-6.5 max-[940px]:grid-cols-1 max-[720px]:gap-5">
         <div className="flex flex-col gap-5.5 max-[720px]:gap-4.5">
-          {heroDate && (
-            <BestHero
-              token={token}
-              heroDate={heroDate}
-              location={event.location}
-              organizerName={event.organizerName}
-              isOrganizer={isOrganizer}
-              locked={locked}
-              yesVoterNames={yesVoterNamesFor(heroDate.id)}
-              totalParticipants={event.participants.length}
-            />
-          )}
+          <div className="flex flex-col gap-4.5">
+            {showAttendanceCard && heroDate && (
+              <AttendanceCard
+                token={token}
+                date={heroDate}
+                status={myAttendanceStatus}
+                isExplicitOut={event.you?.attendance === ATTENDANCE_VALUES.out}
+                isAnnouncement={isAnnouncement}
+                myClaim={myClaimedItem}
+              />
+            )}
+            {isAnnouncement && heroDate ? (
+              <AnnounceHero
+                date={heroDate}
+                location={event.location}
+                comingNames={comingNamesForAnnouncement(heroDate.id)}
+                outNames={outNamesForAnnouncement(heroDate.id)}
+                totalParticipants={event.participants.length}
+              />
+            ) : (
+              heroDate && (
+                <BestHero
+                  token={token}
+                  heroDate={heroDate}
+                  location={event.location}
+                  organizerName={event.organizerName}
+                  isOrganizer={isOrganizer}
+                  locked={locked}
+                  yesVoterNames={yesVoterNamesFor(heroDate.id)}
+                  totalParticipants={event.participants.length}
+                />
+              )
+            )}
+          </div>
 
           {!isAnnouncement && (
             <SectionCard
@@ -124,26 +186,32 @@ export function EventDetailView({
             </SectionCard>
           )}
 
-          {event.items.length > 0 && (
-            <SectionCard
-              kicker={<Trans>The haul</Trans>}
-              title={<Trans>Who brings what</Trans>}
-            >
-              <div className="flex flex-col gap-2.5">
-                {event.items.map((item) => (
-                  <div
-                    key={item.id}
-                    className="border-border bg-card flex items-center gap-3.5 rounded-(--r-md) border px-4.5 py-3.5"
-                  >
-                    <span className="border-border size-2.25 shrink-0 rounded-full border-2" />
-                    <span className="text-[15px] font-semibold wrap-break-word">
-                      {item.label}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </SectionCard>
-          )}
+          <SectionCard
+            kicker={<Trans>The haul</Trans>}
+            title={<Trans>Who brings what</Trans>}
+            right={
+              locked && (
+                <span className="border-border rounded-full border bg-(--card-2) px-2.75 py-0.75 text-[13px] font-semibold">
+                  <Trans>
+                    {claimedCount}/{event.items.length} covered
+                  </Trans>
+                </span>
+              )
+            }
+          >
+            <Haul
+              token={token}
+              items={event.items}
+              participants={event.participants}
+              chosenDateOptionId={event.chosenDateOptionId}
+              locked={locked}
+              joined={joined}
+              isOrganizer={isOrganizer}
+              organizerName={event.organizerName}
+              you={event.you}
+              myParticipantId={myParticipantId}
+            />
+          </SectionCard>
         </div>
 
         <aside className="flex flex-col gap-4.5 max-[940px]:gap-4">
@@ -151,7 +219,12 @@ export function EventDetailView({
             kicker={<Trans>The crew</Trans>}
             title={<Trans>{event.participants.length} invited</Trans>}
           >
-            <CrewList participants={event.participants} />
+            <Attendees
+              participants={event.participants}
+              chosenDateOptionId={event.chosenDateOptionId}
+              locked={locked}
+              myParticipantId={myParticipantId}
+            />
           </SectionCard>
           <ShareAside shareUrl={shareUrl} />
         </aside>

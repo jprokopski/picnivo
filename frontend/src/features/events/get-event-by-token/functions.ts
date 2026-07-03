@@ -24,3 +24,11 @@ export const getEventByTokenFn = createServerFn({ method: "GET" })
 export const getShareOriginFn = createServerFn({ method: "GET" }).handler(
   async () => getRequestUrl().origin,
 );
+
+// The `you` DTO deliberately omits the caller's own participant id (it only
+// needs to answer "is this vote/claim mine?"). Removing an item you added
+// needs the raw id to compare against `EventItemDto.addedByParticipantId`,
+// so it's read from the same httpOnly cookie and threaded down separately.
+export const getMyParticipantIdFn = createServerFn({ method: "GET" })
+  .inputValidator(tokenSchema)
+  .handler(async ({ data }) => getParticipantIdCookie(data.token) ?? null);

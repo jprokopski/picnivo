@@ -383,6 +383,25 @@ date. Covered by `GetEventByTokenHandlerTests.
 WithSingleDateEvent_YesCountIncludesOrganizerAsImplicitYes` and
 `...WithMultipleDates_YesCountDoesNotIncludeOrganizer`.
 
+**Addendum (superseded in Phase 6, 2026-07-03)**: The implicit-yes rule above
+is removed. Phase 6 gave every participant — including the organizer, via the
+auto-created `IsOrganizer` participant row — an explicit `Attendance` RSVP
+(`AttendanceCard`/`AnnounceHero`'s "I'm in" / "Can't make it"). Once that
+mechanism exists, hardcoding the organizer as an always-yes voter is no
+longer a stand-in for "they have no way to express attendance" — it actively
+fights the RSVP the organizer can now cast, and double-counts them (they
+already appear in `event.participants`). `CountFor` no longer special-cases
+`isAnnouncement`; `YesCount` for a fresh single-date event is now `0` until
+someone actually votes (never, for announcements — no vote UI) and is
+otherwise unused by announcement rendering, which reads `Attendance`
+directly via `isEffectivelyComing`/`isEffectivelyOut`. Frontend
+`comingNamesForAnnouncement`/`yesVoterNamesFor` dropped their matching
+`[organizerName, ...]` prepend for the same reason. `AnnounceHero` dropped
+its `isOrganizer` prop and no-voting-needed message; the organizer now sees
+the same RSVP buttons as any guest. Renamed/updated:
+`WithSingleDateEvent_YesCountIncludesOrganizerAsImplicitYes` →
+`...YesCountHasNoImplicitOrganizerVote` (asserts `0`, not `1`).
+
 #### 4. Extend ListEvents read model (dashboard)
 
 **File**: `backend/Picnivo.API/Features/Events/ListEvents/`
@@ -708,6 +727,25 @@ whether the Coming/Can't-make-it crew split filters the organizer out or shows
 them deliberately — don't let their presence in `participants[]` fall through
 as an accident.
 
+**Addendum (impl-review fix, 2026-07-03)**: Decision — the organizer **is**
+shown in the crew split (in whichever of Coming/Can't-make-it bucket they
+effectively fall into) and tagged "HOST", rather than filtered out. This
+diverges from the design reference (`picnivo-web-event.jsx`), which only
+surfaces the organizer via a "hosted by" kicker and never in the crew list —
+accepted as a deliberate deviation so the crew list stays a complete roster of
+everyone the read model returns, matching the "N invited" count in the
+`SectionCard` header above it. Identifying the organizer required a new
+signal: `ParticipantDto` gained `IsOrganizer` (backend `Participant.IsOrganizer`
+bool, set `true` only on the auto-created organizer participant in
+`CreateEvent.cs`; migration `AddParticipantIsOrganizer`), replacing an earlier
+`displayName === organizerName` heuristic that had no dedicated field to key
+off and would mistag a guest who happened to share the organizer's display
+name. `attendees.tsx`'s `PersonRow` now reads `participant.isOrganizer`
+directly; the `organizerName` prop was removed from `Attendees` since nothing
+else needed it. Phase 7's dashboard crew stack should reuse `IsOrganizer`
+rather than reintroducing a name-based heuristic, since it carries the same
+"is this the organizer" question the Phase 4 review raised for `ListEvents`.
+
 ### Changes Required:
 
 #### 1. Gated haul → confirm → checklist claiming
@@ -726,8 +764,10 @@ server functions). Haul is `WebHaulGated` until `chosenDateOptionId` is set; onc
 locked, if the caller isn't coming show `WebConfirmClaim` (calls `setAttendanceFn`
 'coming'), else the checklist. Claim disabled unless the gate is satisfied; own
 claim shows unclaim; orphan items styled per design and re-claimable. On 409
-"already claimed", show inline "already taken" + `router.invalidate()`. Add-item
-mirrors S-01 `items-editor` dedupe/max via `addItemFn`.
+"already claimed", show a toast "already taken" (matching the `toast.error`
+convention already used by `VoteControl`/`ConfirmClaim`/`AddItem`) +
+`router.invalidate()`. Add-item mirrors S-01 `items-editor` dedupe/max via
+`addItemFn`.
 
 #### 2. Attendance toggle + Coming/Can't-make-it crew split
 
@@ -997,13 +1037,13 @@ avoid Postgres multiple-cascade-path errors.
 
 #### Automated
 
-- [ ] 6.1 Type check passes: `pnpm typecheck`
-- [ ] 6.2 Lint passes: `pnpm lint`
-- [ ] 6.3 Tests pass: `pnpm test`
-- [ ] 6.4 Haul tests: gated before lock; confirm-claim when not coming; claim gated; own unclaim; 409 "already taken"; orphan renders + re-claimable; add-item dedupe/max
-- [ ] 6.5 Attendance tests: toggle coming/out + mutation; crew splits Coming/Can't-make-it when locked; count-me-out recovery card
-- [ ] 6.6 Announcement tests: single-date renders AnnounceHero, no vote UI, RSVP works
-- [ ] 6.7 i18n extract/compile succeeds
+- [x] 6.1 Type check passes: `pnpm typecheck`
+- [x] 6.2 Lint passes: `pnpm lint`
+- [x] 6.3 Tests pass: `pnpm test`
+- [x] 6.4 Haul tests: gated before lock; confirm-claim when not coming; claim gated; own unclaim; 409 "already taken"; orphan renders + re-claimable; add-item dedupe/max
+- [x] 6.5 Attendance tests: toggle coming/out + mutation; crew splits Coming/Can't-make-it when locked; count-me-out recovery card
+- [x] 6.6 Announcement tests: single-date renders AnnounceHero, no vote UI, RSVP works
+- [x] 6.7 i18n extract/compile succeeds
 
 #### Manual
 

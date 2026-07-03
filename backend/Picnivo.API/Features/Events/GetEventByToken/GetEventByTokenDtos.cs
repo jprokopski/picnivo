@@ -17,6 +17,7 @@ public record ParticipantVoteDto(Guid DateOptionId, VoteChoice Choice);
 public record ParticipantDto(
     Guid Id,
     string DisplayName,
+    bool IsOrganizer,
     AttendanceStatus Attendance,
     IReadOnlyList<ParticipantVoteDto> Votes);
 

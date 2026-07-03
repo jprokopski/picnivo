@@ -9,6 +9,13 @@ vi.mock("@tanstack/react-router", () => ({
   useRouter: () => ({ invalidate: vi.fn() }),
 }));
 
+window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+  matches: false,
+  media: query,
+  addEventListener: vi.fn(),
+  removeEventListener: vi.fn(),
+})) as unknown as typeof window.matchMedia;
+
 afterEach(() => cleanup());
 
 function Wrapper({ children }: { children: React.ReactNode }) {
@@ -61,6 +68,7 @@ const baseEvent: EventDetailResponse = {
     {
       id: "p1",
       displayName: "Alice",
+      isOrganizer: false,
       attendance: 1,
       votes: [{ dateOptionId: "d1", choice: 1 }],
     },
@@ -77,6 +85,7 @@ describe("EventDetailView", () => {
           token="tok1"
           shareUrl="https://picnivo.test/e/tok1"
           isOrganizer={false}
+          myParticipantId={null}
         />
       </Wrapper>,
     );
@@ -93,6 +102,7 @@ describe("EventDetailView", () => {
           token="tok1"
           shareUrl="https://picnivo.test/e/tok1"
           isOrganizer={false}
+          myParticipantId={null}
         />
       </Wrapper>,
     );
@@ -107,6 +117,7 @@ describe("EventDetailView", () => {
           token="tok1"
           shareUrl="https://picnivo.test/e/tok1"
           isOrganizer={false}
+          myParticipantId={null}
         />
       </Wrapper>,
     );
@@ -122,6 +133,7 @@ describe("EventDetailView", () => {
           token="tok1"
           shareUrl="https://picnivo.test/e/tok1"
           isOrganizer={false}
+          myParticipantId={null}
         />
       </Wrapper>,
     );
@@ -136,6 +148,7 @@ describe("EventDetailView", () => {
           token="tok1"
           shareUrl="https://picnivo.test/e/tok1"
           isOrganizer={true}
+          myParticipantId={null}
         />
       </Wrapper>,
     );
@@ -150,6 +163,7 @@ describe("EventDetailView", () => {
           token="tok1"
           shareUrl="https://picnivo.test/e/tok1"
           isOrganizer={false}
+          myParticipantId={null}
         />
       </Wrapper>,
     );
@@ -164,6 +178,7 @@ describe("EventDetailView", () => {
           token="tok1"
           shareUrl="https://picnivo.test/e/tok1"
           isOrganizer={false}
+          myParticipantId={null}
         />
       </Wrapper>,
     );
@@ -182,17 +197,26 @@ describe("EventDetailView", () => {
           token="tok1"
           shareUrl="https://picnivo.test/e/tok1"
           isOrganizer={false}
+          myParticipantId={null}
         />
       </Wrapper>,
     );
     expect(screen.queryByText("Vote on the dates")).toBeNull();
   });
 
-  it("counts the organizer as able to make it for a single-date announcement", () => {
+  it("does not assume the organizer is coming to a single-date announcement by default", () => {
     const single: EventDetailResponse = {
       ...baseEvent,
-      dateOptions: [{ ...baseEvent.dateOptions[0], yesCount: 1 }],
-      participants: [],
+      dateOptions: [baseEvent.dateOptions[0]],
+      participants: [
+        {
+          id: "org-1",
+          displayName: "Maya",
+          isOrganizer: true,
+          attendance: 1,
+          votes: [],
+        },
+      ],
     };
     render(
       <Wrapper>
@@ -201,11 +225,202 @@ describe("EventDetailView", () => {
           token="tok1"
           shareUrl="https://picnivo.test/e/tok1"
           isOrganizer={false}
+          myParticipantId={null}
         />
       </Wrapper>,
     );
-    expect(screen.getByText(/1 of 0 can make it/i)).toBeDefined();
-    expect(screen.getByLabelText("Maya")).toBeDefined();
+    expect(screen.getByText(/0 of 1 coming/i)).toBeDefined();
+  });
+
+  it("counts the organizer as coming once they've confirmed for a single-date announcement", () => {
+    const single: EventDetailResponse = {
+      ...baseEvent,
+      dateOptions: [baseEvent.dateOptions[0]],
+      participants: [
+        {
+          id: "org-1",
+          displayName: "Maya",
+          isOrganizer: true,
+          attendance: 2,
+          votes: [],
+        },
+      ],
+    };
+    render(
+      <Wrapper>
+        <EventDetailView
+          event={single}
+          token="tok1"
+          shareUrl="https://picnivo.test/e/tok1"
+          isOrganizer={false}
+          myParticipantId={null}
+        />
+      </Wrapper>,
+    );
+    expect(screen.getByText(/1 of 1 coming/i)).toBeDefined();
+  });
+});
+
+describe("EventDetailView announcement RSVP", () => {
+  it("lets the organizer RSVP on a single-date announcement instead of showing a no-voting message", () => {
+    const single: EventDetailResponse = {
+      ...baseEvent,
+      dateOptions: [baseEvent.dateOptions[0]],
+      participants: [
+        {
+          id: "org-1",
+          displayName: "Maya",
+          isOrganizer: true,
+          attendance: 1,
+          votes: [],
+        },
+      ],
+      you: { votes: [], claimedItemIds: [], attendance: 1 },
+    };
+    render(
+      <Wrapper>
+        <EventDetailView
+          event={single}
+          token="tok1"
+          shareUrl="https://picnivo.test/e/tok1"
+          isOrganizer={true}
+          myParticipantId="org-1"
+        />
+      </Wrapper>,
+    );
+
+    expect(screen.getByRole("button", { name: /I'm in/i })).toBeDefined();
+    expect(
+      screen.getByRole("button", { name: /Can't make it/i }),
+    ).toBeDefined();
+    expect(screen.queryByText(/No voting needed/i)).toBeNull();
+  });
+
+  it("does not count a freshly joined guest as coming until they RSVP", () => {
+    const single: EventDetailResponse = {
+      ...baseEvent,
+      dateOptions: [baseEvent.dateOptions[0]],
+      participants: [
+        {
+          id: "org-1",
+          displayName: "Maya",
+          isOrganizer: true,
+          attendance: 1,
+          votes: [],
+        },
+        {
+          id: "p2",
+          displayName: "Bob",
+          isOrganizer: false,
+          attendance: 1,
+          votes: [],
+        },
+      ],
+      you: { votes: [], claimedItemIds: [], attendance: 1 },
+    };
+    render(
+      <Wrapper>
+        <EventDetailView
+          event={single}
+          token="tok1"
+          shareUrl="https://picnivo.test/e/tok1"
+          isOrganizer={false}
+          myParticipantId="p2"
+        />
+      </Wrapper>,
+    );
+
+    expect(screen.getByText(/0 of 2 coming/i)).toBeDefined();
+    expect(screen.getByText(/are you coming\?/i)).toBeDefined();
+    expect(screen.queryByText(/you're in/i)).toBeNull();
+  });
+});
+
+describe("EventDetailView attendance card", () => {
+  const locked: EventDetailResponse = {
+    ...baseEvent,
+    chosenDateOptionId: "d1",
+  };
+
+  it("lets a coming guest back out once the date is locked", () => {
+    render(
+      <Wrapper>
+        <EventDetailView
+          event={{
+            ...locked,
+            you: {
+              votes: [{ dateOptionId: "d1", choice: 1 }],
+              claimedItemIds: [],
+              attendance: 1,
+            },
+          }}
+          token="tok1"
+          shareUrl="https://picnivo.test/e/tok1"
+          isOrganizer={false}
+          myParticipantId="p2"
+        />
+      </Wrapper>,
+    );
+
+    expect(screen.getByText(/you're in/i)).toBeDefined();
+    expect(
+      screen.getByRole("button", { name: /Can't make it anymore\?/i }),
+    ).toBeDefined();
+  });
+
+  it("prompts an undecided guest who never voted on the locked date", () => {
+    render(
+      <Wrapper>
+        <EventDetailView
+          event={{
+            ...locked,
+            you: { votes: [], claimedItemIds: [], attendance: 1 },
+          }}
+          token="tok1"
+          shareUrl="https://picnivo.test/e/tok1"
+          isOrganizer={false}
+          myParticipantId="p2"
+        />
+      </Wrapper>,
+    );
+
+    expect(screen.getByText(/are you still coming/i)).toBeDefined();
+  });
+
+  it("shows the attendance card to the organizer too", () => {
+    render(
+      <Wrapper>
+        <EventDetailView
+          event={{
+            ...locked,
+            you: { votes: [], claimedItemIds: [], attendance: 1 },
+          }}
+          token="tok1"
+          shareUrl="https://picnivo.test/e/tok1"
+          isOrganizer={true}
+          myParticipantId="org-1"
+        />
+      </Wrapper>,
+    );
+
+    expect(screen.getByText(/are you still coming/i)).toBeDefined();
+  });
+
+  it("hides the attendance card for a guest who hasn't joined", () => {
+    render(
+      <Wrapper>
+        <EventDetailView
+          event={locked}
+          token="tok1"
+          shareUrl="https://picnivo.test/e/tok1"
+          isOrganizer={false}
+          myParticipantId={null}
+        />
+      </Wrapper>,
+    );
+
+    expect(screen.queryByText(/are you still coming/i)).toBeNull();
+    expect(screen.queryByText(/you're in/i)).toBeNull();
   });
 });
 

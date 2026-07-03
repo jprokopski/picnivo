@@ -6,6 +6,7 @@ public class Participant
     public Guid EventId { get; set; }
     public string DisplayName { get; set; } = string.Empty;
     public AttendanceStatus Attendance { get; set; } = AttendanceStatus.Undecided;
+    public bool IsOrganizer { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
 
     public Event? Event { get; set; }

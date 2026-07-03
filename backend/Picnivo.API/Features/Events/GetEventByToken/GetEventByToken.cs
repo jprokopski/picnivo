@@ -32,7 +32,7 @@ public static class GetEventByToken
                     ClaimedByName = i.Claim != null ? i.Claim.Participant!.DisplayName : null,
                     OrphanedFromName = i.OrphanedFromParticipant != null ? i.OrphanedFromParticipant.DisplayName : null
                 }).ToList(),
-                Participants = e.Participants.Select(p => new { p.Id, p.DisplayName, p.Attendance }).ToList()
+                Participants = e.Participants.Select(p => new { p.Id, p.DisplayName, p.IsOrganizer, p.Attendance }).ToList()
             })
             .FirstOrDefaultAsync(ct);
 
@@ -49,19 +49,8 @@ public static class GetEventByToken
             .Select(v => new { v.ParticipantId, v.DateOptionId, v.Choice })
             .ToListAsync(ct);
 
-        var isAnnouncement = dateOptionIds.Count == 1;
-
-        int CountFor(Guid dateOptionId, VoteChoice choice)
-        {
-            var count = allVotes.Count(v => v.DateOptionId == dateOptionId && v.Choice == choice);
-            if (isAnnouncement && choice == VoteChoice.Yes)
-            {
-                // Single-date events are a de-facto announcement (FR-004): no vote UI is
-                // shown, so the organizer who set the date implicitly counts as attending.
-                count++;
-            }
-            return count;
-        }
+        int CountFor(Guid dateOptionId, VoteChoice choice) =>
+            allVotes.Count(v => v.DateOptionId == dateOptionId && v.Choice == choice);
 
         var bestDateOptionId = raw.DateOptions
             .OrderByDescending(d => CountFor(d.Id, VoteChoice.Yes))
@@ -103,7 +92,7 @@ public static class GetEventByToken
             [.. raw.Items.Select(i => new EventItemDto(
                 i.Id, i.Label, i.ClaimedByParticipantId, i.ClaimedByName, i.AddedByParticipantId, i.OrphanedFromName))],
             [.. raw.Participants.Select(p => new ParticipantDto(
-                p.Id, p.DisplayName, p.Attendance,
+                p.Id, p.DisplayName, p.IsOrganizer, p.Attendance,
                 [.. allVotes
                     .Where(v => v.ParticipantId == p.Id)
                     .Select(v => new ParticipantVoteDto(v.DateOptionId, v.Choice))]))],

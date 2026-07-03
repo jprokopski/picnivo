@@ -17,6 +17,10 @@ public class ParticipantConfiguration : IEntityTypeConfiguration<Participant>
         builder.Property(p => p.Attendance)
             .IsRequired();
 
+        builder.Property(p => p.IsOrganizer)
+            .IsRequired()
+            .HasDefaultValue(false);
+
         builder.Property(p => p.CreatedAt)
             .HasDefaultValueSql("now()");
 
