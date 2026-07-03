@@ -1037,18 +1037,18 @@ avoid Postgres multiple-cascade-path errors.
 
 #### Automated
 
-- [x] 6.1 Type check passes: `pnpm typecheck`
-- [x] 6.2 Lint passes: `pnpm lint`
-- [x] 6.3 Tests pass: `pnpm test`
-- [x] 6.4 Haul tests: gated before lock; confirm-claim when not coming; claim gated; own unclaim; 409 "already taken"; orphan renders + re-claimable; add-item dedupe/max
-- [x] 6.5 Attendance tests: toggle coming/out + mutation; crew splits Coming/Can't-make-it when locked; count-me-out recovery card
-- [x] 6.6 Announcement tests: single-date renders AnnounceHero, no vote UI, RSVP works
-- [x] 6.7 i18n extract/compile succeeds
+- [x] 6.1 Type check passes: `pnpm typecheck` — b7fc237
+- [x] 6.2 Lint passes: `pnpm lint` — b7fc237
+- [x] 6.3 Tests pass: `pnpm test` — b7fc237
+- [x] 6.4 Haul tests: gated before lock; confirm-claim when not coming; claim gated; own unclaim; 409 "already taken"; orphan renders + re-claimable; add-item dedupe/max — b7fc237
+- [x] 6.5 Attendance tests: toggle coming/out + mutation; crew splits Coming/Can't-make-it when locked; count-me-out recovery card — b7fc237
+- [x] 6.6 Announcement tests: single-date renders AnnounceHero, no vote UI, RSVP works — b7fc237
+- [x] 6.7 i18n extract/compile succeeds — b7fc237
 
 #### Manual
 
-- [ ] 6.8 Locked event: confirm → checklist claim matches design; count-me-out frees orphan another covers; crew split correct
-- [ ] 6.9 Single-date announcement matches design; RSVP + claiming work
+- [x] 6.8 Locked event: confirm → checklist claim matches design; count-me-out frees orphan another covers; crew split correct — b7fc237
+- [x] 6.9 Single-date announcement matches design; RSVP + claiming work — b7fc237
 
 ### Phase 7: Frontend — Organizer Events Dashboard
 
