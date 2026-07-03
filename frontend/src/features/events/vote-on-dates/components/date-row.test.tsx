@@ -13,13 +13,6 @@ function Wrapper({ children }: { children: React.ReactNode }) {
   return <I18nProvider i18n={i18n}>{children}</I18nProvider>;
 }
 
-window.matchMedia = vi.fn().mockImplementation((query: string) => ({
-  matches: false,
-  media: query,
-  addEventListener: vi.fn(),
-  removeEventListener: vi.fn(),
-})) as unknown as typeof window.matchMedia;
-
 afterEach(() => cleanup());
 
 const date: DateOptionDto = {
@@ -115,7 +108,7 @@ describe("DateRow", () => {
         />
       </Wrapper>,
     );
-    expect(screen.queryByRole("group", { name: "Vote" })).toBeNull();
+    expect(screen.queryAllByRole("group", { name: "Vote" })).toHaveLength(0);
 
     rerender(
       <Wrapper>
@@ -129,6 +122,7 @@ describe("DateRow", () => {
         />
       </Wrapper>,
     );
-    expect(screen.getByRole("group", { name: "Vote" })).toBeDefined();
+    // Both the desktop and mobile variants render; CSS decides which shows.
+    expect(screen.getAllByRole("group", { name: "Vote" })).toHaveLength(2);
   });
 });

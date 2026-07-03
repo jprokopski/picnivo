@@ -52,10 +52,10 @@ export function EventsList({ events, hostName }: EventsListProps) {
           <p className="mb-2.5 font-mono text-[11px] font-medium tracking-[0.14em] text-(--accent-deep) uppercase">
             <Trans>Your events</Trans>
           </p>
-          <h1 className="font-display text-foreground m-0 text-[44px] leading-[1.08] font-extrabold tracking-tight text-balance max-[900px]:text-[36px] max-[720px]:text-[32px] max-[480px]:text-[28px]">
+          <h1 className="m-0 font-display text-[44px] leading-[1.08] font-extrabold tracking-tight text-balance text-foreground max-[900px]:text-[36px] max-[720px]:text-[32px] max-[480px]:text-[28px]">
             <Trans>Events you're hosting.</Trans>
           </h1>
-          <p className="text-muted-foreground m-0 mt-3.5 max-w-[52ch] text-[17px] leading-normal max-[720px]:mt-2.5 max-[720px]:text-[15.5px]">
+          <p className="m-0 mt-3.5 max-w-[52ch] text-[17px] leading-normal text-muted-foreground max-[720px]:mt-2.5 max-[720px]:text-[15.5px]">
             <Trans>
               The plans you've set up. Share the link and see who's in.
             </Trans>
@@ -116,7 +116,7 @@ export function EventsList({ events, hostName }: EventsListProps) {
           </p>
           <Link
             to="/create"
-            className="bg-primary mt-4 inline-flex cursor-pointer appearance-none items-center justify-center gap-2.25 rounded-full border-0 px-4 py-2.5 font-sans text-[14px] leading-none font-bold whitespace-nowrap text-white no-underline shadow-(--sh-pop) transition-[transform,box-shadow,background] duration-160 hover:-translate-y-0.5 hover:bg-(--accent-deep) active:translate-y-0"
+            className="mt-4 inline-flex cursor-pointer appearance-none items-center justify-center gap-2.25 rounded-full border-0 bg-primary px-4 py-2.5 font-sans text-[14px] leading-none font-bold whitespace-nowrap text-white no-underline shadow-(--sh-pop) transition-[transform,box-shadow,background] duration-160 hover:-translate-y-0.5 hover:bg-(--accent-deep) active:translate-y-0"
           >
             <PlusIcon size={16} />
             <Trans>Create your first event</Trans>

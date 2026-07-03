@@ -67,7 +67,7 @@ export function AddItem({ token, items, joined, active }: AddItemProps) {
           disabled={disabled || !trimmed || duplicate}
           onClick={() => void handleAdd()}
         >
-          <PlusIcon className="h-4 w-4" />
+          <PlusIcon className="size-4" />
         </Button>
       </div>
       {duplicate && (

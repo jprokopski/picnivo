@@ -28,7 +28,7 @@ export function SectionCard({
           <p className="font-mono text-[11px] font-medium tracking-[0.14em] text-(--accent-deep) uppercase">
             {kicker}
           </p>
-          <h3 className="font-display m-0 mt-1 text-[21px] font-bold tracking-[-0.01em]">
+          <h3 className="m-0 mt-1 font-display text-[21px] font-bold tracking-[-0.01em]">
             {title}
           </h3>
         </div>

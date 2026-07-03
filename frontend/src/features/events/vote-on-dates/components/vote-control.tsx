@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLingui } from "@lingui/react/macro";
 import { useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
@@ -13,18 +13,6 @@ interface VoteControlProps {
   isBest?: boolean;
 }
 
-function useNarrow(breakpoint = 720) {
-  const [narrow, setNarrow] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia(`(max-width: ${breakpoint}px)`);
-    const update = () => setNarrow(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, [breakpoint]);
-  return narrow;
-}
-
 export function VoteControl({
   token,
   dateOptionId,
@@ -34,7 +22,6 @@ export function VoteControl({
 }: VoteControlProps) {
   const { t } = useLingui();
   const router = useRouter();
-  const narrow = useNarrow();
   const [pending, setPending] = useState(false);
 
   const labels: Record<VoteChoiceKey, string> = {
@@ -59,12 +46,45 @@ export function VoteControl({
 
   const isDisabled = disabled || pending;
 
-  if (narrow) {
-    return (
+  return (
+    <>
       <div
         role="group"
         aria-label={t`Vote`}
-        className="flex w-full gap-1 rounded-full border border-(--line) p-0.75"
+        className="flex gap-2.5 max-[720px]:hidden"
+        style={{ opacity: isDisabled ? 0.6 : 1 }}
+      >
+        {VOTE_ORDER.map((key) => {
+          const meta = VOTE_META[key];
+          const on = value === key;
+          return (
+            <button
+              key={key}
+              type="button"
+              title={labels[key]}
+              aria-label={labels[key]}
+              aria-pressed={on}
+              disabled={isDisabled}
+              onClick={() => void handleChange(key)}
+              className="flex size-11.5 items-center justify-center rounded-full text-[22px] duration-180"
+              style={{
+                border: on
+                  ? `2.5px solid ${meta.color}`
+                  : "2px solid var(--line)",
+                background: on ? meta.tint : "var(--card-2)",
+                transform: on ? "scale(1.08)" : "scale(1)",
+                transition: "all 180ms cubic-bezier(0.16,1,0.3,1)",
+              }}
+            >
+              {meta.emoji}
+            </button>
+          );
+        })}
+      </div>
+      <div
+        role="group"
+        aria-label={t`Vote`}
+        className="hidden w-full gap-1 rounded-full border border-(--line) p-0.75 max-[720px]:flex"
         style={{
           background: isBest ? "var(--card)" : "var(--card-2)",
           opacity: isDisabled ? 0.6 : 1,
@@ -93,42 +113,6 @@ export function VoteControl({
           );
         })}
       </div>
-    );
-  }
-
-  return (
-    <div
-      role="group"
-      aria-label={t`Vote`}
-      className="flex gap-2.5"
-      style={{ opacity: isDisabled ? 0.6 : 1 }}
-    >
-      {VOTE_ORDER.map((key) => {
-        const meta = VOTE_META[key];
-        const on = value === key;
-        return (
-          <button
-            key={key}
-            type="button"
-            title={labels[key]}
-            aria-label={labels[key]}
-            aria-pressed={on}
-            disabled={isDisabled}
-            onClick={() => void handleChange(key)}
-            className="flex size-11.5 items-center justify-center rounded-full text-[22px] duration-180"
-            style={{
-              border: on
-                ? `2.5px solid ${meta.color}`
-                : "2px solid var(--line)",
-              background: on ? meta.tint : "var(--card-2)",
-              transform: on ? "scale(1.08)" : "scale(1)",
-              transition: "all 180ms cubic-bezier(0.16,1,0.3,1)",
-            }}
-          >
-            {meta.emoji}
-          </button>
-        );
-      })}
-    </div>
+    </>
   );
 }

@@ -48,7 +48,7 @@ export function DateRow({
         <div className="font-mono text-[11px] text-(--accent-deep)">
           {parts.dow.toUpperCase()}
         </div>
-        <div className="font-display my-0.5 text-[30px]">{parts.day}</div>
+        <div className="my-0.5 font-display text-[30px]">{parts.day}</div>
         <div className="font-mono text-[10px] text-(--ink-soft)">
           {parts.mon}
         </div>

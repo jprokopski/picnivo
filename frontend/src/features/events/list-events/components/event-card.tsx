@@ -55,12 +55,12 @@ export function EventCard({ event, hostName }: EventCardProps) {
         : t`${claimedCount} / ${itemCount} claimed`;
 
   return (
-    <article className="group border-border bg-card hover:border-primary relative flex flex-col overflow-hidden rounded-(--r-lg) border shadow-(--sh-md) transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-1 hover:shadow-(--sh-lg)">
+    <article className="group relative flex flex-col overflow-hidden rounded-(--r-lg) border border-border bg-card shadow-(--sh-md) transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-1 hover:border-primary hover:shadow-(--sh-lg)">
       <Link
         to="/e/$token"
         params={{ token: event.token }}
         aria-label={t`Open ${event.title}`}
-        className="focus-visible:outline-primary absolute inset-0 z-10 rounded-(--r-lg) focus-visible:outline-3 focus-visible:outline-offset-2"
+        className="absolute inset-0 z-10 rounded-(--r-lg) focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-primary"
       />
 
       <div className="relative h-40 overflow-hidden bg-[linear-gradient(180deg,#ffd58a_0%,#ff9d6b_40%,#f1633f_78%,#e0492a_100%)]">
@@ -71,13 +71,13 @@ export function EventCard({ event, hostName }: EventCardProps) {
         </span>
       </div>
 
-      <div className="bg-primary h-1.25 shrink-0" />
+      <div className="h-1.25 shrink-0 bg-primary" />
 
       <div className="flex flex-1 flex-col px-5 pt-4.5 pb-5">
-        <p className="mb-0 overflow-hidden font-mono text-[11px] font-medium tracking-[0.14em] text-ellipsis whitespace-nowrap text-(--accent-deep) uppercase">
+        <p className="mb-0 truncate font-mono text-[11px] font-medium tracking-[0.14em] text-(--accent-deep) uppercase">
           {event.location || t`To be defined`}
         </p>
-        <h3 className="font-display m-0 mt-1.25 text-[23px] font-bold tracking-[-0.01em] wrap-break-word">
+        <h3 className="m-0 mt-1.25 font-display text-[23px] font-bold tracking-[-0.01em] wrap-break-word">
           {event.title}
         </h3>
 
@@ -88,7 +88,7 @@ export function EventCard({ event, hostName }: EventCardProps) {
           </span>
         </div>
 
-        <div className="border-border mt-3.5 flex flex-wrap items-center gap-2 border-t pt-3.5">
+        <div className="mt-3.5 flex flex-wrap items-center gap-2 border-t border-border pt-3.5">
           {status === "past" ? (
             <span
               className="inline-flex items-center gap-1.5 rounded-full px-3.25 py-1.75 text-[13px] font-extrabold"
@@ -113,7 +113,7 @@ export function EventCard({ event, hostName }: EventCardProps) {
               {whenLabel}
             </span>
           ) : (
-            <span className="border-border text-foreground inline-flex items-center gap-1.5 rounded-full border bg-(--card-2) px-3.25 py-1.75 text-[13px] font-semibold">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-(--card-2) px-3.25 py-1.75 text-[13px] font-semibold text-foreground">
               <ClockIcon size={13} color="var(--ink-soft)" />
               {whenLabel}
             </span>
@@ -138,7 +138,7 @@ export function EventCard({ event, hostName }: EventCardProps) {
           </span>
         </div>
 
-        <div className="border-border mt-3.25 border-t pt-3.25">
+        <div className="mt-3.25 border-t border-border pt-3.25">
           <span className="text-[13px] font-semibold text-(--ink-faint)">
             {itemsLabel}
           </span>

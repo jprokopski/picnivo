@@ -39,12 +39,12 @@ export function ShareAside({ shareUrl }: ShareAsideProps) {
       >
         {copied ? (
           <>
-            <CheckIcon className="h-4 w-4" />
+            <CheckIcon className="size-4" />
             <Trans>Copied!</Trans>
           </>
         ) : (
           <>
-            <CopyIcon className="h-4 w-4" />
+            <CopyIcon className="size-4" />
             <Trans>Copy invite link</Trans>
           </>
         )}
