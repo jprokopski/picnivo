@@ -3,12 +3,14 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { ESLint, Rule } from "eslint";
 
-// eslint-plugin-tailwindcss (v4 alpha/4.0.6) doesn't cover these two
+// eslint-plugin-tailwindcss (v4 alpha/4.0.6) doesn't cover these
 // conversions yet, only VS Code's Tailwind CSS IntelliSense does:
 //   - arbitrary pixel values on spacing-scale utilities -> bare scale number
 //     (max-w-[1000px] -> max-w-250, since --spacing defaults to 0.25rem/4px)
 //   - arbitrary CSS-var values -> the bare utility for a theme-aliased token
 //     (bg-(--card) -> bg-card, because @theme declares --color-card: var(--card))
+//   - the legacy v3 important-modifier prefix -> the v4 suffix position
+//     (!h-10.5 -> h-10.5!, since v4 moved `!` to the end of the class name)
 // This local rule fills that gap so `eslint` (not just the editor) surfaces
 // and can --fix every instance across the codebase.
 
@@ -121,6 +123,15 @@ function canonicalizeBase(
   base: string,
   aliasMap: ThemeAliasMap,
 ): string | null {
+  // Legacy v3 `!` prefix (e.g. `!h-10.5`) -> v4 suffix position
+  // (`h-10.5!`). Recurse first so a compound case like `!max-w-[1000px]`
+  // also picks up the arbitrary-value canonicalization below.
+  if (base.startsWith("!") && !base.endsWith("!")) {
+    const rest = base.slice(1);
+    const canonicalRest = canonicalizeBase(rest, aliasMap) ?? rest;
+    return `${canonicalRest}!`;
+  }
+
   const zMatch = /^z-\[(\d+)\]$/.exec(base);
   if (zMatch) return `z-${zMatch[1]}`;
 
