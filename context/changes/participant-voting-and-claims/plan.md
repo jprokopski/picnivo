@@ -840,6 +840,36 @@ new tab would strand that SPA navigation/state instead of using it. Keep
 the dashboard card's event link same-tab in this phase — don't reintroduce
 `target="_blank"`.
 
+**Addendum (impl-review fix, 2026-07-03)**: Decision — the Phase 4 note above
+is resolved: the dashboard **excludes** the organizer from `ParticipantCount`/
+`ParticipantNames`, unlike Phase 6's hub crew list (which shows the organizer
+tagged "HOST"). Rationale: the design reference's live dashboard card
+(`liveCard.crew = event.participants` in `picnivo-web-events.jsx`) never
+includes the host in the "going"/crew data at all — there's no design-fidelity
+argument for showing them here the way there was for the hub's "complete
+roster" crew list. Implementation: `ListEvents.cs` now selects
+`Participant.IsOrganizer` and filters it out of both `ParticipantCount` and
+`Participants` before projecting to `EventSummaryResponse`, reusing the same
+field Phase 6 introduced (as that phase's own addendum recommended). No
+frontend change needed — `event-card.tsx` already just renders whatever
+count/names the API returns. Covered by
+`ListEventsHandlerTests.ExcludesOrganizerFromParticipantCountAndNames`.
+
+**Addendum (impl-review fix, 2026-07-03)**: `deriveEventStatus`
+(`frontend/src/features/events/list-events/schema.ts`) computes a 4th status,
+`"now"`, in addition to the three specified above (`voting` / `date-set` /
+`past`) — a 5-hour window (`HAPPENING_NOW_WINDOW_MS`) from the chosen date's
+`startsAt`, during which the card shows a pulsing "Today · happening now"
+chip instead of the formatted date. Rationale: the design reference's static
+dashboard fixture includes a `status: 'now'` card with a dedicated
+`web-datechip--now` style and pulse keyframes — a real, styled state in the
+design system, just one the mockup's *live* card never computes dynamically
+(no elapsed-time concept in the demo data). Since no end time is recorded for
+an event, "happening now" is necessarily a heuristic window rather than an
+exact span; 5 hours was chosen as long enough to cover a typical picnic/
+hangout without lingering as "now" indefinitely. Covered by `deriveEventStatus`
+tests in `schema.test.ts` and the "happening now" cases in `event-card.test.tsx`.
+
 ### Changes Required:
 
 #### 1. Event card enrichment
@@ -1054,13 +1084,13 @@ avoid Postgres multiple-cascade-path errors.
 
 #### Automated
 
-- [ ] 7.1 Type check passes: `pnpm typecheck`
-- [ ] 7.2 Lint passes: `pnpm lint`
-- [ ] 7.3 Tests pass: `pnpm test`
-- [ ] 7.4 Card tests: status chip voting/date-set/past; "N going" from count; "X / Y claimed"; crew stack capped
-- [ ] 7.5 List tests: Ongoing/Past filter uses derived status; counts correct
-- [ ] 7.6 i18n extract/compile succeeds; `pnpm build` succeeds
+- [x] 7.1 Type check passes: `pnpm typecheck`
+- [x] 7.2 Lint passes: `pnpm lint`
+- [x] 7.3 Tests pass: `pnpm test`
+- [x] 7.4 Card tests: status chip voting/date-set/past; "N going" from count; "X / Y claimed"; crew stack capped
+- [x] 7.5 List tests: Ongoing/Past filter uses derived status; counts correct
+- [x] 7.6 i18n extract/compile succeeds; `pnpm build` succeeds
 
 #### Manual
 
-- [ ] 7.7 Dashboard cards match design; live event status/going/claimed/crew reflect real state end to end
+- [x] 7.7 Dashboard cards match design; live event status/going/claimed/crew reflect real state end to end

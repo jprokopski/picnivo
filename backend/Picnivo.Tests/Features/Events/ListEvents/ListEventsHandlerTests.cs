@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using ListEventsHandler = Picnivo.API.Features.Events.ListEvents.ListEvents;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
 using Picnivo.API.Features.Events.ListEvents;
@@ -102,6 +103,101 @@ public class ListEventsHandlerTests
         summary.ClaimedCount.ShouldBe(1);
         summary.ChosenDateOptionId.ShouldBe(dateOptionA.Id);
         summary.ChosenDateStartsAt.ShouldBe(dateOptionA.StartsAt);
+    }
+
+    [Fact]
+    public async Task ExcludesOrganizerFromParticipantCountAndNames()
+    {
+        // Arrange
+        await using var db = TestDb.Create();
+        var orgId = Guid.NewGuid();
+        db.Organizers.Add(new Organizer { Id = orgId, DisplayName = "Test", CreatedAt = DateTimeOffset.UtcNow });
+        await db.SaveChangesAsync();
+        db.ChangeTracker.Clear();
+        var token = await SeedEventAsync(db, orgId, "Host Picnic");
+        var @event = await db.Events.SingleAsync(e => e.Token == token);
+
+        var organizerParticipant = new Participant
+        {
+            Id = Guid.CreateVersion7(),
+            EventId = @event.Id,
+            DisplayName = "Test",
+            IsOrganizer = true,
+            CreatedAt = DateTimeOffset.UtcNow,
+        };
+        var guest = new Participant
+        {
+            Id = Guid.CreateVersion7(),
+            EventId = @event.Id,
+            DisplayName = "Alice",
+            CreatedAt = DateTimeOffset.UtcNow.AddMinutes(1),
+        };
+        db.Participants.AddRange(organizerParticipant, guest);
+        await db.SaveChangesAsync();
+        db.ChangeTracker.Clear();
+
+        // Act
+        var result = await ListEventsHandler.Handle(UserWith(orgId), db, CancellationToken.None);
+
+        // Assert
+        var ok = result.ShouldBeOfType<Ok<List<EventSummaryResponse>>>();
+        var summary = ok.Value!.Single(s => s.Token == token);
+        summary.ParticipantCount.ShouldBe(1);
+        summary.ParticipantNames.ShouldBe(["Alice"]);
+    }
+
+    [Fact]
+    public async Task WithSingleDateEvent_TreatsLoneDateAsChosen()
+    {
+        // Arrange
+        await using var db = TestDb.Create();
+        var orgId = Guid.NewGuid();
+        db.Organizers.Add(new Organizer { Id = orgId, DisplayName = "Test", CreatedAt = DateTimeOffset.UtcNow });
+        await db.SaveChangesAsync();
+        db.ChangeTracker.Clear();
+
+        var lone = new DateOption { Id = Guid.CreateVersion7(), StartsAt = DateTimeOffset.UtcNow.AddDays(3) };
+        db.Events.Add(new Event
+        {
+            Id = Guid.CreateVersion7(),
+            OrganizerId = orgId,
+            Title = "Announcement Picnic",
+            Token = "announcetoken1",
+            CreatedAt = DateTimeOffset.UtcNow,
+            DateOptions = [lone]
+        });
+        await db.SaveChangesAsync();
+        db.ChangeTracker.Clear();
+
+        // Act
+        var result = await ListEventsHandler.Handle(UserWith(orgId), db, CancellationToken.None);
+
+        // Assert
+        var ok = result.ShouldBeOfType<Ok<List<EventSummaryResponse>>>();
+        var summary = ok.Value!.Single(s => s.Token == "announcetoken1");
+        summary.ChosenDateOptionId.ShouldBe(lone.Id);
+        summary.ChosenDateStartsAt.ShouldBe(lone.StartsAt);
+    }
+
+    [Fact]
+    public async Task WithMultipleDatesAndNoLock_ChosenDateOptionIdIsNull()
+    {
+        // Arrange
+        await using var db = TestDb.Create();
+        var orgId = Guid.NewGuid();
+        db.Organizers.Add(new Organizer { Id = orgId, DisplayName = "Test", CreatedAt = DateTimeOffset.UtcNow });
+        await db.SaveChangesAsync();
+        db.ChangeTracker.Clear();
+        var token = await SeedEventAsync(db, orgId, "Undecided Picnic", dateCount: 2);
+
+        // Act
+        var result = await ListEventsHandler.Handle(UserWith(orgId), db, CancellationToken.None);
+
+        // Assert
+        var ok = result.ShouldBeOfType<Ok<List<EventSummaryResponse>>>();
+        var summary = ok.Value!.Single(s => s.Token == token);
+        summary.ChosenDateOptionId.ShouldBeNull();
+        summary.ChosenDateStartsAt.ShouldBeNull();
     }
 
     private static ClaimsPrincipal UserWith(Guid organizerId) =>

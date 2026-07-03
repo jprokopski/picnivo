@@ -5,6 +5,7 @@ import { PlusIcon } from "lucide-react";
 import type { EventSummaryResponse } from "@/api/picnivo-api";
 import { cn } from "@/lib/utils";
 import { EventCard } from "./event-card";
+import { deriveEventStatus } from "../schema";
 
 interface EventsListProps {
   events: EventSummaryResponse[];
@@ -14,7 +15,7 @@ interface EventsListProps {
 type EventFilter = "all" | "ongoing" | "past";
 
 function isPastEvent(event: EventSummaryResponse) {
-  return event.soonestDate !== null && new Date(event.soonestDate) < new Date();
+  return deriveEventStatus(event) === "past";
 }
 
 export function EventsList({ events, hostName }: EventsListProps) {

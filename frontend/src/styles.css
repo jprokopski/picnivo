@@ -178,6 +178,19 @@ body {
   }
 }
 
+/* A soft halo pulse (not an opacity flicker) — referenced by Tailwind
+   arbitrary [animation:web-nowpulse_...] on the dashboard's "happening now"
+   chip in event-card.tsx. */
+@keyframes web-nowpulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(63, 158, 99, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(63, 158, 99, 0);
+  }
+}
+
 /* Responsive gutter — consumed by Tailwind arbitrary max(var(--web-gutter), ...) */
 @media (max-width: 900px) {
   :root {
