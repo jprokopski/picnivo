@@ -14,7 +14,7 @@ const signUpSchema = credentialsSchema.extend({
 });
 
 export const signInFn = createServerFn({ method: "POST" })
-  .inputValidator(signInSchema)
+  .validator(signInSchema)
   .handler(async ({ data }) => {
     const supabase = createSupabaseServerClient();
     const { error } = await supabase.auth.signInWithPassword({
@@ -25,7 +25,7 @@ export const signInFn = createServerFn({ method: "POST" })
   });
 
 export const signUpFn = createServerFn({ method: "POST" })
-  .inputValidator(signUpSchema)
+  .validator(signUpSchema)
   .handler(async ({ data }) => {
     const supabase = createSupabaseServerClient();
     const { error } = await supabase.auth.signUp({

@@ -18,7 +18,7 @@ function detailOf(err: unknown): string {
 }
 
 export const claimItemFn = createServerFn({ method: "POST" })
-  .inputValidator(itemActionSchema)
+  .validator(itemActionSchema)
   .handler(async ({ data }) => {
     const participantId = getParticipantIdCookie(data.token);
     if (!participantId) {
@@ -41,7 +41,7 @@ export const claimItemFn = createServerFn({ method: "POST" })
   });
 
 export const releaseClaimFn = createServerFn({ method: "POST" })
-  .inputValidator(itemActionSchema)
+  .validator(itemActionSchema)
   .handler(async ({ data }) => {
     const participantId = getParticipantIdCookie(data.token);
     if (!participantId) {
@@ -56,7 +56,7 @@ export const releaseClaimFn = createServerFn({ method: "POST" })
   });
 
 export const addItemFn = createServerFn({ method: "POST" })
-  .inputValidator(addItemSchema)
+  .validator(addItemSchema)
   .handler(async ({ data }) => {
     const participantId = getParticipantIdCookie(data.token);
     if (!participantId) {
@@ -79,7 +79,7 @@ export const addItemFn = createServerFn({ method: "POST" })
   });
 
 export const removeItemFn = createServerFn({ method: "POST" })
-  .inputValidator(itemActionSchema)
+  .validator(itemActionSchema)
   .handler(async ({ data }) => {
     const participantId = getParticipantIdCookie(data.token);
     if (!participantId) {

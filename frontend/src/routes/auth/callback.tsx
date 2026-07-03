@@ -4,7 +4,7 @@ import { Trans } from "@lingui/react/macro";
 import { createSupabaseServerClient } from "../../lib/supabase/server";
 
 const exchangeCodeFn = createServerFn({ method: "GET" })
-  .inputValidator((data: { code: string }) => data)
+  .validator((data: { code: string }) => data)
   .handler(async ({ data }) => {
     const supabase = createSupabaseServerClient();
     const { error } = await supabase.auth.exchangeCodeForSession(data.code);

@@ -11,7 +11,7 @@ const selectFinalDateSchema = z.object({
 
 export const selectFinalDateFn = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
-  .inputValidator(selectFinalDateSchema)
+  .validator(selectFinalDateSchema)
   .handler(async ({ data, context }) => {
     const {
       data: { session },

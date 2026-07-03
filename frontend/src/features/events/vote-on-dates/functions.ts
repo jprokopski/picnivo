@@ -5,7 +5,7 @@ import { getParticipantIdCookie } from "../../../lib/participant/cookie";
 import { castVoteSchema, VOTE_CHOICE_VALUES } from "./schema";
 
 export const castVotesFn = createServerFn({ method: "POST" })
-  .inputValidator(castVoteSchema)
+  .validator(castVoteSchema)
   .handler(async ({ data }) => {
     const participantId = getParticipantIdCookie(data.token);
     if (!participantId) {
