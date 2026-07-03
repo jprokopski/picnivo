@@ -11,11 +11,21 @@ import {
 
 export const Route = createFileRoute("/_app/e/$token")({
   loader: async ({ params, context }) => {
-    const [event, origin, myParticipantId] = await Promise.all([
-      getEventByTokenFn({ data: { token: params.token } }),
-      getShareOriginFn(),
+    // Resolve identity first — for a cookie-less organizer this backfills the
+    // `pv_p` cookie and yields their participant id, which we thread into the
+    // event fetch so `you` resolves on the very first render (a cookie set this
+    // request isn't readable this request). `getShareOriginFn` has no such
+    // dependency and runs in parallel.
+    const [myParticipantId, origin] = await Promise.all([
       getMyParticipantIdFn({ data: { token: params.token } }),
+      getShareOriginFn(),
     ]);
+    const event = await getEventByTokenFn({
+      data: {
+        token: params.token,
+        participantId: myParticipantId ?? undefined,
+      },
+    });
     const isOrganizer = event ? context.user?.id === event.organizerId : false;
     return {
       event,

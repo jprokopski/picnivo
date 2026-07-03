@@ -1,6 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { Trans } from "@lingui/react/macro";
+import { safeRedirectPath } from "../../lib/auth/safe-redirect";
 import { createSupabaseServerClient } from "../../lib/supabase/server";
 
 const exchangeCodeFn = createServerFn({ method: "GET" })
@@ -40,11 +41,7 @@ export const Route = createFileRoute("/auth/callback")({
       });
     }
 
-    const safeNext =
-      deps.next && deps.next.startsWith("/") && !deps.next.startsWith("//")
-        ? deps.next
-        : "/events";
-    throw redirect({ to: safeNext });
+    throw redirect({ to: safeRedirectPath(deps.next) });
   },
   component: CallbackPage,
 });
