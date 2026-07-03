@@ -169,6 +169,10 @@ export interface EventSummaryResponse {
   chosenDateStartsAt: EventSummaryResponseChosenDateStartsAt;
 }
 
+export interface GetMyParticipantResponse {
+  participantId: string;
+}
+
 export type HttpValidationProblemDetailsType = null | string;
 
 export type HttpValidationProblemDetailsTitle = null | string;
@@ -1237,6 +1241,167 @@ export const useCreateEvent = <
 
   return useMutation(mutationOptions, queryClient);
 };
+
+export const getMyParticipant = (
+  token: string,
+  options?: SecondParameter<typeof axiosInstance>,
+  signal?: AbortSignal,
+) => {
+  return axiosInstance<GetMyParticipantResponse>(
+    { url: `/api/events/${token}/me`, method: "GET", signal },
+    options,
+  );
+};
+
+export const getGetMyParticipantQueryKey = (token?: string) => {
+  return [`/api/events/${token}/me`] as const;
+};
+
+export const getGetMyParticipantQueryOptions = <
+  TData = Awaited<ReturnType<typeof getMyParticipant>>,
+  TError = void,
+>(
+  token: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getMyParticipant>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetMyParticipantQueryKey(token);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getMyParticipant>>
+  > = ({ signal }) => getMyParticipant(token, requestOptions, signal);
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!token,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getMyParticipant>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetMyParticipantQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getMyParticipant>>
+>;
+export type GetMyParticipantQueryError = void;
+
+export function useGetMyParticipant<
+  TData = Awaited<ReturnType<typeof getMyParticipant>>,
+  TError = void,
+>(
+  token: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getMyParticipant>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getMyParticipant>>,
+          TError,
+          Awaited<ReturnType<typeof getMyParticipant>>
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetMyParticipant<
+  TData = Awaited<ReturnType<typeof getMyParticipant>>,
+  TError = void,
+>(
+  token: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getMyParticipant>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getMyParticipant>>,
+          TError,
+          Awaited<ReturnType<typeof getMyParticipant>>
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetMyParticipant<
+  TData = Awaited<ReturnType<typeof getMyParticipant>>,
+  TError = void,
+>(
+  token: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getMyParticipant>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+
+export function useGetMyParticipant<
+  TData = Awaited<ReturnType<typeof getMyParticipant>>,
+  TError = void,
+>(
+  token: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getMyParticipant>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getGetMyParticipantQueryOptions(token, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
 
 export const getEventByToken = (
   token: string,

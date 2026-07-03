@@ -227,13 +227,13 @@ None — no schema change, no data migration. Existing events benefit immediatel
 
 #### Automated
 
-- [x] 1.1 Backend builds (regenerates OpenAPI spec + client): `dotnet build`
-- [x] 1.2 Integration tests pass: `dotnet test`
-- [x] 1.3 New integration tests cover organizer/other-user/unauthenticated/unknown-token cases
+- [x] 1.1 Backend builds (regenerates OpenAPI spec + client): `dotnet build` — 418457d
+- [x] 1.2 Integration tests pass: `dotnet test` — 418457d
+- [x] 1.3 New integration tests cover organizer/other-user/unauthenticated/unknown-token cases — 418457d
 
 #### Manual
 
-- [x] 1.4 `GET /api/events/{token}/me` with organizer bearer returns the correct participant id
+- [x] 1.4 `GET /api/events/{token}/me` with organizer bearer returns the correct participant id — 418457d
 
 ### Phase 2: Frontend — lazy cookie backfill on event visit
 
