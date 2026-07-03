@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { Trans, useLingui } from "@lingui/react/macro";
+import { toast } from "sonner";
 import { signInFn, signUpFn } from "../../../lib/auth/functions";
 import { createSupabaseBrowserClient } from "../../../lib/supabase/client";
 import { cn } from "../../../lib/utils";
@@ -56,14 +57,7 @@ export function AuthPanel({ mode, redirect, onToggleMode }: AuthPanelProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [prevMode, setPrevMode] = useState(mode);
-
-  if (mode !== prevMode) {
-    setPrevMode(mode);
-    setError("");
-  }
 
   const canSubmit =
     email.trim() !== "" &&
@@ -72,7 +66,6 @@ export function AuthPanel({ mode, redirect, onToggleMode }: AuthPanelProps) {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setError("");
     setSubmitting(true);
 
     try {
@@ -81,7 +74,7 @@ export function AuthPanel({ mode, redirect, onToggleMode }: AuthPanelProps) {
         : await signInFn({ data: { email, password } });
 
       if (result.error) {
-        setError(result.error);
+        toast.error(result.error);
         return;
       }
 
@@ -96,7 +89,7 @@ export function AuthPanel({ mode, redirect, onToggleMode }: AuthPanelProps) {
           : "/events";
       navigate({ to: safe });
     } catch {
-      setError(t`Something went wrong. Please try again.`);
+      toast.error(t`Something went wrong. Please try again.`);
     } finally {
       setSubmitting(false);
     }
@@ -110,20 +103,20 @@ export function AuthPanel({ mode, redirect, onToggleMode }: AuthPanelProps) {
         provider: "google",
         options: { redirectTo: `${origin}/auth/callback` },
       });
-      if (oauthError) setError(oauthError.message);
+      if (oauthError) toast.error(oauthError.message);
     } catch {
-      setError(t`Failed to start Google sign-in`);
+      toast.error(t`Failed to start Google sign-in.`);
     }
   }
 
   return (
-    <div className="grid w-full max-w-250 grid-cols-[1.02fr_0.98fr] overflow-hidden rounded-(--r-xl) border border-(--line) bg-card shadow-(--sh-lg) max-[820px]:max-w-115 max-[820px]:grid-cols-1 max-[480px]:min-h-screen max-[480px]:rounded-none max-[480px]:border-0 max-[480px]:shadow-none">
+    <div className="bg-card grid w-full max-w-250 grid-cols-[1.02fr_0.98fr] overflow-hidden rounded-(--r-xl) border border-(--line) shadow-(--sh-lg) max-[820px]:max-w-115 max-[820px]:grid-cols-1 max-[480px]:min-h-screen max-[480px]:rounded-none max-[480px]:border-0 max-[480px]:shadow-none">
       {/* brand panel */}
       <aside className="relative flex min-h-145 flex-col justify-start gap-7 overflow-hidden bg-[linear-gradient(168deg,#ffd58a_0%,#ff9d6b_30%,#f1633f_60%,#e0492a_100%)] p-10 text-white max-[820px]:hidden">
         <AuthScene />
         <div className="relative z-2">
           <Logo size={22} tone="light" />
-          <h2 className="mt-7.5 font-display text-[32px] leading-[1.04] font-extrabold tracking-tight text-balance [text-shadow:0_2px_14px_rgba(120,42,18,0.28)]">
+          <h2 className="font-display mt-7.5 text-[32px] leading-[1.04] font-extrabold tracking-tight text-balance [text-shadow:0_2px_14px_rgba(120,42,18,0.28)]">
             {isSignup ? (
               <Trans>Plan the hang — together.</Trans>
             ) : (
@@ -154,7 +147,7 @@ export function AuthPanel({ mode, redirect, onToggleMode }: AuthPanelProps) {
           <span className="font-mono text-[11px] font-medium tracking-[0.14em] text-(--accent-deep) uppercase">
             {isSignup ? <Trans>Create account</Trans> : <Trans>Sign in</Trans>}
           </span>
-          <h1 className="mt-2 font-display text-[30px] leading-[1.02] font-extrabold tracking-tight text-balance text-(--ink)">
+          <h1 className="font-display mt-2 text-[30px] leading-[1.02] font-extrabold tracking-tight text-balance text-(--ink)">
             {isSignup ? (
               <Trans>Join Picnivo</Trans>
             ) : (
@@ -172,17 +165,11 @@ export function AuthPanel({ mode, redirect, onToggleMode }: AuthPanelProps) {
           </p>
         </div>
 
-        {error && (
-          <div className="mb-4 rounded-(--r-sm) border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300">
-            {error}
-          </div>
-        )}
-
         <Button
           type="button"
           variant="outline"
           onClick={handleGoogleSignIn}
-          className="h-13 w-full gap-2.75 rounded-full border-[1.5px] border-(--line) bg-card text-[15.5px] font-bold text-(--ink) shadow-(--sh-sm) hover:bg-(--card-2)"
+          className="bg-card h-13 w-full gap-2.75 rounded-full border-[1.5px] border-(--line) text-[15.5px] font-bold text-(--ink) shadow-(--sh-sm) hover:bg-(--card-2)"
         >
           <GoogleIcon />
           <Trans>Continue with Google</Trans>
