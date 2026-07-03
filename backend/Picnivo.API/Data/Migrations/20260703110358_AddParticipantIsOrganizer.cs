@@ -15,15 +15,14 @@ namespace Picnivo.API.Data.Migrations
                 table: "Participants",
                 type: "boolean",
                 nullable: false,
-                defaultValue: false);
+                defaultValue: false
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "IsOrganizer",
-                table: "Participants");
+            migrationBuilder.DropColumn(name: "IsOrganizer", table: "Participants");
         }
     }
 }

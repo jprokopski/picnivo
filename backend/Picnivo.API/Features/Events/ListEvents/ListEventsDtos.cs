@@ -13,4 +13,5 @@ public record EventSummaryResponse(
     IReadOnlyList<string> ParticipantNames,
     int ClaimedCount,
     Guid? ChosenDateOptionId,
-    DateTimeOffset? ChosenDateStartsAt);
+    DateTimeOffset? ChosenDateStartsAt
+);

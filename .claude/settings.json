@@ -9,6 +9,24 @@
             "command": "jq -r '.tool_input.file_path // .tool_response.filePath' | { read -r f; case \"$f\" in /Users/jpro/code/picnivo/frontend/*) npx prettier --write \"$f\" ;; esac; } 2>/dev/null || true",
             "timeout": 30,
             "statusMessage": "Formatting..."
+          },
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path // .tool_response.filePath' | { read -r f; case \"$f\" in /Users/jpro/code/picnivo/backend/*.cs) cd /Users/jpro/code/picnivo/backend && dotnet csharpier format \"$f\" ;; esac; } 2>/dev/null || true",
+            "timeout": 30,
+            "statusMessage": "Formatting..."
+          },
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path // .tool_response.filePath' | { read -r f; case \"$f\" in /Users/jpro/code/picnivo/frontend/*.ts|/Users/jpro/code/picnivo/frontend/*.tsx) cd /Users/jpro/code/picnivo/frontend && out=$(pnpm exec eslint --fix --quiet \"$f\" 2>&1); code=$?; if [ $code -ne 0 ]; then echo \"$out\" >&2; exit 2; fi ;; esac; }",
+            "timeout": 30,
+            "statusMessage": "Linting..."
+          },
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path // .tool_response.filePath' | { read -r f; case \"$f\" in /Users/jpro/code/picnivo/frontend/*.ts|/Users/jpro/code/picnivo/frontend/*.tsx) cd /Users/jpro/code/picnivo/frontend && out=$(pnpm exec tsc --noEmit 2>&1); code=$?; if [ $code -ne 0 ]; then echo \"$out\" >&2; exit 2; fi ;; esac; }",
+            "timeout": 30,
+            "statusMessage": "Typechecking..."
           }
         ]
       }

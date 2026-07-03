@@ -1,8 +1,8 @@
-using ReleaseClaimHandler = Picnivo.API.Features.Claims.ReleaseClaim.ReleaseClaim;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
+using ReleaseClaimHandler = Picnivo.API.Features.Claims.ReleaseClaim.ReleaseClaim;
 
 namespace Picnivo.Tests.Features.Claims.ReleaseClaim;
 
@@ -16,7 +16,13 @@ public class ReleaseClaimHandlerTests
         var (token, participantId, itemId) = await SeedClaimedItemAsync(db);
 
         // Act
-        var result = await ReleaseClaimHandler.Handle(token, itemId, participantId, db, CancellationToken.None);
+        var result = await ReleaseClaimHandler.Handle(
+            token,
+            itemId,
+            participantId,
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<NoContent>();
@@ -33,7 +39,13 @@ public class ReleaseClaimHandlerTests
         var (token, _, itemId) = await SeedClaimedItemAsync(db);
 
         // Act
-        var result = await ReleaseClaimHandler.Handle(token, itemId, Guid.NewGuid(), db, CancellationToken.None);
+        var result = await ReleaseClaimHandler.Handle(
+            token,
+            itemId,
+            Guid.NewGuid(),
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<NotFound>();
@@ -46,17 +58,32 @@ public class ReleaseClaimHandlerTests
         await using var db = TestDb.Create();
 
         // Act
-        var result = await ReleaseClaimHandler.Handle("unknowntoken", Guid.NewGuid(), Guid.NewGuid(), db, CancellationToken.None);
+        var result = await ReleaseClaimHandler.Handle(
+            "unknowntoken",
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<NotFound>();
     }
 
     private static async Task<(string Token, Guid ParticipantId, Guid ItemId)> SeedClaimedItemAsync(
-        PicnivoDbContext db, string token = "testtoken01")
+        PicnivoDbContext db,
+        string token = "testtoken01"
+    )
     {
         var organizerId = Guid.NewGuid();
-        db.Organizers.Add(new Organizer { Id = organizerId, DisplayName = "Organizer", CreatedAt = DateTimeOffset.UtcNow });
+        db.Organizers.Add(
+            new Organizer
+            {
+                Id = organizerId,
+                DisplayName = "Organizer",
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
 
         var item = new EventItem { Id = Guid.CreateVersion7(), Label = "Sandwiches" };
         var @event = new Event
@@ -66,8 +93,15 @@ public class ReleaseClaimHandlerTests
             Title = "Test Picnic",
             Token = token,
             CreatedAt = DateTimeOffset.UtcNow,
-            DateOptions = [new DateOption { Id = Guid.CreateVersion7(), StartsAt = DateTimeOffset.UtcNow.AddDays(7) }],
-            Items = [item]
+            DateOptions =
+            [
+                new DateOption
+                {
+                    Id = Guid.CreateVersion7(),
+                    StartsAt = DateTimeOffset.UtcNow.AddDays(7),
+                },
+            ],
+            Items = [item],
         };
         db.Events.Add(@event);
 
@@ -77,16 +111,18 @@ public class ReleaseClaimHandlerTests
             EventId = @event.Id,
             DisplayName = "Alice",
             Attendance = AttendanceStatus.Coming,
-            CreatedAt = DateTimeOffset.UtcNow
+            CreatedAt = DateTimeOffset.UtcNow,
         };
         db.Participants.Add(participant);
-        db.ItemClaims.Add(new ItemClaim
-        {
-            Id = Guid.CreateVersion7(),
-            EventItemId = item.Id,
-            ParticipantId = participant.Id,
-            ClaimedAt = DateTimeOffset.UtcNow
-        });
+        db.ItemClaims.Add(
+            new ItemClaim
+            {
+                Id = Guid.CreateVersion7(),
+                EventItemId = item.Id,
+                ParticipantId = participant.Id,
+                ClaimedAt = DateTimeOffset.UtcNow,
+            }
+        );
 
         await db.SaveChangesAsync();
         db.ChangeTracker.Clear();

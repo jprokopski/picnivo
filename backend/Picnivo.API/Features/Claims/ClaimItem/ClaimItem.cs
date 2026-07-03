@@ -11,15 +11,16 @@ public static class ClaimItem
         Guid itemId,
         Guid participantId,
         PicnivoDbContext db,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
-        var @event = await db.Events
-            .Where(e => e.Token == token)
+        var @event = await db
+            .Events.Where(e => e.Token == token)
             .Select(e => new
             {
                 e.Id,
                 e.ChosenDateOptionId,
-                DateOptionIds = e.DateOptions.Select(d => d.Id).ToList()
+                DateOptionIds = e.DateOptions.Select(d => d.Id).ToList(),
             })
             .FirstOrDefaultAsync(ct);
 
@@ -28,16 +29,20 @@ public static class ClaimItem
             return Results.NotFound();
         }
 
-        var item = await db.EventItems
-            .FirstOrDefaultAsync(i => i.Id == itemId && i.EventId == @event.Id, ct);
+        var item = await db.EventItems.FirstOrDefaultAsync(
+            i => i.Id == itemId && i.EventId == @event.Id,
+            ct
+        );
 
         if (item is null)
         {
             return Results.NotFound();
         }
 
-        var participant = await db.Participants
-            .FirstOrDefaultAsync(p => p.Id == participantId && p.EventId == @event.Id, ct);
+        var participant = await db.Participants.FirstOrDefaultAsync(
+            p => p.Id == participantId && p.EventId == @event.Id,
+            ct
+        );
 
         if (participant is null)
         {
@@ -45,13 +50,24 @@ public static class ClaimItem
         }
 
         var chosenDateOptionId = Event.ResolveEffectiveChosenDateOptionId(
-            @event.ChosenDateOptionId, @event.DateOptionIds);
+            @event.ChosenDateOptionId,
+            @event.DateOptionIds
+        );
 
         var isComing = participant.Attendance == AttendanceStatus.Coming;
-        if (!isComing && participant.Attendance == AttendanceStatus.Undecided && chosenDateOptionId is { } chosenId)
+        if (
+            !isComing
+            && participant.Attendance == AttendanceStatus.Undecided
+            && chosenDateOptionId is { } chosenId
+        )
         {
             isComing = await db.DateVotes.AnyAsync(
-                v => v.ParticipantId == participantId && v.DateOptionId == chosenId && v.Choice == VoteChoice.Yes, ct);
+                v =>
+                    v.ParticipantId == participantId
+                    && v.DateOptionId == chosenId
+                    && v.Choice == VoteChoice.Yes,
+                ct
+            );
         }
 
         if (!isComing)
@@ -59,13 +75,15 @@ public static class ClaimItem
             return Results.StatusCode(StatusCodes.Status403Forbidden);
         }
 
-        db.ItemClaims.Add(new ItemClaim
-        {
-            Id = Guid.CreateVersion7(),
-            EventItemId = itemId,
-            ParticipantId = participantId,
-            ClaimedAt = DateTimeOffset.UtcNow
-        });
+        db.ItemClaims.Add(
+            new ItemClaim
+            {
+                Id = Guid.CreateVersion7(),
+                EventItemId = itemId,
+                ParticipantId = participantId,
+                ClaimedAt = DateTimeOffset.UtcNow,
+            }
+        );
         item.OrphanedFromParticipantId = null;
 
         await db.SaveChangesAsync(ct);

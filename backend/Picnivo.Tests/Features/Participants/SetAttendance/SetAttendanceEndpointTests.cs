@@ -16,8 +16,13 @@ public class SetAttendanceEndpointTests(ApiFixture fixture)
         await using var ctx = await fixture.CheckOutAsync();
 
         // Act
-        var ex = await Should.ThrowAsync<ApiException>(() => ctx.ApiClient.SetAttendanceAsync(
-            "unknowntokenxyz", Guid.NewGuid(), new SetAttendanceRequest { Status = 2 }));
+        var ex = await Should.ThrowAsync<ApiException>(() =>
+            ctx.ApiClient.SetAttendanceAsync(
+                "unknowntokenxyz",
+                Guid.NewGuid(),
+                new SetAttendanceRequest { Status = 2 }
+            )
+        );
 
         // Assert
         ex.StatusCode.ShouldBe(404);
@@ -32,7 +37,11 @@ public class SetAttendanceEndpointTests(ApiFixture fixture)
         await ctx.ApiClient.ClaimItemAsync(token, itemId, participantId);
 
         // Act
-        await ctx.ApiClient.SetAttendanceAsync(token, participantId, new SetAttendanceRequest { Status = 3 });
+        await ctx.ApiClient.SetAttendanceAsync(
+            token,
+            participantId,
+            new SetAttendanceRequest { Status = 3 }
+        );
 
         // Assert
         using var scope = ctx.Services.CreateScope();
@@ -42,16 +51,30 @@ public class SetAttendanceEndpointTests(ApiFixture fixture)
         item.OrphanedFromParticipantId.ShouldBe(participantId);
     }
 
-    private static async Task<(string Token, Guid ParticipantId, Guid ItemId)> SeedEventWithParticipantAsync(
-        IServiceProvider services, string token = "testtoken01")
+    private static async Task<(
+        string Token,
+        Guid ParticipantId,
+        Guid ItemId
+    )> SeedEventWithParticipantAsync(IServiceProvider services, string token = "testtoken01")
     {
         using var scope = services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<PicnivoDbContext>();
         var organizerId = Guid.NewGuid();
-        db.Organizers.Add(new Organizer { Id = organizerId, DisplayName = "Organizer", CreatedAt = DateTimeOffset.UtcNow });
+        db.Organizers.Add(
+            new Organizer
+            {
+                Id = organizerId,
+                DisplayName = "Organizer",
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
 
         var item = new EventItem { Id = Guid.CreateVersion7(), Label = "Sandwiches" };
-        var dateOption = new DateOption { Id = Guid.CreateVersion7(), StartsAt = DateTimeOffset.UtcNow.AddDays(7) };
+        var dateOption = new DateOption
+        {
+            Id = Guid.CreateVersion7(),
+            StartsAt = DateTimeOffset.UtcNow.AddDays(7),
+        };
         var @event = new Event
         {
             Id = Guid.CreateVersion7(),
@@ -60,7 +83,7 @@ public class SetAttendanceEndpointTests(ApiFixture fixture)
             Token = token,
             CreatedAt = DateTimeOffset.UtcNow,
             DateOptions = [dateOption],
-            Items = [item]
+            Items = [item],
         };
         db.Events.Add(@event);
 
@@ -70,7 +93,7 @@ public class SetAttendanceEndpointTests(ApiFixture fixture)
             EventId = @event.Id,
             DisplayName = "Alice",
             Attendance = AttendanceStatus.Coming,
-            CreatedAt = DateTimeOffset.UtcNow
+            CreatedAt = DateTimeOffset.UtcNow,
         };
         db.Participants.Add(participant);
 

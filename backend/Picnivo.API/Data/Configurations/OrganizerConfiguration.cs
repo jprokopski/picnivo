@@ -10,14 +10,10 @@ public class OrganizerConfiguration : IEntityTypeConfiguration<Organizer>
     {
         builder.HasKey(o => o.Id);
 
-        builder.Property(o => o.Id)
-            .ValueGeneratedNever();
+        builder.Property(o => o.Id).ValueGeneratedNever();
 
-        builder.Property(o => o.DisplayName)
-            .IsRequired()
-            .HasMaxLength(100);
+        builder.Property(o => o.DisplayName).IsRequired().HasMaxLength(100);
 
-        builder.Property(o => o.CreatedAt)
-            .HasDefaultValueSql("now()");
+        builder.Property(o => o.CreatedAt).HasDefaultValueSql("now()");
     }
 }

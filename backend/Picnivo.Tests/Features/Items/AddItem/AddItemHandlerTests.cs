@@ -1,9 +1,9 @@
-using AddItemHandler = Picnivo.API.Features.Items.AddItem.AddItem;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
 using Picnivo.API.Features.Items.AddItem;
+using AddItemHandler = Picnivo.API.Features.Items.AddItem.AddItem;
 
 namespace Picnivo.Tests.Features.Items.AddItem;
 
@@ -17,7 +17,12 @@ public class AddItemHandlerTests
         var (token, participantId) = await SeedEventWithParticipantAsync(db);
 
         // Act
-        var result = await AddItemHandler.Handle(token, new AddItemRequest(participantId, "Drinks"), db, CancellationToken.None);
+        var result = await AddItemHandler.Handle(
+            token,
+            new AddItemRequest(participantId, "Drinks"),
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         var created = result.ShouldBeOfType<Created<AddItemResponse>>();
@@ -32,11 +37,21 @@ public class AddItemHandlerTests
         // Arrange
         await using var db = TestDb.Create();
         var (token, participantId) = await SeedEventWithParticipantAsync(db);
-        await AddItemHandler.Handle(token, new AddItemRequest(participantId, "Drinks"), db, CancellationToken.None);
+        await AddItemHandler.Handle(
+            token,
+            new AddItemRequest(participantId, "Drinks"),
+            db,
+            CancellationToken.None
+        );
         db.ChangeTracker.Clear();
 
         // Act
-        var result = await AddItemHandler.Handle(token, new AddItemRequest(participantId, "drinks"), db, CancellationToken.None);
+        var result = await AddItemHandler.Handle(
+            token,
+            new AddItemRequest(participantId, "drinks"),
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<Conflict>();
@@ -51,7 +66,12 @@ public class AddItemHandlerTests
         var (token, participantId) = await SeedEventWithParticipantAsync(db, existingItemCount: 50);
 
         // Act
-        var result = await AddItemHandler.Handle(token, new AddItemRequest(participantId, "One More"), db, CancellationToken.None);
+        var result = await AddItemHandler.Handle(
+            token,
+            new AddItemRequest(participantId, "One More"),
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<BadRequest>();
@@ -65,19 +85,35 @@ public class AddItemHandlerTests
         var (token, _) = await SeedEventWithParticipantAsync(db);
 
         // Act
-        var result = await AddItemHandler.Handle(token, new AddItemRequest(Guid.NewGuid(), "Drinks"), db, CancellationToken.None);
+        var result = await AddItemHandler.Handle(
+            token,
+            new AddItemRequest(Guid.NewGuid(), "Drinks"),
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<NotFound>();
     }
 
     private static async Task<(string Token, Guid ParticipantId)> SeedEventWithParticipantAsync(
-        PicnivoDbContext db, int existingItemCount = 0, string token = "testtoken01")
+        PicnivoDbContext db,
+        int existingItemCount = 0,
+        string token = "testtoken01"
+    )
     {
         var organizerId = Guid.NewGuid();
-        db.Organizers.Add(new Organizer { Id = organizerId, DisplayName = "Organizer", CreatedAt = DateTimeOffset.UtcNow });
+        db.Organizers.Add(
+            new Organizer
+            {
+                Id = organizerId,
+                DisplayName = "Organizer",
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
 
-        var items = Enumerable.Range(1, existingItemCount)
+        var items = Enumerable
+            .Range(1, existingItemCount)
             .Select(i => new EventItem { Id = Guid.CreateVersion7(), Label = $"Item {i}" })
             .ToList();
 
@@ -88,8 +124,15 @@ public class AddItemHandlerTests
             Title = "Test Picnic",
             Token = token,
             CreatedAt = DateTimeOffset.UtcNow,
-            DateOptions = [new DateOption { Id = Guid.CreateVersion7(), StartsAt = DateTimeOffset.UtcNow.AddDays(7) }],
-            Items = items
+            DateOptions =
+            [
+                new DateOption
+                {
+                    Id = Guid.CreateVersion7(),
+                    StartsAt = DateTimeOffset.UtcNow.AddDays(7),
+                },
+            ],
+            Items = items,
         };
         db.Events.Add(@event);
 
@@ -99,7 +142,7 @@ public class AddItemHandlerTests
             EventId = @event.Id,
             DisplayName = "Alice",
             Attendance = AttendanceStatus.Coming,
-            CreatedAt = DateTimeOffset.UtcNow
+            CreatedAt = DateTimeOffset.UtcNow,
         };
         db.Participants.Add(participant);
 

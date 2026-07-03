@@ -10,10 +10,11 @@ public static class JoinEvent
         string token,
         JoinEventRequest req,
         PicnivoDbContext db,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
-        var @event = await db.Events
-            .Where(e => e.Token == token)
+        var @event = await db
+            .Events.Where(e => e.Token == token)
             .Select(e => new { e.Id })
             .FirstOrDefaultAsync(ct);
 
@@ -24,8 +25,8 @@ public static class JoinEvent
 
         var displayName = req.DisplayName.Trim();
 
-        var duplicateName = await db.Participants
-            .Where(p => p.EventId == @event.Id)
+        var duplicateName = await db
+            .Participants.Where(p => p.EventId == @event.Id)
             .AnyAsync(p => p.DisplayName.ToLower() == displayName.ToLower(), ct);
 
         var participant = new Participant
@@ -34,7 +35,7 @@ public static class JoinEvent
             EventId = @event.Id,
             DisplayName = displayName,
             Attendance = AttendanceStatus.Undecided,
-            CreatedAt = DateTimeOffset.UtcNow
+            CreatedAt = DateTimeOffset.UtcNow,
         };
 
         db.Participants.Add(participant);

@@ -2,7 +2,13 @@ using Picnivo.API.Data.Models;
 
 namespace Picnivo.API.Features.Events.GetEventByToken;
 
-public record DateOptionDto(Guid Id, DateTimeOffset StartsAt, int YesCount, int MaybeCount, int NoCount);
+public record DateOptionDto(
+    Guid Id,
+    DateTimeOffset StartsAt,
+    int YesCount,
+    int MaybeCount,
+    int NoCount
+);
 
 public record EventItemDto(
     Guid Id,
@@ -10,7 +16,8 @@ public record EventItemDto(
     Guid? ClaimedByParticipantId,
     string? ClaimedByName,
     Guid? AddedByParticipantId,
-    string? OrphanedFromName);
+    string? OrphanedFromName
+);
 
 public record ParticipantVoteDto(Guid DateOptionId, VoteChoice Choice);
 
@@ -19,14 +26,16 @@ public record ParticipantDto(
     string DisplayName,
     bool IsOrganizer,
     AttendanceStatus Attendance,
-    IReadOnlyList<ParticipantVoteDto> Votes);
+    IReadOnlyList<ParticipantVoteDto> Votes
+);
 
 public record YouVoteDto(Guid DateOptionId, VoteChoice Choice);
 
 public record YouDto(
     IReadOnlyList<YouVoteDto> Votes,
     IReadOnlyList<Guid> ClaimedItemIds,
-    AttendanceStatus Attendance);
+    AttendanceStatus Attendance
+);
 
 public record EventDetailResponse(
     string Title,
@@ -39,4 +48,5 @@ public record EventDetailResponse(
     IReadOnlyList<DateOptionDto> DateOptions,
     IReadOnlyList<EventItemDto> Items,
     IReadOnlyList<ParticipantDto> Participants,
-    YouDto? You);
+    YouDto? You
+);

@@ -6,7 +6,8 @@ namespace Picnivo.API.Features.Events.CreateEvent;
 // Collision handling (retry on unique-constraint violation) lives at the insert site.
 public static class ShareTokenGenerator
 {
-    private const string Alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private const string Alphabet =
+        "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     private const int DefaultLength = 10;
 
     public static string Generate(int length = DefaultLength)

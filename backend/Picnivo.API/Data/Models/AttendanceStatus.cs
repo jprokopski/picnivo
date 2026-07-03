@@ -5,5 +5,5 @@ public enum AttendanceStatus
     Invalid = 0,
     Undecided = 1,
     Coming = 2,
-    Out = 3
+    Out = 3,
 }

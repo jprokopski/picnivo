@@ -1,9 +1,9 @@
-using CastVotesHandler = Picnivo.API.Features.Votes.CastVotes.CastVotes;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
 using Picnivo.API.Features.Votes.CastVotes;
+using CastVotesHandler = Picnivo.API.Features.Votes.CastVotes.CastVotes;
 
 namespace Picnivo.Tests.Features.Votes.CastVotes;
 
@@ -18,10 +18,20 @@ public class CastVotesHandlerTests
 
         // Act
         await CastVotesHandler.Handle(
-            token, participantId, new CastVotesRequest([new VoteDto(dateOptionId, VoteChoice.Yes)]), db, CancellationToken.None);
+            token,
+            participantId,
+            new CastVotesRequest([new VoteDto(dateOptionId, VoteChoice.Yes)]),
+            db,
+            CancellationToken.None
+        );
         db.ChangeTracker.Clear();
         var result = await CastVotesHandler.Handle(
-            token, participantId, new CastVotesRequest([new VoteDto(dateOptionId, VoteChoice.No)]), db, CancellationToken.None);
+            token,
+            participantId,
+            new CastVotesRequest([new VoteDto(dateOptionId, VoteChoice.No)]),
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<NoContent>();
@@ -39,7 +49,12 @@ public class CastVotesHandlerTests
 
         // Act
         var result = await CastVotesHandler.Handle(
-            token, participantId, new CastVotesRequest([new VoteDto(Guid.NewGuid(), VoteChoice.Yes)]), db, CancellationToken.None);
+            token,
+            participantId,
+            new CastVotesRequest([new VoteDto(Guid.NewGuid(), VoteChoice.Yes)]),
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<BadRequest>();
@@ -54,7 +69,12 @@ public class CastVotesHandlerTests
 
         // Act
         var result = await CastVotesHandler.Handle(
-            token, Guid.NewGuid(), new CastVotesRequest([new VoteDto(dateOptionId, VoteChoice.Yes)]), db, CancellationToken.None);
+            token,
+            Guid.NewGuid(),
+            new CastVotesRequest([new VoteDto(dateOptionId, VoteChoice.Yes)]),
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<NotFound>();
@@ -65,24 +85,52 @@ public class CastVotesHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
-        var (token, participantId, dateOptionId, _) = await SeedEventWithParticipantAsync(db, dateOptionCount: 1);
+        var (token, participantId, dateOptionId, _) = await SeedEventWithParticipantAsync(
+            db,
+            dateOptionCount: 1
+        );
 
         // Act
         var result = await CastVotesHandler.Handle(
-            token, participantId, new CastVotesRequest([new VoteDto(dateOptionId, VoteChoice.Yes)]), db, CancellationToken.None);
+            token,
+            participantId,
+            new CastVotesRequest([new VoteDto(dateOptionId, VoteChoice.Yes)]),
+            db,
+            CancellationToken.None
+        );
 
         // Assert
         result.ShouldBeOfType<BadRequest>();
     }
 
-    private static async Task<(string Token, Guid ParticipantId, Guid DateOptionId, Guid EventId)> SeedEventWithParticipantAsync(
-        PicnivoDbContext db, int dateOptionCount = 2, string token = "testtoken01")
+    private static async Task<(
+        string Token,
+        Guid ParticipantId,
+        Guid DateOptionId,
+        Guid EventId
+    )> SeedEventWithParticipantAsync(
+        PicnivoDbContext db,
+        int dateOptionCount = 2,
+        string token = "testtoken01"
+    )
     {
         var organizerId = Guid.NewGuid();
-        db.Organizers.Add(new Organizer { Id = organizerId, DisplayName = "Organizer", CreatedAt = DateTimeOffset.UtcNow });
+        db.Organizers.Add(
+            new Organizer
+            {
+                Id = organizerId,
+                DisplayName = "Organizer",
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
 
-        var dateOptions = Enumerable.Range(1, dateOptionCount)
-            .Select(i => new DateOption { Id = Guid.CreateVersion7(), StartsAt = DateTimeOffset.UtcNow.AddDays(7 + i) })
+        var dateOptions = Enumerable
+            .Range(1, dateOptionCount)
+            .Select(i => new DateOption
+            {
+                Id = Guid.CreateVersion7(),
+                StartsAt = DateTimeOffset.UtcNow.AddDays(7 + i),
+            })
             .ToList();
 
         var @event = new Event
@@ -92,7 +140,7 @@ public class CastVotesHandlerTests
             Title = "Test Picnic",
             Token = token,
             CreatedAt = DateTimeOffset.UtcNow,
-            DateOptions = dateOptions
+            DateOptions = dateOptions,
         };
         db.Events.Add(@event);
 
@@ -102,7 +150,7 @@ public class CastVotesHandlerTests
             EventId = @event.Id,
             DisplayName = "Alice",
             Attendance = AttendanceStatus.Undecided,
-            CreatedAt = DateTimeOffset.UtcNow
+            CreatedAt = DateTimeOffset.UtcNow,
         };
         db.Participants.Add(participant);
 

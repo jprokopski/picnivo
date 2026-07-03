@@ -6,9 +6,7 @@ namespace Picnivo.API.Data;
 public class PicnivoDbContext : DbContext
 {
     public PicnivoDbContext(DbContextOptions<PicnivoDbContext> options)
-        : base(options)
-    {
-    }
+        : base(options) { }
 
     public DbSet<Event> Events => Set<Event>();
     public DbSet<Organizer> Organizers => Set<Organizer>();

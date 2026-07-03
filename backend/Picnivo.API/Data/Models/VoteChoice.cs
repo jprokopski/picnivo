@@ -5,5 +5,5 @@ public enum VoteChoice
     Invalid = 0,
     Yes = 1,
     Maybe = 2,
-    No = 3
+    No = 3,
 }

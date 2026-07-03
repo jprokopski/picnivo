@@ -11,7 +11,10 @@ public class CreateEventValidatorTests
     public async Task WithEmptyTitle_IsInvalid()
     {
         // Arrange
-        var request = ValidRequest() with { Title = "   " };
+        var request = ValidRequest() with
+        {
+            Title = "   ",
+        };
 
         // Act
         var result = await _validator.TestValidateAsync(request);
@@ -24,7 +27,10 @@ public class CreateEventValidatorTests
     public async Task WithZeroDateOptions_IsInvalid()
     {
         // Arrange
-        var request = ValidRequest() with { DateOptions = [] };
+        var request = ValidRequest() with
+        {
+            DateOptions = [],
+        };
 
         // Act
         var result = await _validator.TestValidateAsync(request);
@@ -50,7 +56,10 @@ public class CreateEventValidatorTests
     public async Task WithPastDateOption_IsInvalid()
     {
         // Arrange
-        var request = ValidRequest() with { DateOptions = [DateTimeOffset.UtcNow.AddDays(-1)] };
+        var request = ValidRequest() with
+        {
+            DateOptions = [DateTimeOffset.UtcNow.AddDays(-1)],
+        };
 
         // Act
         var result = await _validator.TestValidateAsync(request);
@@ -72,12 +81,15 @@ public class CreateEventValidatorTests
         result.ShouldNotHaveAnyValidationErrors();
     }
 
-    private static CreateEventRequest ValidRequest(int dateCount = 2) => new(
-        Title: "Test Picnic",
-        Description: null,
-        Location: null,
-        DateOptions: Enumerable.Range(1, dateCount)
-            .Select(i => DateTimeOffset.UtcNow.AddDays(7 + i))
-            .ToArray(),
-        Items: []);
+    private static CreateEventRequest ValidRequest(int dateCount = 2) =>
+        new(
+            Title: "Test Picnic",
+            Description: null,
+            Location: null,
+            DateOptions: Enumerable
+                .Range(1, dateCount)
+                .Select(i => DateTimeOffset.UtcNow.AddDays(7 + i))
+                .ToArray(),
+            Items: []
+        );
 }

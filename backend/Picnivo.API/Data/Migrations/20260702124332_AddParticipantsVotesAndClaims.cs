@@ -15,19 +15,22 @@ namespace Picnivo.API.Data.Migrations
                 name: "ChosenDateOptionId",
                 table: "Events",
                 type: "uuid",
-                nullable: true);
+                nullable: true
+            );
 
             migrationBuilder.AddColumn<Guid>(
                 name: "AddedByParticipantId",
                 table: "EventItems",
                 type: "uuid",
-                nullable: true);
+                nullable: true
+            );
 
             migrationBuilder.AddColumn<Guid>(
                 name: "OrphanedFromParticipantId",
                 table: "EventItems",
                 type: "uuid",
-                nullable: true);
+                nullable: true
+            );
 
             migrationBuilder.CreateTable(
                 name: "Participants",
@@ -35,9 +38,17 @@ namespace Picnivo.API.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     EventId = table.Column<Guid>(type: "uuid", nullable: false),
-                    DisplayName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    DisplayName = table.Column<string>(
+                        type: "character varying(100)",
+                        maxLength: 100,
+                        nullable: false
+                    ),
                     Attendance = table.Column<int>(type: "integer", nullable: false),
-                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")
+                    CreatedAt = table.Column<DateTimeOffset>(
+                        type: "timestamp with time zone",
+                        nullable: false,
+                        defaultValueSql: "now()"
+                    ),
                 },
                 constraints: table =>
                 {
@@ -47,8 +58,10 @@ namespace Picnivo.API.Data.Migrations
                         column: x => x.EventId,
                         principalTable: "Events",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "DateVotes",
@@ -57,7 +70,7 @@ namespace Picnivo.API.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     ParticipantId = table.Column<Guid>(type: "uuid", nullable: false),
                     DateOptionId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Choice = table.Column<int>(type: "integer", nullable: false)
+                    Choice = table.Column<int>(type: "integer", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -67,14 +80,17 @@ namespace Picnivo.API.Data.Migrations
                         column: x => x.DateOptionId,
                         principalTable: "DateOptions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade
+                    );
                     table.ForeignKey(
                         name: "FK_DateVotes_Participants_ParticipantId",
                         column: x => x.ParticipantId,
                         principalTable: "Participants",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "ItemClaims",
@@ -83,7 +99,11 @@ namespace Picnivo.API.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     EventItemId = table.Column<Guid>(type: "uuid", nullable: false),
                     ParticipantId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ClaimedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")
+                    ClaimedAt = table.Column<DateTimeOffset>(
+                        type: "timestamp with time zone",
+                        nullable: false,
+                        defaultValueSql: "now()"
+                    ),
                 },
                 constraints: table =>
                 {
@@ -93,56 +113,67 @@ namespace Picnivo.API.Data.Migrations
                         column: x => x.EventItemId,
                         principalTable: "EventItems",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade
+                    );
                     table.ForeignKey(
                         name: "FK_ItemClaims_Participants_ParticipantId",
                         column: x => x.ParticipantId,
                         principalTable: "Participants",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_Events_ChosenDateOptionId",
                 table: "Events",
-                column: "ChosenDateOptionId");
+                column: "ChosenDateOptionId"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_EventItems_AddedByParticipantId",
                 table: "EventItems",
-                column: "AddedByParticipantId");
+                column: "AddedByParticipantId"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_EventItems_OrphanedFromParticipantId",
                 table: "EventItems",
-                column: "OrphanedFromParticipantId");
+                column: "OrphanedFromParticipantId"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_DateVotes_DateOptionId",
                 table: "DateVotes",
-                column: "DateOptionId");
+                column: "DateOptionId"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_DateVotes_Participant_DateOption",
                 table: "DateVotes",
                 columns: new[] { "ParticipantId", "DateOptionId" },
-                unique: true);
+                unique: true
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_ItemClaims_EventItem",
                 table: "ItemClaims",
                 column: "EventItemId",
-                unique: true);
+                unique: true
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_ItemClaims_ParticipantId",
                 table: "ItemClaims",
-                column: "ParticipantId");
+                column: "ParticipantId"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_Participants_EventId",
                 table: "Participants",
-                column: "EventId");
+                column: "EventId"
+            );
 
             migrationBuilder.AddForeignKey(
                 name: "FK_EventItems_Participants_AddedByParticipantId",
@@ -150,7 +181,8 @@ namespace Picnivo.API.Data.Migrations
                 column: "AddedByParticipantId",
                 principalTable: "Participants",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.SetNull);
+                onDelete: ReferentialAction.SetNull
+            );
 
             migrationBuilder.AddForeignKey(
                 name: "FK_EventItems_Participants_OrphanedFromParticipantId",
@@ -158,14 +190,16 @@ namespace Picnivo.API.Data.Migrations
                 column: "OrphanedFromParticipantId",
                 principalTable: "Participants",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.SetNull);
+                onDelete: ReferentialAction.SetNull
+            );
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Events_DateOptions_ChosenDateOptionId",
                 table: "Events",
                 column: "ChosenDateOptionId",
                 principalTable: "DateOptions",
-                principalColumn: "Id");
+                principalColumn: "Id"
+            );
         }
 
         /// <inheritdoc />
@@ -173,48 +207,42 @@ namespace Picnivo.API.Data.Migrations
         {
             migrationBuilder.DropForeignKey(
                 name: "FK_EventItems_Participants_AddedByParticipantId",
-                table: "EventItems");
+                table: "EventItems"
+            );
 
             migrationBuilder.DropForeignKey(
                 name: "FK_EventItems_Participants_OrphanedFromParticipantId",
-                table: "EventItems");
+                table: "EventItems"
+            );
 
             migrationBuilder.DropForeignKey(
                 name: "FK_Events_DateOptions_ChosenDateOptionId",
-                table: "Events");
+                table: "Events"
+            );
 
-            migrationBuilder.DropTable(
-                name: "DateVotes");
+            migrationBuilder.DropTable(name: "DateVotes");
 
-            migrationBuilder.DropTable(
-                name: "ItemClaims");
+            migrationBuilder.DropTable(name: "ItemClaims");
 
-            migrationBuilder.DropTable(
-                name: "Participants");
+            migrationBuilder.DropTable(name: "Participants");
 
-            migrationBuilder.DropIndex(
-                name: "IX_Events_ChosenDateOptionId",
-                table: "Events");
+            migrationBuilder.DropIndex(name: "IX_Events_ChosenDateOptionId", table: "Events");
 
             migrationBuilder.DropIndex(
                 name: "IX_EventItems_AddedByParticipantId",
-                table: "EventItems");
+                table: "EventItems"
+            );
 
             migrationBuilder.DropIndex(
                 name: "IX_EventItems_OrphanedFromParticipantId",
-                table: "EventItems");
+                table: "EventItems"
+            );
 
-            migrationBuilder.DropColumn(
-                name: "ChosenDateOptionId",
-                table: "Events");
+            migrationBuilder.DropColumn(name: "ChosenDateOptionId", table: "Events");
 
-            migrationBuilder.DropColumn(
-                name: "AddedByParticipantId",
-                table: "EventItems");
+            migrationBuilder.DropColumn(name: "AddedByParticipantId", table: "EventItems");
 
-            migrationBuilder.DropColumn(
-                name: "OrphanedFromParticipantId",
-                table: "EventItems");
+            migrationBuilder.DropColumn(name: "OrphanedFromParticipantId", table: "EventItems");
         }
     }
 }
