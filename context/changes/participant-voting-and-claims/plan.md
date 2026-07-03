@@ -1084,13 +1084,13 @@ avoid Postgres multiple-cascade-path errors.
 
 #### Automated
 
-- [x] 7.1 Type check passes: `pnpm typecheck`
-- [x] 7.2 Lint passes: `pnpm lint`
-- [x] 7.3 Tests pass: `pnpm test`
-- [x] 7.4 Card tests: status chip voting/date-set/past; "N going" from count; "X / Y claimed"; crew stack capped
-- [x] 7.5 List tests: Ongoing/Past filter uses derived status; counts correct
-- [x] 7.6 i18n extract/compile succeeds; `pnpm build` succeeds
+- [x] 7.1 Type check passes: `pnpm typecheck` — d53b300
+- [x] 7.2 Lint passes: `pnpm lint` — d53b300
+- [x] 7.3 Tests pass: `pnpm test` — d53b300
+- [x] 7.4 Card tests: status chip voting/date-set/past; "N going" from count; "X / Y claimed"; crew stack capped — d53b300
+- [x] 7.5 List tests: Ongoing/Past filter uses derived status; counts correct — d53b300
+- [x] 7.6 i18n extract/compile succeeds; `pnpm build` succeeds — d53b300
 
 #### Manual
 
-- [x] 7.7 Dashboard cards match design; live event status/going/claimed/crew reflect real state end to end
+- [x] 7.7 Dashboard cards match design; live event status/going/claimed/crew reflect real state end to end — d53b300
