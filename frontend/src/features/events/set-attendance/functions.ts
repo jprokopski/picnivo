@@ -5,7 +5,7 @@ import { getParticipantIdCookie } from "../../../lib/participant/cookie";
 import { ATTENDANCE_VALUES, setAttendanceSchema } from "./schema";
 
 export const setAttendanceFn = createServerFn({ method: "POST" })
-  .inputValidator(setAttendanceSchema)
+  .validator(setAttendanceSchema)
   .handler(async ({ data }) => {
     const participantId = getParticipantIdCookie(data.token);
     if (!participantId) {

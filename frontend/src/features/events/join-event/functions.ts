@@ -5,7 +5,7 @@ import { setParticipantIdCookie } from "../../../lib/participant/cookie";
 import { joinEventSchema } from "./schema";
 
 export const joinEventFn = createServerFn({ method: "POST" })
-  .inputValidator(joinEventSchema)
+  .validator(joinEventSchema)
   .handler(async ({ data }) => {
     try {
       const result = await joinEvent(data.token, {

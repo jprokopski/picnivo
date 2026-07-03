@@ -7,7 +7,7 @@ import { createEventSchema } from "./schema";
 
 export const createEventFn = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
-  .inputValidator(createEventSchema)
+  .validator(createEventSchema)
   .handler(async ({ data, context }) => {
     const {
       data: { session },

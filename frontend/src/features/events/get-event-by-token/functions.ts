@@ -6,7 +6,7 @@ import { getParticipantIdCookie } from "../../../lib/participant/cookie";
 import { tokenSchema } from "./schema";
 
 export const getEventByTokenFn = createServerFn({ method: "GET" })
-  .inputValidator(tokenSchema)
+  .validator(tokenSchema)
   .handler(async ({ data }) => {
     try {
       return await getEventByToken(data.token, {
@@ -30,5 +30,5 @@ export const getShareOriginFn = createServerFn({ method: "GET" }).handler(
 // needs the raw id to compare against `EventItemDto.addedByParticipantId`,
 // so it's read from the same httpOnly cookie and threaded down separately.
 export const getMyParticipantIdFn = createServerFn({ method: "GET" })
-  .inputValidator(tokenSchema)
+  .validator(tokenSchema)
   .handler(async ({ data }) => getParticipantIdCookie(data.token) ?? null);
