@@ -17,11 +17,20 @@ err()  { echo -e "${RED}[dev]${NC} $*" >&2; }
 BACKEND_PID=""
 FRONTEND_PID=""
 
+kill_tree() {
+  local pid="$1"
+  local child
+  for child in $(pgrep -P "$pid" 2>/dev/null || true); do
+    kill_tree "$child"
+  done
+  kill "$pid" 2>/dev/null || true
+}
+
 cleanup() {
   echo ""
   log "Shutting down…"
-  [[ -n "$FRONTEND_PID" ]] && kill "$FRONTEND_PID" 2>/dev/null || true
-  [[ -n "$BACKEND_PID" ]]  && kill "$BACKEND_PID"  2>/dev/null || true
+  [[ -n "$FRONTEND_PID" ]] && kill_tree "$FRONTEND_PID"
+  [[ -n "$BACKEND_PID" ]]  && kill_tree "$BACKEND_PID"
   log "Stopping Supabase…"
   (cd "$ROOT" && supabase stop) 2>/dev/null || true
   ok "Done."

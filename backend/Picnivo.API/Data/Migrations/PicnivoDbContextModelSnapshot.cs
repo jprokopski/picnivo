@@ -41,10 +41,39 @@ namespace Picnivo.API.Data.Migrations
                     b.ToTable("DateOptions");
                 });
 
+            modelBuilder.Entity("Picnivo.API.Data.Models.DateVote", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Choice")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("DateOptionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ParticipantId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DateOptionId");
+
+                    b.HasIndex("ParticipantId", "DateOptionId")
+                        .IsUnique()
+                        .HasDatabaseName("IX_DateVotes_Participant_DateOption");
+
+                    b.ToTable("DateVotes");
+                });
+
             modelBuilder.Entity("Picnivo.API.Data.Models.Event", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ChosenDateOptionId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTimeOffset>("CreatedAt")
@@ -75,6 +104,8 @@ namespace Picnivo.API.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ChosenDateOptionId");
+
                     b.HasIndex("OrganizerId");
 
                     b.HasIndex("Token")
@@ -89,6 +120,9 @@ namespace Picnivo.API.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("AddedByParticipantId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("EventId")
                         .HasColumnType("uuid");
 
@@ -97,11 +131,53 @@ namespace Picnivo.API.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
+                    b.Property<string>("NormalizedLabel")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("text")
+                        .HasComputedColumnSql("lower(\"Label\")", true);
+
+                    b.Property<Guid?>("OrphanedFromParticipantId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("EventId");
+                    b.HasIndex("AddedByParticipantId");
+
+                    b.HasIndex("OrphanedFromParticipantId");
+
+                    b.HasIndex("EventId", "NormalizedLabel")
+                        .IsUnique()
+                        .HasDatabaseName("IX_EventItems_Event_NormalizedLabel");
 
                     b.ToTable("EventItems");
+                });
+
+            modelBuilder.Entity("Picnivo.API.Data.Models.ItemClaim", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("ClaimedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<Guid>("EventItemId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ParticipantId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventItemId")
+                        .IsUnique()
+                        .HasDatabaseName("IX_ItemClaims_EventItem");
+
+                    b.HasIndex("ParticipantId");
+
+                    b.ToTable("ItemClaims");
                 });
 
             modelBuilder.Entity("Picnivo.API.Data.Models.Organizer", b =>
@@ -124,6 +200,40 @@ namespace Picnivo.API.Data.Migrations
                     b.ToTable("Organizers");
                 });
 
+            modelBuilder.Entity("Picnivo.API.Data.Models.Participant", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Attendance")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsOrganizer")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId");
+
+                    b.ToTable("Participants");
+                });
+
             modelBuilder.Entity("Picnivo.API.Data.Models.DateOption", b =>
                 {
                     b.HasOne("Picnivo.API.Data.Models.Event", "Event")
@@ -135,21 +245,91 @@ namespace Picnivo.API.Data.Migrations
                     b.Navigation("Event");
                 });
 
+            modelBuilder.Entity("Picnivo.API.Data.Models.DateVote", b =>
+                {
+                    b.HasOne("Picnivo.API.Data.Models.DateOption", "DateOption")
+                        .WithMany()
+                        .HasForeignKey("DateOptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Picnivo.API.Data.Models.Participant", "Participant")
+                        .WithMany("Votes")
+                        .HasForeignKey("ParticipantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DateOption");
+
+                    b.Navigation("Participant");
+                });
+
             modelBuilder.Entity("Picnivo.API.Data.Models.Event", b =>
                 {
+                    b.HasOne("Picnivo.API.Data.Models.DateOption", "ChosenDateOption")
+                        .WithMany()
+                        .HasForeignKey("ChosenDateOptionId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.HasOne("Picnivo.API.Data.Models.Organizer", "Organizer")
                         .WithMany()
                         .HasForeignKey("OrganizerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("ChosenDateOption");
+
                     b.Navigation("Organizer");
                 });
 
             modelBuilder.Entity("Picnivo.API.Data.Models.EventItem", b =>
                 {
+                    b.HasOne("Picnivo.API.Data.Models.Participant", "AddedByParticipant")
+                        .WithMany()
+                        .HasForeignKey("AddedByParticipantId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("Picnivo.API.Data.Models.Event", "Event")
                         .WithMany("Items")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Picnivo.API.Data.Models.Participant", "OrphanedFromParticipant")
+                        .WithMany()
+                        .HasForeignKey("OrphanedFromParticipantId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("AddedByParticipant");
+
+                    b.Navigation("Event");
+
+                    b.Navigation("OrphanedFromParticipant");
+                });
+
+            modelBuilder.Entity("Picnivo.API.Data.Models.ItemClaim", b =>
+                {
+                    b.HasOne("Picnivo.API.Data.Models.EventItem", "EventItem")
+                        .WithOne("Claim")
+                        .HasForeignKey("Picnivo.API.Data.Models.ItemClaim", "EventItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Picnivo.API.Data.Models.Participant", "Participant")
+                        .WithMany("Claims")
+                        .HasForeignKey("ParticipantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EventItem");
+
+                    b.Navigation("Participant");
+                });
+
+            modelBuilder.Entity("Picnivo.API.Data.Models.Participant", b =>
+                {
+                    b.HasOne("Picnivo.API.Data.Models.Event", "Event")
+                        .WithMany("Participants")
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -162,6 +342,20 @@ namespace Picnivo.API.Data.Migrations
                     b.Navigation("DateOptions");
 
                     b.Navigation("Items");
+
+                    b.Navigation("Participants");
+                });
+
+            modelBuilder.Entity("Picnivo.API.Data.Models.EventItem", b =>
+                {
+                    b.Navigation("Claim");
+                });
+
+            modelBuilder.Entity("Picnivo.API.Data.Models.Participant", b =>
+                {
+                    b.Navigation("Claims");
+
+                    b.Navigation("Votes");
                 });
 #pragma warning restore 612, 618
         }

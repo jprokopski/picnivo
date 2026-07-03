@@ -1,0 +1,31 @@
+root = true
+
+[*.cs]
+# Use var instead of explicit class — backend/context/foundation/lessons.md
+csharp_style_var_for_built_in_types = true:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
+csharp_style_var_elsewhere = false:silent
+
+# Always wrap control-flow bodies in { } braces, even single-line — backend/context/foundation/lessons.md
+csharp_prefer_braces = true:warning
+
+# Reserve enum value 0 for Invalid/Unspecified/None — backend/context/foundation/lessons.md
+dotnet_diagnostic.CA1008.severity = warning
+
+# Order class members by kind (const/field/ctor/property/method/nested type), then by access
+# level within each group — backend/context/foundation/lessons.md. Requires StyleCop.Analyzers.
+# Only the ordering rules covering that lesson are enabled; every other StyleCop category
+# (naming, spacing, documentation, etc.) is turned off to avoid unrelated noise.
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.DocumentationRules.severity = none
+dotnet_diagnostic.SA0001.severity = none
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.LayoutRules.severity = none
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.MaintainabilityRules.severity = none
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.NamingRules.severity = none
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.OrderingRules.severity = none
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.ReadabilityRules.severity = none
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.SpacingRules.severity = none
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.SpecialRules.severity = none
+dotnet_diagnostic.SA1201.severity = warning
+dotnet_diagnostic.SA1202.severity = warning
+dotnet_diagnostic.SA1203.severity = warning
+dotnet_diagnostic.SA1204.severity = warning

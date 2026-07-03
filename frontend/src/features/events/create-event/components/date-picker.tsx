@@ -280,7 +280,9 @@ function CustomDatePicker({ selectedIds, onPick }: CustomDatePickerProps) {
         onClick={() => (open ? close() : setOpen(true))}
         className={cn(
           "bg-card inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-dashed px-3.5 py-2.25 text-[13px] font-semibold",
-          open ? "border-primary text-(--accent-deep)" : "border-border text-foreground",
+          open
+            ? "border-primary text-(--accent-deep)"
+            : "border-border text-foreground",
         )}
       >
         <CalendarIcon size={15} />
@@ -359,7 +361,11 @@ function CustomDatePicker({ selectedIds, onPick }: CustomDatePickerProps) {
                     "flex aspect-square items-center justify-center rounded-(--r-sm) border-[1.5px] text-[13px]",
                     hi ? "font-bold" : "font-medium",
                     isToday && !hi ? "border-border" : "border-transparent",
-                    isPending ? "bg-primary" : already ? "bg-accent" : "bg-transparent",
+                    isPending
+                      ? "bg-primary"
+                      : already
+                        ? "bg-accent"
+                        : "bg-transparent",
                     isPending
                       ? "text-white"
                       : already
@@ -543,7 +549,9 @@ export function DatePicker({ selections, onChange }: DatePickerProps) {
       <p
         className={cn(
           "mt-3.5 text-[13px] leading-normal",
-          count === 0 ? "text-muted-foreground font-normal" : "font-semibold text-(--accent-deep)",
+          count === 0
+            ? "text-muted-foreground font-normal"
+            : "font-semibold text-(--accent-deep)",
         )}
       >
         {hint}

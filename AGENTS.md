@@ -21,6 +21,8 @@ Feature branches off main, merged via pull request.
 
 Root `context/` holds the global product vision and cross-cutting decisions. Frontend- and backend-specific context (architecture, conventions, local decisions) belongs in `frontend/context/` and `backend/context/` respectively.
 
+`lessons.md` exists in three places — `context/foundation/lessons.md` (cross-cutting), `frontend/context/foundation/lessons.md`, and `backend/context/foundation/lessons.md`. Any skill or agent that uses lessons as review/planning priors (e.g. `/10x-plan`, `/10x-plan-review`, `/10x-implement`, `/10x-impl-review`) must read every lessons file relevant to the files under review — not just the root one. A change touching both `frontend/` and `backend/` needs all three.
+
 ## Product Context
 
 MVP event coordinator for small groups — see `@context/foundation/prd.md` for full requirements.

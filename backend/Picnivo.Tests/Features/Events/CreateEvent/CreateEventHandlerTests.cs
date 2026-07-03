@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using CreateEventHandler = Picnivo.API.Features.Events.CreateEvent.CreateEvent;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
@@ -30,6 +31,49 @@ public class CreateEventHandlerTests
         var ev = await db.Events.Include(e => e.DateOptions).Include(e => e.Items).SingleAsync();
         ev.DateOptions.Count.ShouldBe(2);
         ev.Items.Count.ShouldBe(2);
+    }
+
+    [Fact]
+    public async Task AddsOrganizerAsParticipant()
+    {
+        // Arrange
+        var organizerId = Guid.NewGuid();
+        await using var db = await SeedDbAsync(organizerId);
+        var req = new CreateEventRequest(
+            Title: "My Picnic",
+            Description: null,
+            Location: null,
+            DateOptions: [DateTimeOffset.UtcNow.AddDays(7)],
+            Items: []);
+
+        // Act
+        await CreateEventHandler.Handle(req, UserWith(organizerId), db, CancellationToken.None);
+
+        // Assert
+        db.ChangeTracker.Clear();
+        var ev = await db.Events.Include(e => e.Participants).SingleAsync();
+        ev.Participants.Count.ShouldBe(1);
+        ev.Participants.Single().DisplayName.ShouldBe("Test Organizer");
+    }
+
+    [Fact]
+    public async Task ReturnsUnauthorizedWhenOrganizerNotYetProvisioned()
+    {
+        // Arrange
+        await using var db = TestDb.Create();
+        var req = new CreateEventRequest(
+            Title: "My Picnic",
+            Description: null,
+            Location: null,
+            DateOptions: [DateTimeOffset.UtcNow.AddDays(7)],
+            Items: []);
+
+        // Act
+        var result = await CreateEventHandler.Handle(req, UserWith(Guid.NewGuid()), db, CancellationToken.None);
+
+        // Assert
+        result.ShouldBeOfType<UnauthorizedHttpResult>();
+        (await db.Events.AnyAsync()).ShouldBeFalse();
     }
 
     [Fact]

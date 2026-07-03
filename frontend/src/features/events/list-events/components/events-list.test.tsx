@@ -55,6 +55,11 @@ const baseEvent: EventSummaryResponse = {
   dateOptionCount: 2,
   itemCount: 3,
   soonestDate: "2099-06-20T19:00:00.000Z",
+  participantCount: 0,
+  participantNames: [],
+  claimedCount: 0,
+  chosenDateOptionId: null,
+  chosenDateStartsAt: null,
 };
 
 describe("EventsList", () => {

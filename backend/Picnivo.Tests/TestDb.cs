@@ -1,3 +1,4 @@
+using EntityFramework.Exceptions.Sqlite;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
@@ -13,7 +14,7 @@ internal static class TestDb
     {
         var conn = new SqliteConnection($"Data Source={Guid.NewGuid():N};Mode=Memory;Cache=Shared");
         conn.Open();
-        var opts = new DbContextOptionsBuilder<PicnivoDbContext>().UseSqlite(conn).Options;
+        var opts = new DbContextOptionsBuilder<PicnivoDbContext>().UseSqlite(conn).UseExceptionProcessor().Options;
         var db = new SqlitePicnivoDbContext(opts, conn);
         db.Database.EnsureCreated();
         return db;

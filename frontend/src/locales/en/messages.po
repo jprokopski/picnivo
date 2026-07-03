@@ -13,12 +13,43 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#. placeholder {0}: event.organizerName
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:22
-msgid "{0} is hosting"
-msgstr "{0} is hosting"
+#. placeholder {0}: outNames.join(" & ")
+#: src/features/events/get-event-by-token/components/announce-hero.tsx:67
+msgid "{0} can't make it"
+msgstr "{0} can't make it"
 
-#: src/features/events/create-event/components/date-picker.tsx:483
+#. placeholder {0}: event.participants.length
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:220
+msgid "{0} invited"
+msgstr "{0} invited"
+
+#. placeholder {0}: comingNames.length
+#: src/features/events/get-event-by-token/components/announce-hero.tsx:58
+msgid "{0} of {totalParticipants} coming"
+msgstr "{0} of {totalParticipants} coming"
+
+#. placeholder {0}: event.participants.length
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:165
+msgid "{0} voted"
+msgstr "{0} voted"
+
+#. placeholder {0}: parts.dow
+#. placeholder {1}: parts.mon
+#. placeholder {2}: parts.day
+#: src/features/events/set-attendance/components/attendance-card.tsx:120
+msgid "{0}, {1} {2} — are you coming?"
+msgstr "{0}, {1} {2} — are you coming?"
+
+#: src/features/events/list-events/components/event-card.tsx:55
+msgid "{claimedCount} / {itemCount} claimed"
+msgstr "{claimedCount} / {itemCount} claimed"
+
+#. placeholder {0}: event.items.length
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:195
+msgid "{claimedCount}/{0} covered"
+msgstr "{claimedCount}/{0} covered"
+
+#: src/features/events/create-event/components/date-picker.tsx:489
 msgid "{count} days proposed · friends vote Yes / Maybe / No"
 msgstr "{count} days proposed · friends vote Yes / Maybe / No"
 
@@ -26,21 +57,73 @@ msgstr "{count} days proposed · friends vote Yes / Maybe / No"
 msgid "{dateCount} dates"
 msgstr "{dateCount} dates"
 
-#: src/features/events/list-events/components/event-card.tsx:29
-msgid "{dateOptionCount} dates"
-msgstr "{dateOptionCount} dates"
+#: src/features/events/list-events/components/event-card.tsx:39
+msgid "{dateOptionCount} dates · voting open"
+msgstr "{dateOptionCount} dates · voting open"
 
 #: src/features/events/create-event/components/create-event-form.tsx:370
 msgid "{itemCount} items"
 msgstr "{itemCount} items"
 
-#: src/features/events/list-events/components/event-card.tsx:86
-msgid "{itemCount} items on the list"
-msgstr "{itemCount} items on the list"
+#: src/features/events/vote-on-dates/components/date-row.tsx:102
+msgid "{maybe} maybe"
+msgstr "{maybe} maybe"
+
+#: src/features/events/vote-on-dates/components/date-row.tsx:105
+msgid "{no} no"
+msgstr "{no} no"
+
+#: src/features/events/get-event-by-token/components/event-band.tsx:31
+msgid "{organizerName} is hosting"
+msgstr "{organizerName} is hosting"
+
+#: src/features/events/get-event-by-token/components/best-hero.tsx:116
+msgid "{organizerName} picks the final date once everyone's voted."
+msgstr "{organizerName} picks the final date once everyone's voted."
+
+#: src/features/events/claim-items/components/haul-gated.tsx:28
+msgid "{organizerName} sets the final date."
+msgstr "{organizerName} sets the final date."
+
+#: src/features/events/list-events/components/event-card.tsx:132
+msgid "{participantCount} going"
+msgstr "{participantCount} going"
+
+#: src/features/events/get-event-by-token/components/best-hero.tsx:99
+msgid "{yes} of {totalParticipants} can make it"
+msgstr "{yes} of {totalParticipants} can make it"
+
+#: src/features/events/vote-on-dates/components/date-row.tsx:99
+msgid "{yes} yes"
+msgstr "{yes} yes"
+
+#: src/features/events/claim-items/components/haul.tsx:71
+msgid "<0>{comingCount} coming</0> — grab what you'll bring."
+msgstr "<0>{comingCount} coming</0> — grab what you'll bring."
+
+#: src/features/events/get-event-by-token/components/best-hero.tsx:75
+msgid "✓ It's official"
+msgstr "✓ It's official"
+
+#: src/features/events/vote-on-dates/components/date-row.tsx:67
+msgid "✓ Locked"
+msgstr "✓ Locked"
+
+#: src/features/events/join-event/components/join-bar.tsx:49
+msgid "👋 Add your name to join in"
+msgstr "👋 Add your name to join in"
+
+#: src/features/events/get-event-by-token/components/announce-hero.tsx:40
+msgid "📣 It's happening"
+msgstr "📣 It's happening"
 
 #: src/features/events/create-event/components/create-event-form.tsx:129
 msgid "A note"
 msgstr "A note"
+
+#: src/features/events/set-attendance/components/attendance-card.tsx:108
+msgid "Actually, I'll make it"
+msgstr "Actually, I'll make it"
 
 #: src/features/events/create-event/components/create-event-form.tsx:119
 msgid "Add a spot"
@@ -50,27 +133,32 @@ msgstr "Add a spot"
 msgid "Add an item…"
 msgstr "Add an item…"
 
+#: src/features/events/claim-items/components/add-item.tsx:66
 #: src/features/events/create-event/components/items-editor.tsx:69
 msgid "Add item"
 msgstr "Add item"
 
-#: src/features/events/create-event/components/date-picker.tsx:517
+#: src/features/events/create-event/components/date-picker.tsx:523
 msgid "Add more days"
 msgstr "Add more days"
 
-#: src/features/events/create-event/components/date-picker.tsx:427
+#: src/features/events/claim-items/components/add-item.tsx:51
+msgid "Add something you'll bring…"
+msgstr "Add something you'll bring…"
+
+#: src/features/events/create-event/components/date-picker.tsx:433
 msgid "Add this date"
 msgstr "Add this date"
 
-#: src/features/events/list-events/components/events-list.tsx:36
+#: src/features/events/list-events/components/events-list.tsx:37
 msgid "All"
 msgstr "All"
 
-#: src/features/auth/components/auth-panel.tsx:275
+#: src/features/auth/components/auth-panel.tsx:281
 msgid "Already have an account?"
 msgstr "Already have an account?"
 
-#: src/features/auth/components/auth-panel.tsx:241
+#: src/features/auth/components/auth-panel.tsx:247
 msgid "At least 6 characters"
 msgstr "At least 6 characters"
 
@@ -82,6 +170,10 @@ msgstr "Back"
 msgid "Beach umbrella"
 msgstr "Beach umbrella"
 
+#: src/features/events/get-event-by-token/components/best-hero.tsx:79
+msgid "Best date so far"
+msgstr "Best date so far"
+
 #: src/features/events/create-event/components/create-event-form.tsx:174
 msgid "Bring a little something"
 msgstr "Bring a little something"
@@ -90,49 +182,96 @@ msgstr "Bring a little something"
 msgid "Bug spray"
 msgstr "Bug spray"
 
-#: src/components/ui/dialog.tsx:77
-#: src/components/ui/dialog.tsx:115
+#: src/features/events/set-attendance/components/attendance-card.tsx:175
+msgid "Can't make it"
+msgstr "Can't make it"
+
+#. placeholder {0}: out.length
+#: src/features/events/set-attendance/components/attendees.tsx:91
+msgid "Can't make it · {0}"
+msgstr "Can't make it · {0}"
+
+#: src/features/events/set-attendance/components/attendance-card.tsx:68
+msgid "Can't make it anymore?"
+msgstr "Can't make it anymore?"
+
+#: src/features/events/claim-items/components/haul.tsx:166
+msgid "Claim"
+msgstr "Claim"
+
+#: src/features/events/claim-items/components/haul-gated.tsx:22
+msgid "Claiming opens once the date's locked. "
+msgstr "Claiming opens once the date's locked. "
+
+#: src/components/ui/dialog.tsx:78
+#: src/components/ui/dialog.tsx:118
 msgid "Close"
 msgstr "Close"
 
-#: src/routes/auth/callback.tsx:52
+#. placeholder {0}: coming.length
+#: src/features/events/set-attendance/components/attendees.tsx:53
+msgid "Coming · {0}"
+msgstr "Coming · {0}"
+
+#: src/routes/auth/callback.tsx:56
 msgid "Completing sign in..."
 msgstr "Completing sign in..."
+
+#: src/features/events/claim-items/components/haul.tsx:168
+msgid "Confirm to claim"
+msgstr "Confirm to claim"
+
+#: src/features/events/claim-items/components/add-item.tsx:53
+msgid "Confirm you're coming to add"
+msgstr "Confirm you're coming to add"
+
+#: src/features/events/claim-items/components/confirm-claim.tsx:45
+msgid "Confirm you're coming to claim. "
+msgstr "Confirm you're coming to claim. "
 
 #: src/features/events/create-event/components/create-event-form.tsx:258
 msgid "Continue"
 msgstr "Continue"
 
-#: src/features/auth/components/auth-panel.tsx:182
+#: src/features/auth/components/auth-panel.tsx:188
 msgid "Continue with Google"
 msgstr "Continue with Google"
 
 #: src/features/events/create-event/components/share-link-dialog.tsx:93
+#: src/features/events/get-event-by-token/components/share-aside.tsx:43
 msgid "Copied!"
 msgstr "Copied!"
+
+#: src/features/events/get-event-by-token/components/share-aside.tsx:48
+msgid "Copy invite link"
+msgstr "Copy invite link"
 
 #: src/features/events/create-event/components/share-link-dialog.tsx:98
 msgid "Copy link"
 msgstr "Copy link"
 
+#: src/features/events/set-attendance/components/attendance-card.tsx:173
+msgid "Count me out"
+msgstr "Count me out"
+
 #: src/features/events/create-event/components/create-event-form.tsx:271
 msgid "Create & get link"
 msgstr "Create & get link"
 
-#: src/features/auth/components/auth-panel.tsx:149
-#: src/features/auth/components/auth-panel.tsx:263
+#: src/features/auth/components/auth-panel.tsx:155
+#: src/features/auth/components/auth-panel.tsx:269
 msgid "Create account"
 msgstr "Create account"
 
-#: src/features/auth/components/auth-panel.tsx:284
+#: src/features/auth/components/auth-panel.tsx:290
 msgid "Create one"
 msgstr "Create one"
 
-#: src/features/events/list-events/components/events-list.tsx:121
+#: src/features/events/list-events/components/events-list.tsx:122
 msgid "Create your first event"
 msgstr "Create your first event"
 
-#: src/features/auth/components/auth-panel.tsx:261
+#: src/features/auth/components/auth-panel.tsx:267
 msgid "Creating account..."
 msgstr "Creating account..."
 
@@ -148,10 +287,6 @@ msgstr "Cups & plates"
 msgid "Custom"
 msgstr "Custom"
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:40
-msgid "dates"
-msgstr "dates"
-
 #: src/features/events/create-event/components/items-editor.tsx:17
 msgid "Dessert"
 msgstr "Dessert"
@@ -160,7 +295,7 @@ msgstr "Dessert"
 msgid "e.g. Sunset Beach Picnic"
 msgstr "e.g. Sunset Beach Picnic"
 
-#: src/features/auth/components/auth-panel.tsx:217
+#: src/features/auth/components/auth-panel.tsx:223
 msgid "Email"
 msgstr "Email"
 
@@ -168,15 +303,15 @@ msgstr "Email"
 msgid "Event name"
 msgstr "Event name"
 
-#: src/features/events/list-events/components/events-list.tsx:55
+#: src/features/events/list-events/components/events-list.tsx:56
 msgid "Events you're hosting."
 msgstr "Events you're hosting."
 
-#: src/features/auth/components/auth-panel.tsx:109
+#: src/features/auth/components/auth-panel.tsx:115
 msgid "Failed to start Google sign-in"
 msgstr "Failed to start Google sign-in"
 
-#: src/features/events/list-events/components/events-list.tsx:69
+#: src/features/events/list-events/components/events-list.tsx:70
 msgid "Filter events"
 msgstr "Filter events"
 
@@ -184,43 +319,109 @@ msgstr "Filter events"
 msgid "From scattered group chat to a ready-to-go plan — on one shared page."
 msgstr "From scattered group chat to a ready-to-go plan — on one shared page."
 
-#: src/features/auth/components/auth-panel.tsx:128
+#: src/features/auth/components/auth-panel.tsx:134
 msgid "From scattered group chat to a ready-to-go plan — pick a date, claim "
 "what to bring, all on one shared page."
 msgstr "From scattered group chat to a ready-to-go plan — pick a date, claim "
 "what to bring, all on one shared page."
 
-#: src/features/auth/components/auth-panel.tsx:249
+#: src/features/events/get-event-by-token/components/event-band.tsx:49
+msgid "going"
+msgstr "going"
+
+#: src/features/events/set-attendance/components/attendance-card.tsx:143
+msgid "Heads up"
+msgstr "Heads up"
+
+#: src/features/auth/components/auth-panel.tsx:255
 msgid "Hide"
 msgstr "Hide"
 
-#: src/features/events/list-events/components/event-card.tsx:67
+#: src/features/events/set-attendance/components/attendees.tsx:145
+msgid "HOST"
+msgstr "HOST"
+
+#: src/features/events/list-events/components/event-card.tsx:87
 msgid "Hosted by you"
 msgstr "Hosted by you"
 
-#: src/features/events/list-events/components/event-card.tsx:50
+#: src/features/events/list-events/components/event-card.tsx:70
 msgid "Hosting"
 msgstr "Hosting"
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:48
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:158
+msgid "How everyone voted"
+msgstr "How everyone voted"
+
+#: src/features/events/claim-items/components/haul.tsx:165
+msgid "I'll cover it"
+msgstr "I'll cover it"
+
+#: src/features/events/set-attendance/components/attendance-card.tsx:162
+msgid "I'll make it"
+msgstr "I'll make it"
+
+#: src/features/events/claim-items/components/confirm-claim.tsx:55
+#: src/features/events/set-attendance/components/attendance-card.tsx:164
+msgid "I'm in"
+msgstr "I'm in"
+
+#: src/features/events/get-event-by-token/components/share-aside.tsx:27
+msgid "Invite more friends"
+msgstr "Invite more friends"
+
+#: src/features/events/get-event-by-token/components/event-band.tsx:57
 msgid "items"
 msgstr "items"
 
-#: src/features/auth/components/auth-panel.tsx:153
+#: src/features/events/join-event/components/join-bar.tsx:71
+msgid "Join"
+msgstr "Join"
+
+#: src/features/auth/components/auth-panel.tsx:159
 msgid "Join Picnivo"
 msgstr "Join Picnivo"
+
+#: src/features/events/claim-items/components/add-item.tsx:54
+msgid "Join to add items"
+msgstr "Join to add items"
+
+#: src/features/events/claim-items/components/haul.tsx:169
+msgid "Join to claim"
+msgstr "Join to claim"
+
+#: src/features/events/vote-on-dates/components/date-row.tsx:67
+msgid "Leading"
+msgstr "Leading"
+
+#: src/features/events/set-attendance/components/attendance-card.tsx:136
+msgid "Let the group know so the haul and headcount stay accurate."
+msgstr "Let the group know so the haul and headcount stay accurate."
 
 #: src/features/events/create-event/components/create-event-form.tsx:290
 msgid "Live preview"
 msgstr "Live preview"
 
+#: src/features/events/get-event-by-token/components/best-hero.tsx:110
+msgid "Lock in this date"
+msgstr "Lock in this date"
+
+#: src/features/events/claim-items/components/haul-gated.tsx:26
+msgid "Lock the date above to open the haul."
+msgstr "Lock the date above to open the haul."
+
 #: src/components/header.tsx:182
 msgid "Log in"
 msgstr "Log in"
 
-#: src/features/auth/components/auth-panel.tsx:209
+#: src/features/auth/components/auth-panel.tsx:215
 msgid "Maya Chen"
 msgstr "Maya Chen"
+
+#: src/features/events/set-attendance/components/attendees.tsx:119
+#: src/features/events/vote-on-dates/components/vote-control.tsx:42
+msgid "Maybe"
+msgstr "Maybe"
 
 #: src/components/header.tsx:72
 #: src/components/header.tsx:152
@@ -232,49 +433,70 @@ msgstr "My events"
 msgid "New event"
 msgstr "New event"
 
-#: src/features/auth/components/auth-panel.tsx:277
+#: src/features/auth/components/auth-panel.tsx:283
 msgid "New to Picnivo?"
 msgstr "New to Picnivo?"
 
-#: src/features/events/create-event/components/date-picker.tsx:320
+#: src/features/events/create-event/components/date-picker.tsx:322
 msgid "Next month"
 msgstr "Next month"
+
+#: src/features/events/vote-on-dates/components/vote-control.tsx:43
+msgid "No"
+msgstr "No"
 
 #: src/features/events/create-event/components/create-event-form.tsx:300
 msgid "No account needed for guests — they just open the link."
 msgstr "No account needed for guests — they just open the link."
 
-#: src/features/events/list-events/components/event-card.tsx:34
+#: src/features/events/list-events/components/event-card.tsx:45
 msgid "No dates yet"
 msgstr "No dates yet"
 
-#: src/features/events/list-events/components/events-list.tsx:42
-#: src/features/events/list-events/components/events-list.tsx:114
+#: src/features/events/list-events/components/events-list.tsx:43
+#: src/features/events/list-events/components/events-list.tsx:115
 msgid "No events yet."
 msgstr "No events yet."
 
-#: src/features/events/list-events/components/events-list.tsx:43
+#: src/features/events/list-events/components/events-list.tsx:44
 msgid "No ongoing events yet."
 msgstr "No ongoing events yet."
 
-#: src/features/events/list-events/components/events-list.tsx:44
+#: src/features/events/list-events/components/events-list.tsx:45
 msgid "No past events yet."
 msgstr "No past events yet."
+
+#: src/features/events/set-attendance/components/attendance-card.tsx:81
+msgid "No worries — we'll catch you next time 🌅"
+msgstr "No worries — we'll catch you next time 🌅"
+
+#: src/features/events/list-events/components/event-card.tsx:130
+msgid "Nobody yet"
+msgstr "Nobody yet"
+
+#: src/features/events/list-events/components/event-card.tsx:54
+msgid "Nothing on the list yet"
+msgstr "Nothing on the list yet"
+
+#. placeholder {0}: items.length
+#: src/features/events/claim-items/components/haul-gated.tsx:34
+msgid "On the list · {0}"
+msgstr "On the list · {0}"
 
 #: src/features/events/create-event/components/create-event-form.tsx:52
 msgid "One or more selected times are in the past. Please update the time."
 msgstr "One or more selected times are in the past. Please update the time."
 
-#: src/features/events/list-events/components/events-list.tsx:37
+#: src/features/events/list-events/components/events-list.tsx:38
 msgid "Ongoing"
 msgstr "Ongoing"
 
 #. placeholder {0}: event.title
-#: src/features/events/list-events/components/event-card.tsx:42
+#: src/features/events/list-events/components/event-card.tsx:62
 msgid "Open {0}"
 msgstr "Open {0}"
 
-#: src/features/events/list-events/components/event-card.tsx:80
+#: src/features/events/list-events/components/event-card.tsx:137
 msgid "Open event"
 msgstr "Open event"
 
@@ -287,27 +509,27 @@ msgstr "Open event page"
 msgid "optional"
 msgstr "optional"
 
-#: src/features/auth/components/auth-panel.tsx:191
+#: src/features/auth/components/auth-panel.tsx:197
 msgid "or sign in with email"
 msgstr "or sign in with email"
 
-#: src/features/auth/components/auth-panel.tsx:189
+#: src/features/auth/components/auth-panel.tsx:195
 msgid "or sign up with email"
 msgstr "or sign up with email"
 
-#: src/features/auth/components/auth-panel.tsx:232
+#: src/features/auth/components/auth-panel.tsx:238
 msgid "Password"
 msgstr "Password"
 
-#: src/features/events/list-events/components/events-list.tsx:38
+#: src/features/events/list-events/components/events-list.tsx:39
 msgid "Past"
 msgstr "Past"
 
-#: src/features/events/create-event/components/date-picker.tsx:287
+#: src/features/events/create-event/components/date-picker.tsx:289
 msgid "Pick a custom date"
 msgstr "Pick a custom date"
 
-#: src/features/events/create-event/components/date-picker.tsx:480
+#: src/features/events/create-event/components/date-picker.tsx:486
 msgid "Pick at least one day to continue."
 msgstr "Pick at least one day to continue."
 
@@ -323,7 +545,7 @@ msgstr "Picnivo · prototype"
 msgid "Plan something good."
 msgstr "Plan something good."
 
-#: src/features/auth/components/auth-panel.tsx:122
+#: src/features/auth/components/auth-panel.tsx:128
 msgid "Plan the hang — together."
 msgstr "Plan the hang — together."
 
@@ -331,17 +553,25 @@ msgstr "Plan the hang — together."
 msgid "Please try again in a moment."
 msgstr "Please try again in a moment."
 
-#: src/features/events/create-event/components/date-picker.tsx:298
+#: src/features/events/create-event/components/date-picker.tsx:300
 msgid "Previous month"
 msgstr "Previous month"
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:63
-msgid "Proposed dates"
-msgstr "Proposed dates"
+#. placeholder {0}: item.label
+#: src/features/events/claim-items/components/haul.tsx:227
+msgid "Remove {0}"
+msgstr "Remove {0}"
 
 #: src/features/events/create-event/components/items-editor.tsx:43
 msgid "Remove {item}"
 msgstr "Remove {item}"
+
+#. placeholder {0}: parts.dow
+#. placeholder {1}: parts.mon
+#. placeholder {2}: parts.day
+#: src/features/events/set-attendance/components/attendance-card.tsx:51
+msgid "See you {0}, {1} {2} 🎉"
+msgstr "See you {0}, {1} {2} 🎉"
 
 #: src/features/events/create-event/components/create-event-form.tsx:192
 msgid "Set it up once, share one link, and watch the date, the food, and the "
@@ -359,17 +589,17 @@ msgid "Share this link with the group. They vote and claim items — no app, no 
 msgstr "Share this link with the group. They vote and claim items — no app, no "
 "login."
 
-#: src/features/auth/components/auth-panel.tsx:249
+#: src/features/auth/components/auth-panel.tsx:255
 msgid "Show"
 msgstr "Show"
 
-#: src/features/auth/components/auth-panel.tsx:149
-#: src/features/auth/components/auth-panel.tsx:268
-#: src/features/auth/components/auth-panel.tsx:284
+#: src/features/auth/components/auth-panel.tsx:155
+#: src/features/auth/components/auth-panel.tsx:274
+#: src/features/auth/components/auth-panel.tsx:290
 msgid "Sign in"
 msgstr "Sign in"
 
-#: src/features/auth/components/auth-panel.tsx:164
+#: src/features/auth/components/auth-panel.tsx:170
 msgid "Sign in to pick dates and rally your crew."
 msgstr "Sign in to pick dates and rally your crew."
 
@@ -377,20 +607,35 @@ msgstr "Sign in to pick dates and rally your crew."
 msgid "Sign out"
 msgstr "Sign out"
 
-#: src/features/auth/components/auth-panel.tsx:266
+#: src/features/auth/components/auth-panel.tsx:272
 msgid "Signing in..."
 msgstr "Signing in..."
+
+#: src/features/events/join-event/components/join-bar.tsx:76
+msgid "Someone's already using that name — add a last initial?"
+msgstr "Someone's already using that name — add a last initial?"
 
 #: src/components/error-fallback.tsx:11
 msgid "Something went wrong."
 msgstr "Something went wrong."
 
+#: src/features/auth/components/auth-panel.tsx:99
+#: src/features/events/claim-items/components/add-item.tsx:34
+#: src/features/events/claim-items/components/confirm-claim.tsx:33
 #: src/features/events/create-event/components/create-event-form.tsx:73
 #: src/features/events/create-event/components/create-event-form.tsx:80
+#: src/features/events/get-event-by-token/components/best-hero.tsx:45
+#: src/features/events/join-event/components/join-bar.tsx:36
+#: src/features/events/set-attendance/components/attendance-card.tsx:37
+#: src/features/events/vote-on-dates/components/vote-control.tsx:53
 msgid "Something went wrong. Please try again."
 msgstr "Something went wrong. Please try again."
 
-#: src/features/auth/components/auth-panel.tsx:160
+#: src/features/events/get-event-by-token/components/share-aside.tsx:26
+msgid "Spread the word"
+msgstr "Spread the word"
+
+#: src/features/auth/components/auth-panel.tsx:166
 msgid "Start planning get-togethers everyone actually shows up to."
 msgstr "Start planning get-togethers everyone actually shows up to."
 
@@ -399,7 +644,7 @@ msgstr "Start planning get-togethers everyone actually shows up to."
 msgid "Step {0} of {TOTAL_STEPS}"
 msgstr "Step {0} of {TOTAL_STEPS}"
 
-#: src/features/events/create-event/components/date-picker.tsx:519
+#: src/features/events/create-event/components/date-picker.tsx:525
 msgid "Suggested days"
 msgstr "Suggested days"
 
@@ -407,25 +652,68 @@ msgstr "Suggested days"
 msgid "Tap to add"
 msgstr "Tap to add"
 
+#: src/features/events/claim-items/components/add-item.tsx:75
+msgid "That's already on the list."
+msgstr "That's already on the list."
+
+#: src/features/events/set-attendance/components/attendance-card.tsx:131
+msgid "That's the date that worked for most people. Can you still swing by, or "
+"should we count you out?"
+msgstr "That's the date that worked for most people. Can you still swing by, or "
+"should we count you out?"
+
 #: src/features/events/create-event/components/create-event-form.tsx:164
 msgid "The basics"
 msgstr "The basics"
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:105
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:219
+msgid "The crew"
+msgstr "The crew"
+
+#. placeholder {0}: parts.dow
+#. placeholder {1}: parts.mon
+#. placeholder {2}: parts.day
+#: src/features/events/set-attendance/components/attendance-card.tsx:124
+msgid "The group locked {0}, {1} {2} — are you still coming?"
+msgstr "The group locked {0}, {1} {2} — are you still coming?"
+
+#. placeholder {0}: parts.dow
+#. placeholder {1}: parts.mon
+#. placeholder {2}: parts.day
+#: src/features/events/set-attendance/components/attendance-card.tsx:116
+msgid "The group locked {0}, {1} {2} — you voted no."
+msgstr "The group locked {0}, {1} {2} — you voted no."
+
+#. placeholder {0}: parts.dow
+#. placeholder {1}: parts.mon
+#. placeholder {2}: parts.day
+#: src/features/events/set-attendance/components/attendance-card.tsx:93
+msgid "The group locked <0>{0}, {1} {2}</0>, which you said doesn't work."
+msgstr "The group locked <0>{0}, {1} {2}</0>, which you said doesn't work."
+
+#: src/features/events/set-attendance/components/attendance-card.tsx:59
+msgid "The group locked this date and you're down to come."
+msgstr "The group locked this date and you're down to come."
+
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:190
 msgid "The haul"
 msgstr "The haul"
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:138
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:243
 msgid "The link may be mistyped, or the event no longer exists."
 msgstr "The link may be mistyped, or the event no longer exists."
 
-#: src/features/events/list-events/components/events-list.tsx:58
+#: src/features/events/list-events/components/events-list.tsx:59
 msgid "The plans you've set up. Share the link and see who's in."
 msgstr "The plans you've set up. Share the link and see who's in."
 
-#: src/features/events/list-events/components/event-card.tsx:58
+#: src/features/events/list-events/components/event-card.tsx:78
 msgid "To be defined"
 msgstr "To be defined"
+
+#: src/features/events/list-events/components/event-card.tsx:42
+msgid "Today · happening now"
+msgstr "Today · happening now"
 
 #: src/features/events/create-event/components/items-editor.tsx:20
 msgid "Trash bags"
@@ -435,33 +723,56 @@ msgstr "Trash bags"
 msgid "Try again"
 msgstr "Try again"
 
+#. placeholder {0}: undecided.length
+#: src/features/events/set-attendance/components/attendees.tsx:71
+msgid "Undecided · {0}"
+msgstr "Undecided · {0}"
+
 #: src/features/events/create-event/components/create-event-form.tsx:354
 msgid "Untitled event"
 msgstr "Untitled event"
+
+#: src/features/events/vote-on-dates/components/vote-control.tsx:66
+#: src/features/events/vote-on-dates/components/vote-control.tsx:102
+msgid "Vote"
+msgstr "Vote"
+
+#: src/features/events/join-event/components/join-bar.tsx:52
+msgid "Vote on dates and claim what you'll bring — no account needed."
+msgstr "Vote on dates and claim what you'll bring — no account needed."
+
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:160
+msgid "Vote on the dates"
+msgstr "Vote on the dates"
+
+#: src/features/events/list-events/components/event-card.tsx:40
+msgid "Voting open"
+msgstr "Voting open"
+
+#. placeholder {0}: item.orphanedFromName
+#: src/features/events/claim-items/components/haul.tsx:203
+msgid "Was {0}'s — needs a new owner"
+msgstr "Was {0}'s — needs a new owner"
 
 #: src/features/events/create-event/components/items-editor.tsx:19
 msgid "Watermelon"
 msgstr "Watermelon"
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:135
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:240
 msgid "We couldn't find that event."
 msgstr "We couldn't find that event."
 
-#: src/features/auth/components/auth-panel.tsx:155
+#: src/features/auth/components/auth-panel.tsx:161
 msgid "Welcome back"
 msgstr "Welcome back"
 
-#: src/features/auth/components/auth-panel.tsx:124
+#: src/features/auth/components/auth-panel.tsx:130
 msgid "Welcome back to the picnic."
 msgstr "Welcome back to the picnic."
 
 #: src/features/events/create-event/components/create-event-form.tsx:175
 msgid "What do we need?"
 msgstr "What do we need?"
-
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:108
-msgid "What to bring"
-msgstr "What to bring"
 
 #: src/features/events/create-event/components/create-event-form.tsx:165
 msgid "What's the plan?"
@@ -471,7 +782,7 @@ msgstr "What's the plan?"
 msgid "When could it happen?"
 msgstr "When could it happen?"
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:60
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:155
 msgid "When works?"
 msgstr "When works?"
 
@@ -479,27 +790,82 @@ msgstr "When works?"
 msgid "Where"
 msgstr "Where"
 
-#: src/features/auth/components/auth-panel.tsx:140
+#: src/features/auth/components/auth-panel.tsx:146
 msgid "Where good hangs come together"
 msgstr "Where good hangs come together"
 
-#: src/features/events/create-event/components/date-picker.tsx:482
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:191
+msgid "Who brings what"
+msgstr "Who brings what"
+
+#: src/features/events/create-event/components/date-picker.tsx:488
 msgid "With one date this is an announcement — add more to open voting."
 msgstr "With one date this is an announcement — add more to open voting."
 
+#: src/features/events/list-events/components/event-card.tsx:52
+msgid "Wrapped"
+msgstr "Wrapped"
+
+#: src/features/events/vote-on-dates/components/vote-control.tsx:41
+msgid "Yes"
+msgstr "Yes"
+
 #: src/components/header.tsx:53
+#: src/features/events/claim-items/components/haul.tsx:161
+#: src/features/events/set-attendance/components/attendees.tsx:141
 msgid "You"
 msgstr "You"
 
-#: src/features/auth/components/auth-panel.tsx:225
+#: src/features/events/claim-items/components/confirm-claim.tsx:25
+msgid "You haven't confirmed this date yet."
+msgstr "You haven't confirmed this date yet."
+
+#. placeholder {0}: parts.dow
+#. placeholder {1}: parts.mon
+#. placeholder {2}: parts.day
+#: src/features/events/set-attendance/components/attendance-card.tsx:85
+msgid "You said <0>{0}, {1} {2}</0> doesn't work for you. Let us know if that "
+"changes."
+msgstr "You said <0>{0}, {1} {2}</0> doesn't work for you. Let us know if that "
+"changes."
+
+#: src/features/events/claim-items/components/confirm-claim.tsx:24
+msgid "You're down as a maybe for this date."
+msgstr "You're down as a maybe for this date."
+
+#. placeholder {0}: myClaim.label
+#: src/features/events/set-attendance/components/attendance-card.tsx:151
+msgid "You're down for <0>{0}</0>. If you bow out, we'll free it up for someone "
+"else."
+msgstr "You're down for <0>{0}</0>. If you bow out, we'll free it up for "
+"someone else."
+
+#: src/features/events/set-attendance/components/attendance-card.tsx:57
+msgid "You're down to come — see you there."
+msgstr "You're down to come — see you there."
+
+#: src/features/events/set-attendance/components/attendance-card.tsx:48
+msgid "You're in"
+msgstr "You're in"
+
+#: src/features/events/claim-items/components/confirm-claim.tsx:22
+msgid "You're marked can't-make-it for this date."
+msgstr "You're marked can't-make-it for this date."
+
+#: src/features/events/set-attendance/components/attendance-card.tsx:78
+msgid "You're marked: can't make it"
+msgstr "You're marked: can't make it"
+
+#: src/features/auth/components/auth-panel.tsx:231
 msgid "you@email.com"
 msgstr "you@email.com"
 
-#: src/features/events/list-events/components/events-list.tsx:52
+#: src/features/events/list-events/components/events-list.tsx:53
 msgid "Your events"
 msgstr "Your events"
 
-#: src/features/auth/components/auth-panel.tsx:201
+#: src/features/auth/components/auth-panel.tsx:207
+#: src/features/events/join-event/components/join-bar.tsx:60
 msgid "Your name"
 msgstr "Your name"
 

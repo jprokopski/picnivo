@@ -1,10 +1,11 @@
 import { Trans, useLingui } from "@lingui/react/macro";
 import { Link } from "@tanstack/react-router";
 import { ClockIcon, SparklesIcon } from "lucide-react";
-import { Avatar } from "@/components/avatar";
+import { Avatar, AvatarStack } from "@/components/avatar";
 import { PicnicScene } from "@/components/picnic-scene";
 import type { EventSummaryResponse } from "@/api/picnivo-api";
 import { formatInstantParts } from "@/lib/format-instant";
+import { deriveEventStatus } from "../schema";
 
 const SCENE_VARIANTS = ["sunset", "sea", "grove", "berry"] as const;
 
@@ -23,22 +24,41 @@ export function EventCard({ event, hostName }: EventCardProps) {
   const { t } = useLingui();
   const dateOptionCount = Number(event.dateOptionCount);
   const itemCount = Number(event.itemCount);
+  const claimedCount = Number(event.claimedCount);
+  const participantCount = Number(event.participantCount);
+  const participantNames = event.participantNames;
+  const status = deriveEventStatus(event);
 
-  const whenLabel = event.soonestDate
-    ? dateOptionCount > 1
-      ? t`${dateOptionCount} dates`
-      : (() => {
-          const parts = formatInstantParts(event.soonestDate!);
-          return `${parts.dow}, ${parts.mon} ${parts.day} · ${parts.time}`;
-        })()
-    : t`No dates yet`;
+  // The design's dashboard card carries status through the date chip's text
+  // itself (e.g. "3 dates · voting open" vs a formatted single date), not a
+  // separate status badge — once a date is chosen, show that date rather
+  // than the pre-lock "N dates" count.
+  const whenLabel =
+    status === "voting"
+      ? dateOptionCount > 1
+        ? t`${dateOptionCount} dates · voting open`
+        : t`Voting open`
+      : status === "now"
+        ? t`Today · happening now`
+        : (() => {
+            const displayDate = event.chosenDateStartsAt ?? event.soonestDate;
+            if (!displayDate) return t`No dates yet`;
+            const parts = formatInstantParts(displayDate);
+            return `${parts.dow}, ${parts.mon} ${parts.day} · ${parts.time}`;
+          })();
+
+  const itemsLabel =
+    status === "past"
+      ? t`Wrapped`
+      : itemCount === 0
+        ? t`Nothing on the list yet`
+        : t`${claimedCount} / ${itemCount} claimed`;
 
   return (
     <article className="group border-border bg-card hover:border-primary relative flex flex-col overflow-hidden rounded-(--r-lg) border shadow-(--sh-md) transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-1 hover:shadow-(--sh-lg)">
       <Link
         to="/e/$token"
         params={{ token: event.token }}
-        target="_blank"
         aria-label={t`Open ${event.title}`}
         className="focus-visible:outline-primary absolute inset-0 z-10 rounded-(--r-lg) focus-visible:outline-3 focus-visible:outline-offset-2"
       />
@@ -69,21 +89,58 @@ export function EventCard({ event, hostName }: EventCardProps) {
         </div>
 
         <div className="border-border mt-3.5 flex flex-wrap items-center gap-2 border-t pt-3.5">
-          <span className="border-border text-foreground inline-flex items-center gap-1.5 rounded-full border bg-(--card-2) px-3.25 py-1.75 text-[13px] font-semibold">
-            <ClockIcon size={13} color="var(--ink-soft)" />
-            {whenLabel}
-          </span>
+          {status === "past" ? (
+            <span
+              className="inline-flex items-center gap-1.5 rounded-full px-3.25 py-1.75 text-[13px] font-extrabold"
+              style={{
+                background: "rgba(43,32,24,0.06)",
+                color: "var(--ink-soft)",
+              }}
+            >
+              <span className="text-[12px]" aria-hidden="true">
+                🏁
+              </span>
+              {whenLabel}
+            </span>
+          ) : status === "now" ? (
+            <span
+              className="inline-flex items-center gap-1.5 rounded-full px-3.25 py-1.75 text-[13px] font-extrabold motion-safe:animate-[web-nowpulse_4s_ease-in-out_infinite]"
+              style={{ background: "var(--yes-tint)", color: "var(--yes)" }}
+            >
+              <span className="text-[12px]" aria-hidden="true">
+                🟢
+              </span>
+              {whenLabel}
+            </span>
+          ) : (
+            <span className="border-border text-foreground inline-flex items-center gap-1.5 rounded-full border bg-(--card-2) px-3.25 py-1.75 text-[13px] font-semibold">
+              <ClockIcon size={13} color="var(--ink-soft)" />
+              {whenLabel}
+            </span>
+          )}
         </div>
 
-        <div className="mt-4 flex items-center justify-end gap-3">
-          <span className="inline-flex -translate-x-1 items-center gap-1.5 text-[14px] font-extrabold text-(--accent-deep) opacity-0 transition-[opacity,transform,gap] duration-160 group-hover:translate-x-0 group-hover:gap-2.25 group-hover:opacity-100">
+        <div className="mt-4 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            {participantNames.length > 0 && (
+              <AvatarStack names={participantNames} size={26} max={4} />
+            )}
+            <span className="text-[13px] font-bold text-(--ink-soft)">
+              {participantCount === 0 ? (
+                <Trans>Nobody yet</Trans>
+              ) : (
+                <Trans>{participantCount} going</Trans>
+              )}
+            </span>
+          </div>
+          <span className="inline-flex shrink-0 -translate-x-1 items-center gap-1.5 text-[14px] font-extrabold text-(--accent-deep) opacity-0 transition-[opacity,transform,gap] duration-160 group-hover:translate-x-0 group-hover:gap-2.25 group-hover:opacity-100">
             <Trans>Open event</Trans> <span aria-hidden="true">→</span>
           </span>
         </div>
 
         <div className="border-border mt-3.25 border-t pt-3.25">
           <span className="text-[13px] font-semibold text-(--ink-faint)">
-            <Trans>{itemCount} items on the list</Trans>
+            {itemsLabel}
           </span>
         </div>
       </div>

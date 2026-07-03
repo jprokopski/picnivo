@@ -71,6 +71,7 @@ describe("CreateEventForm — submit flow", () => {
     vi.mocked(createEventFn).mockResolvedValue({
       token: "abc123",
       id: "1",
+      participantId: "p1",
       error: null,
     });
 
@@ -100,6 +101,7 @@ describe("CreateEventForm — submit flow", () => {
     vi.mocked(createEventFn).mockResolvedValue({
       token: "abc123",
       id: "1",
+      participantId: "p1",
       error: null,
     });
 
@@ -131,6 +133,7 @@ describe("CreateEventForm — submit flow", () => {
     vi.mocked(createEventFn).mockResolvedValue({
       token: null,
       id: null,
+      participantId: null,
       error: "Server error",
     });
 

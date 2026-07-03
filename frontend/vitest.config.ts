@@ -13,6 +13,11 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     globals: false,
+    env: {
+      VITE_SUPABASE_URL: "http://localhost:54321",
+      VITE_SUPABASE_ANON_KEY: "test-anon-key",
+      VITE_API_URL: "http://localhost:5000",
+    },
   },
   resolve: {
     alias: {

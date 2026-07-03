@@ -5,6 +5,7 @@ using EntityFramework.Exceptions.PostgreSQL;
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API;
+using Picnivo.API.ExceptionHandling;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,8 @@ builder.Services.AddOpenApi();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddDbContext<PicnivoDbContext>(options =>
     options.UseNpgsql(connectionString).UseExceptionProcessor());
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 var frontendUrl = builder.Configuration["Frontend:Url"];
 
@@ -56,6 +59,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseExceptionHandler();
 app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();

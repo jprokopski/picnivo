@@ -29,6 +29,313 @@
         }
       }
     },
+    "/api/events/{token}/participants/{participantId}/votes": {
+      "put": {
+        "tags": [
+          "CastVotes"
+        ],
+        "operationId": "CastVotes",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "participantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CastVotesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/events/{token}/participants/{participantId}/attendance": {
+      "put": {
+        "tags": [
+          "SetAttendance"
+        ],
+        "operationId": "SetAttendance",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "participantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetAttendanceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/events/{token}/participants": {
+      "post": {
+        "tags": [
+          "JoinEvent"
+        ],
+        "operationId": "JoinEvent",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JoinEventRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JoinEventResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/events/{token}/items/{itemId}": {
+      "delete": {
+        "tags": [
+          "RemoveItem"
+        ],
+        "operationId": "RemoveItem",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "participantId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/events/{token}/items": {
+      "post": {
+        "tags": [
+          "AddItem"
+        ],
+        "operationId": "AddItem",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddItemRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddItemResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "409": {
+            "description": "Conflict"
+          }
+        }
+      }
+    },
+    "/api/events/{token}/chosen-date": {
+      "put": {
+        "tags": [
+          "SelectFinalDate"
+        ],
+        "operationId": "SelectFinalDate",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SelectFinalDateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/api/events": {
       "get": {
         "tags": [
@@ -104,6 +411,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "participantId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
@@ -122,10 +437,147 @@
           }
         }
       }
+    },
+    "/api/events/{token}/items/{itemId}/claim": {
+      "delete": {
+        "tags": [
+          "ReleaseClaim"
+        ],
+        "operationId": "ReleaseClaim",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "participantId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ClaimItem"
+        ],
+        "operationId": "ClaimItem",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "participantId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "409": {
+            "description": "Conflict"
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "AddItemRequest": {
+        "required": [
+          "participantId",
+          "label"
+        ],
+        "type": "object",
+        "properties": {
+          "participantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      },
+      "AddItemResponse": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "AttendanceStatus": {
+        "type": "integer"
+      },
+      "CastVotesRequest": {
+        "required": [
+          "votes"
+        ],
+        "type": "object",
+        "properties": {
+          "votes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VoteDto"
+            }
+          }
+        }
+      },
       "CreateEventRequest": {
         "required": [
           "title",
@@ -169,7 +621,8 @@
       "CreateEventResponse": {
         "required": [
           "id",
-          "token"
+          "token",
+          "participantId"
         ],
         "type": "object",
         "properties": {
@@ -179,13 +632,20 @@
           },
           "token": {
             "type": "string"
+          },
+          "participantId": {
+            "type": "string",
+            "format": "uuid"
           }
         }
       },
       "DateOptionDto": {
         "required": [
           "id",
-          "startsAt"
+          "startsAt",
+          "yesCount",
+          "maybeCount",
+          "noCount"
         ],
         "type": "object",
         "properties": {
@@ -196,6 +656,30 @@
           "startsAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "yesCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "maybeCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "noCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
           }
         }
       },
@@ -204,9 +688,14 @@
           "title",
           "description",
           "location",
+          "organizerId",
           "organizerName",
+          "bestDateOptionId",
+          "chosenDateOptionId",
           "dateOptions",
-          "items"
+          "items",
+          "participants",
+          "you"
         ],
         "type": "object",
         "properties": {
@@ -225,8 +714,26 @@
               "string"
             ]
           },
+          "organizerId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "organizerName": {
             "type": "string"
+          },
+          "bestDateOptionId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "chosenDateOptionId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
           },
           "dateOptions": {
             "type": "array",
@@ -239,13 +746,33 @@
             "items": {
               "$ref": "#/components/schemas/EventItemDto"
             }
+          },
+          "participants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ParticipantDto"
+            }
+          },
+          "you": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/YouDto"
+              }
+            ]
           }
         }
       },
       "EventItemDto": {
         "required": [
           "id",
-          "label"
+          "label",
+          "claimedByParticipantId",
+          "claimedByName",
+          "addedByParticipantId",
+          "orphanedFromName"
         ],
         "type": "object",
         "properties": {
@@ -255,6 +782,32 @@
           },
           "label": {
             "type": "string"
+          },
+          "claimedByParticipantId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "claimedByName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "addedByParticipantId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "orphanedFromName": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
@@ -267,7 +820,12 @@
           "createdAt",
           "dateOptionCount",
           "itemCount",
-          "soonestDate"
+          "soonestDate",
+          "participantCount",
+          "participantNames",
+          "claimedCount",
+          "chosenDateOptionId",
+          "chosenDateStartsAt"
         ],
         "type": "object",
         "properties": {
@@ -308,6 +866,42 @@
             "format": "int32"
           },
           "soonestDate": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "participantCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "participantNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "claimedCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "chosenDateOptionId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "chosenDateStartsAt": {
             "type": [
               "null",
               "string"
@@ -362,12 +956,191 @@
             }
           }
         }
+      },
+      "JoinEventRequest": {
+        "required": [
+          "displayName"
+        ],
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string"
+          }
+        }
+      },
+      "JoinEventResponse": {
+        "required": [
+          "participantId",
+          "duplicateName"
+        ],
+        "type": "object",
+        "properties": {
+          "participantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "duplicateName": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ParticipantDto": {
+        "required": [
+          "id",
+          "displayName",
+          "isOrganizer",
+          "attendance",
+          "votes"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "isOrganizer": {
+            "type": "boolean"
+          },
+          "attendance": {
+            "$ref": "#/components/schemas/AttendanceStatus"
+          },
+          "votes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ParticipantVoteDto"
+            }
+          }
+        }
+      },
+      "ParticipantVoteDto": {
+        "required": [
+          "dateOptionId",
+          "choice"
+        ],
+        "type": "object",
+        "properties": {
+          "dateOptionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "choice": {
+            "$ref": "#/components/schemas/VoteChoice"
+          }
+        }
+      },
+      "SelectFinalDateRequest": {
+        "required": [
+          "dateOptionId"
+        ],
+        "type": "object",
+        "properties": {
+          "dateOptionId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          }
+        }
+      },
+      "SetAttendanceRequest": {
+        "required": [
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/AttendanceStatus"
+          }
+        }
+      },
+      "VoteChoice": {
+        "type": "integer"
+      },
+      "VoteDto": {
+        "required": [
+          "dateOptionId",
+          "choice"
+        ],
+        "type": "object",
+        "properties": {
+          "dateOptionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "choice": {
+            "$ref": "#/components/schemas/VoteChoice"
+          }
+        }
+      },
+      "YouDto": {
+        "required": [
+          "votes",
+          "claimedItemIds",
+          "attendance"
+        ],
+        "type": "object",
+        "properties": {
+          "votes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/YouVoteDto"
+            }
+          },
+          "claimedItemIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "attendance": {
+            "$ref": "#/components/schemas/AttendanceStatus"
+          }
+        }
+      },
+      "YouVoteDto": {
+        "required": [
+          "dateOptionId",
+          "choice"
+        ],
+        "type": "object",
+        "properties": {
+          "dateOptionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "choice": {
+            "$ref": "#/components/schemas/VoteChoice"
+          }
+        }
       }
     }
   },
   "tags": [
     {
       "name": "Picnivo.API"
+    },
+    {
+      "name": "CastVotes"
+    },
+    {
+      "name": "SetAttendance"
+    },
+    {
+      "name": "JoinEvent"
+    },
+    {
+      "name": "RemoveItem"
+    },
+    {
+      "name": "AddItem"
+    },
+    {
+      "name": "SelectFinalDate"
     },
     {
       "name": "ListEvents"
@@ -377,6 +1150,12 @@
     },
     {
       "name": "GetEventByToken"
+    },
+    {
+      "name": "ReleaseClaim"
+    },
+    {
+      "name": "ClaimItem"
     }
   ]
 }

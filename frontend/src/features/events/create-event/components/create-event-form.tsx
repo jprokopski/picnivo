@@ -68,7 +68,7 @@ export function CreateEventForm() {
         },
       });
 
-      if (result.error || !result.token) {
+      if (result.error || !result.token || !result.participantId) {
         setSubmitError(
           result.error ?? t`Something went wrong. Please try again.`,
         );

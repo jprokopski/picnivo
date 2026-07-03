@@ -7,4 +7,4 @@ public record CreateEventRequest(
     IReadOnlyList<DateTimeOffset> DateOptions,
     IReadOnlyList<string> Items);
 
-public record CreateEventResponse(Guid Id, string Token);
+public record CreateEventResponse(Guid Id, string Token, Guid ParticipantId);

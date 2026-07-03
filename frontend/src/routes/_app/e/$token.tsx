@@ -3,20 +3,44 @@ import {
   EventDetailView,
   EventNotFound,
 } from "../../../features/events/get-event-by-token/components/event-detail-view";
-import { getEventByTokenFn } from "../../../features/events/get-event-by-token/functions";
+import {
+  getEventByTokenFn,
+  getMyParticipantIdFn,
+  getShareOriginFn,
+} from "../../../features/events/get-event-by-token/functions";
 
 export const Route = createFileRoute("/_app/e/$token")({
-  loader: async ({ params }) => {
-    const event = await getEventByTokenFn({ data: { token: params.token } });
-    return { event };
+  loader: async ({ params, context }) => {
+    const [event, origin, myParticipantId] = await Promise.all([
+      getEventByTokenFn({ data: { token: params.token } }),
+      getShareOriginFn(),
+      getMyParticipantIdFn({ data: { token: params.token } }),
+    ]);
+    const isOrganizer = event ? context.user?.id === event.organizerId : false;
+    return {
+      event,
+      isOrganizer,
+      shareUrl: `${origin}/e/${params.token}`,
+      myParticipantId,
+    };
   },
   component: EventPage,
 });
 
 function EventPage() {
-  const { event } = Route.useLoaderData();
+  const { event, isOrganizer, shareUrl, myParticipantId } =
+    Route.useLoaderData();
+  const { token } = Route.useParams();
 
   if (!event) return <EventNotFound />;
 
-  return <EventDetailView event={event} />;
+  return (
+    <EventDetailView
+      event={event}
+      token={token}
+      isOrganizer={isOrganizer}
+      shareUrl={shareUrl}
+      myParticipantId={myParticipantId}
+    />
+  );
 }
