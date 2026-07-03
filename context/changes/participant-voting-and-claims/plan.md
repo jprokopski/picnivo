@@ -334,6 +334,55 @@ claimedByName?, addedByParticipantId?, orphanedFromName? }`; `participants[]`
 (`{ id, displayName, attendance }`); and `you` (`{ votes, claimedItemIds,
 attendance }` or null). Best date computed in-handler (`pvBestDate` rule).
 
+**Addendum (revised in Phase 5, 2026-07-02)**: `participants[]` gained a
+`votes: [{ dateOptionId, choice }]` field (`ParticipantVoteDto[]`), giving
+every participant's own per-date vote — not just the caller's (`you.votes`
+already had this, but only for the caller). This is a small, necessary
+extension to an already-closed phase, uncovered while implementing Phase 5:
+the design's `BestHero`/`WebDateRow` yes-voter avatar stack needs to know
+*who* voted Yes on a date, which aggregate `yesCount`/`maybeCount`/`noCount`
+alone can't answer. It also unblocks Phase 6, whose "effective coming"
+crew-split rule (`Attendance == Undecided AND voted Yes on the chosen date`)
+must be evaluated per participant, not just for the caller. Implementation:
+`GetEventByToken.cs` now fetches all votes for the event's date options in
+one query and reuses that in-memory list both for tally counts and for each
+participant's `Votes`, replacing the previous grouped-count query with an
+equivalent (and simpler) one — no added round trips. Covered by
+`GetEventByTokenHandlerTests.ReturnsEachParticipantsOwnVotes`.
+
+**Addendum (bug fix, 2026-07-02)**: The response's `chosenDateOptionId` was
+returning the raw (nullable) `Event.ChosenDateOptionId` instead of applying
+FR-004's "1-date event = de-facto chosen" rule — a rule Phase 3's `ClaimItem`
+already implemented for the claim gate (`@event.ChosenDateOptionId ?? (single
+date option ? that id : null)`), but the read model didn't mirror it. Effect:
+the hub UI's `locked` flag stayed `false` for announcement events, so
+`BestHero` kept showing the organizer a "Lock in this date" button for an
+event with only one date — a no-op action that shouldn't exist, since
+claiming was already open server-side. Fix: extracted the fallback into
+`Event.ResolveEffectiveChosenDateOptionId(chosenDateOptionId, dateOptionIds)`
+on the `Event` entity, used by both `ClaimItem` and `GetEventByToken`. No
+frontend change needed — `event-detail-view.tsx`'s `locked = !!event.
+chosenDateOptionId` now naturally reflects the rule once the API returns it.
+Covered by `GetEventByTokenHandlerTests.WithSingleDateEvent_
+TreatsLoneDateAsChosen` and `...WithMultipleDatesAndNoLock_
+ChosenDateOptionIdIsNull`. `ListEvents` (dashboard) does **not** yet apply
+this fallback — Phase 7 hasn't started; revisit there so a fresh announcement
+event's card doesn't derive a "voting" status incorrectly.
+
+**Addendum (revised in Phase 5, 2026-07-02)**: For a single-date
+("announcement") event, `CountFor` now adds +1 to `YesCount` for the lone
+date, treating the organizer as an implicit yes-voter. Rationale: FR-004
+announcement events show no vote UI at all, so the organizer who set the
+date has no way to cast an actual `DateVote` — without this, `BestHero`'s
+"N of M can make it" would always undercount by one relative to the
+frontend's parallel `yesVoterNamesFor` logic
+(`event-detail-view.tsx`), which already lists the organizer as an implicit
+yes-voter in its avatar stack for the same reason. This keeps the backend
+tally and the frontend's avatar-stack membership consistent for the same
+date. Covered by `GetEventByTokenHandlerTests.
+WithSingleDateEvent_YesCountIncludesOrganizerAsImplicitYes` and
+`...WithMultipleDates_YesCountDoesNotIncludeOrganizer`.
+
 #### 4. Extend ListEvents read model (dashboard)
 
 **File**: `backend/Picnivo.API/Features/Events/ListEvents/`
@@ -743,6 +792,14 @@ going" and the organizer in the crew avatar stack. Decide explicitly whether
 the card excludes the organizer from these counts, or whether "1 going" on a
 fresh event is acceptable/intended.
 
+**Note (from Phase 5 review, 2026-07-03)**: `event-card.tsx`'s `<Link>` to
+`/e/$token` dropped `target="_blank"` (added back in S-01) as part of the
+Phase 5 diff, ahead of this phase's own start. Reason: the hub now mutates
+state via `router.invalidate()` after votes/locks/claims; opening it in a
+new tab would strand that SPA navigation/state instead of using it. Keep
+the dashboard card's event link same-tab in this phase — don't reintroduce
+`target="_blank"`.
+
 ### Changes Required:
 
 #### 1. Event card enrichment
@@ -922,19 +979,19 @@ avoid Postgres multiple-cascade-path errors.
 
 #### Automated
 
-- [ ] 5.1 Type check passes: `pnpm typecheck`
-- [ ] 5.2 Lint passes: `pnpm lint`
-- [ ] 5.3 Tests pass: `pnpm test`
-- [ ] 5.4 Vote control tests: renders reactions, pre-selects `you.votes`, calls `castVotesFn`, narrow segmented fallback
-- [ ] 5.5 Date row tests: tallies + stacked bar; Leading chip on best; ✓Locked chip when chosen
-- [ ] 5.6 Hero tests: renders best date; lock button only when organizer; calls `selectFinalDateFn`; locked chip after chosen
-- [ ] 5.7 i18n extract/compile succeeds
+- [x] 5.1 Type check passes: `pnpm typecheck` — 610d650
+- [x] 5.2 Lint passes: `pnpm lint` — 610d650
+- [x] 5.3 Tests pass: `pnpm test` — 610d650
+- [x] 5.4 Vote control tests: renders reactions, pre-selects `you.votes`, calls `castVotesFn`, narrow segmented fallback — 610d650
+- [x] 5.5 Date row tests: tallies + stacked bar; Leading chip on best; ✓Locked chip when chosen — 610d650
+- [x] 5.6 Hero tests: renders best date; lock button only when organizer; calls `selectFinalDateFn`; locked chip after chosen — 610d650
+- [x] 5.7 i18n extract/compile succeeds — 610d650
 
 #### Manual
 
-- [ ] 5.8 Hub matches design (band, hero, reaction voting, date rows, crew + share aside) desktop + mobile
-- [ ] 5.9 Two profiles vote; tallies + best date update; changing a vote updates not duplicates
-- [ ] 5.10 Organizer locks date; hero flips to "It's official"
+- [x] 5.8 Hub matches design (band, hero, reaction voting, date rows, crew + share aside) desktop + mobile — 610d650
+- [x] 5.9 Two profiles vote; tallies + best date update; changing a vote updates not duplicates — 610d650
+- [x] 5.10 Organizer locks date; hero flips to "It's official" — 610d650
 
 ### Phase 6: Frontend — Items, Attendance & Recovery
 
