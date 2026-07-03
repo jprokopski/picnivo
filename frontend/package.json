@@ -22,7 +22,8 @@
     "deploy:dry-run": "pnpm build && wrangler deploy --dry-run",
     "cf:tail": "wrangler tail",
     "cf:tail:preview": "wrangler tail --env preview",
-    "orval": "orval"
+    "orval": "orval",
+    "prepare": "cd .. && husky frontend/.husky"
   },
   "dependencies": {
     "@lingui/core": "^6.2.0",
@@ -78,8 +79,10 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "eslint-plugin-tailwindcss": "4.0.0-alpha.7",
+    "husky": "^9.1.7",
     "jiti": "^2.7.0",
     "jsdom": "^28.1.0",
+    "lint-staged": "^17.0.8",
     "orval": "^7.10.0",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",
