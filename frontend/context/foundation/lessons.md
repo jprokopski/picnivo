@@ -13,7 +13,7 @@
 
 - **Context**: Frontend UI components — any `.tsx` file rendering user-visible text
 - **Problem**: Hardcoded strings bypass the i18n catalog and can never be localized.
-- **Rule**: Always wrap hardcoded UI strings with Lingui's `<Trans>` component or `` t`` `` tag — never use bare string literals in JSX or outside Lingui.
+- **Rule**: Always wrap hardcoded UI strings with Lingui's `<Trans>` component or ` t` `` tag — never use bare string literals in JSX or outside Lingui.
 - **Applies to**: implement, impl-review
 
 ## Always write Tailwind v4 canonical classes — never arbitrary values when a scale equivalent exists
@@ -35,4 +35,11 @@
 - **Context**: New files under `frontend/src/**`, especially `src/components/` and `src/features/<Feature>/**/components/`.
 - **Problem**: New feature files (e.g. `AuthPanel.tsx`, `AuthScene.tsx`, `AvatarStack.tsx`) used PascalCase filenames, diverging from the existing kebab-case convention (`header.tsx`, `logo.tsx`, `avatar.tsx`, `format-instant.ts`), making naming inconsistent and harder to predict/grep across the repo.
 - **Rule**: Use kebab-case for all project files in `frontend/` (e.g. `auth-panel.tsx`, not `AuthPanel.tsx`), matching the existing convention in `src/components/`.
+- **Applies to**: implement, impl-review
+
+## Use toast.error() for transient errors, inline only for field validation
+
+- **Context**: Frontend components with submit/action errors — any component under frontend/src/features/\*\* that handles a form submit, auth attempt, or other server-fn/API call and needs to surface a failure (auth panel, event forms, join flows, etc.)
+- **Problem**: auth-panel.tsx, join-bar.tsx, and create-event-form.tsx each rolled their own local error useState + inline error <div>/<p>, even though the app already has a global <Toaster/> mounted in \_\_root.tsx and toast.error() is the established pattern elsewhere (best-hero.tsx, add-item.tsx). Result: inconsistent UX and errors that can be missed (e.g. below the fold in a multi-step form).
+- **Rule**: Always surface transient action/submit errors (form submits, API calls, auth failures) via toast.error() from sonner — never local error state rendered as an inline div/p. Reserve inline error text for persistent per-field validation that must stay visible next to the field (e.g. duplicate-name/duplicate-item checks).
 - **Applies to**: implement, impl-review
