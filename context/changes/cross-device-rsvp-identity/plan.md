@@ -255,10 +255,10 @@ None — no schema change, no data migration. Existing events benefit immediatel
 
 #### Automated
 
-- [ ] 3.1 Type check passes: `pnpm exec tsc --noEmit`
-- [ ] 3.2 Lint passes: `pnpm lint`
+- [x] 3.1 Type check passes: `pnpm exec tsc --noEmit`
+- [x] 3.2 Lint passes: `pnpm lint`
 
 #### Manual
 
-- [ ] 3.3 Google sign-in from `/login?redirect=/e/<token>` returns to `/e/<token>`
-- [ ] 3.4 Google sign-in with no redirect still lands on `/events`
+- [x] 3.3 Google sign-in from `/login?redirect=/e/<token>` returns to `/e/<token>`
+- [x] 3.4 Google sign-in with no redirect still lands on `/events`

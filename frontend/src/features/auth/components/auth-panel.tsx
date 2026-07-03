@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { toast } from "sonner";
 import { signInFn, signUpFn } from "../../../lib/auth/functions";
+import { safeRedirectPath } from "../../../lib/auth/safe-redirect";
 import { createSupabaseBrowserClient } from "../../../lib/supabase/client";
 import { cn } from "../../../lib/utils";
 import Logo from "../../../components/logo";
@@ -83,11 +84,7 @@ export function AuthPanel({ mode, redirect, onToggleMode }: AuthPanelProps) {
         return;
       }
 
-      const safe =
-        redirect && redirect.startsWith("/") && !redirect.startsWith("//")
-          ? redirect
-          : "/events";
-      navigate({ to: safe });
+      navigate({ to: safeRedirectPath(redirect) });
     } catch {
       toast.error(t`Something went wrong. Please try again.`);
     } finally {
@@ -99,9 +96,12 @@ export function AuthPanel({ mode, redirect, onToggleMode }: AuthPanelProps) {
     try {
       const supabase = createSupabaseBrowserClient();
       const origin = window.location.origin;
+      const safe = safeRedirectPath(redirect);
       const { error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: "google",
-        options: { redirectTo: `${origin}/auth/callback` },
+        options: {
+          redirectTo: `${origin}/auth/callback?next=${encodeURIComponent(safe)}`,
+        },
       });
       if (oauthError) toast.error(oauthError.message);
     } catch {
