@@ -63,8 +63,8 @@ orchestrator updates Status as artifacts appear on disk.
 
 | # | Phase name | Goal (one line) | Risks covered | Test types | Status | Change folder |
 |---|---|---|---|---|---|---|
-| 1 | Claim-path integrity | Prove FCFS holds under contention and the eligibility gate is server-enforced and unbypassable | #1, #2 | integration + concurrency | implementing | context/changes/testing-claim-path-integrity |
-| 2 | Authorization boundaries | Prove only owners act on owned resources and ballots cannot be stuffed | #3, #4 | endpoint + integration | not started | — |
+| 1 | Claim-path integrity | Prove FCFS holds under contention and the eligibility gate is server-enforced and unbypassable | #1, #2 | integration + concurrency | complete | context/changes/testing-claim-path-integrity |
+| 2 | Authorization boundaries | Prove only owners act on owned resources and ballots cannot be stuffed | #3, #4 | endpoint + integration | complete | context/changes/testing-authorization-boundaries |
 | 3 | Aggregation correctness | Pin the best-date ranking, tie-break, and attendance inclusion | #5 | unit + integration | not started | — |
 | 4 | Quality-gates wiring | Fire scoped tests on claim/auth/tally risk files per-edit and pre-commit | cross-cutting (locks #1–#5) | gates (per-edit hook + pre-commit) | not started | — |
 
@@ -126,23 +126,33 @@ future pattern and points at §3.
 - **Reference test**: `backend/Picnivo.Tests/Features/Participants/SetAttendance/SetAttendanceEndpointTests.cs`.
 - **Run locally**: `dotnet test backend/Picnivo.Tests`.
 
-### 6.3 Adding a concurrency test for the claim path
+### 6.3 Adding a concurrency test for a race condition
 
-- TBD — see §3 Phase 1 (Claim-path integrity): prove two simultaneous claims on one item yield exactly one winner and one clean rejection.
+- **Test type**: integration on the real Postgres fixture (`fixture.CheckOutAsync()` — SQLite in-memory does not reproduce contention). `Task.WhenAll` two simultaneous requests through a `Safe*Async` wrapper that catches `ApiException` and returns the status code, then assert on persisted row count, not just status codes.
+- **Exclusive-resource shape** (only one caller should win, e.g. claiming an item): assert exactly one 204, one 409, one persisted row. **Reference test**: `backend/Picnivo.Tests/Features/Claims/ClaimItem/ClaimItemEndpointTests.cs` (`RaceForSameItem_OneWinsOneGetsConflict`).
+- **Idempotent-upsert shape** (both callers legitimately want the same outcome, e.g. a first vote): assert both calls return 204 and exactly one row persists — do not assert which caller's value won (oracle problem). **Reference test**: `backend/Picnivo.Tests/Features/Votes/CastVotes/CastVotesEndpointTests.cs` (`ConcurrentFirstVotes_BothSucceedIdempotently`); the production fix is in `backend/Picnivo.API/Features/Votes/CastVotes/CastVotes.cs` (catches `UniqueConstraintException`, detaches the losing `Added` row, re-queries, retries as an update).
 
 ### 6.4 Adding a test for a new API endpoint
 
 - **Test type**: integration via `WebApplicationFactory`; assert request → response shape AND persisted side-effects.
-- **Also cover**: the authorization boundary (wrong/absent auth, cross-owner ids) — see §3 Phase 2.
-- **Reference test**: `backend/Picnivo.Tests/Features/Events/GetEventByToken/GetEventByTokenEndpointTests.cs`.
+- **Also cover**: the authorization boundary — wrong/absent auth, and a cross-owner/cross-event id (404 via the event-scoped FK filter) vs. a foreign-but-referenced id used in a valid request (400 via membership validation). **Reference tests**: `backend/Picnivo.Tests/Features/Items/RemoveItem/RemoveItemEndpointTests.cs` (`CrossEventItemId_Returns404`); `backend/Picnivo.Tests/Features/Votes/CastVotes/CastVotesEndpointTests.cs` (`CrossEventParticipantId_Returns404`, `ForeignDateOptionId_Returns400`).
+- **Accepted-by-design note**: within-event GUID-based impersonation (a caller holding the event token plus another participant's id can act as them) is the intended friend-group trust model, not an IDOR gap — pin it with a clearly named characterization test rather than "fixing" it. **Reference test**: `CastVotesEndpointTests.cs` (`AnyCallerWithParticipantGuid_CanVoteAsThem_AcceptedFriendGroupTrust`).
+- **Reference test** (base request/response + side-effect pattern): `backend/Picnivo.Tests/Features/Events/GetEventByToken/GetEventByTokenEndpointTests.cs`.
 
 ### 6.5 Adding a test for the best-date aggregation
 
 - TBD — see §3 Phase 3 (Aggregation correctness): derive the expected best date from the ranking rule and fixtures, never from the implementation output.
 
-### 6.6 Per-rollout-phase notes
+### 6.6 Adding a vote-integrity / uniqueness-guardrail test
 
-(Optional. After each phase lands, `/10x-implement` appends a 2–3 line note here capturing anything surprising the rollout phase taught.)
+- **Test type**: two layers. (1) In-request FluentValidation rule via `TestValidateAsync` for request-shape duplicates. (2) A direct-`DbContext` forced-insert test on the real Postgres fixture that bypasses the handler entirely, proving the DB unique index itself rejects a duplicate row — the happy-path upsert never reaches it.
+- **Anti-pattern to avoid**: asserting only the handler's upsert convenience behavior (re-voting updates one row) — that proves convenience logic, not the actual DB guardrail.
+- **Reference tests**: `backend/Picnivo.Tests/Features/Votes/CastVotes/CastVotesValidatorTests.cs` (`WithDuplicateDateOptionId_IsInvalid`); `backend/Picnivo.Tests/Features/Votes/CastVotes/CastVotesConstraintTests.cs` (`DuplicateParticipantAndDateOption_ThrowsUniqueConstraintException`).
+
+### 6.7 Per-rollout-phase notes
+
+- Phase 1 (Claim-path integrity): the 409-vs-500 exception-translation path only fires correctly when the test fixture's exception-processor registration (`ApiFixture.cs`) matches `Program.cs` prod wiring exactly — a mismatch silently drops the 409 mapping instead of failing loudly.
+- Phase 2 (Authorization boundaries): two error codes encode two distinct boundaries on the same endpoint — a foreign *entity* id is a 404 (event-scoped FK filter), a foreign-but-referenced id used in an otherwise valid request is a 400 (membership validation). Tests must distinguish these precisely, not collapse both to "some 4xx".
 
 ## 7. What We Deliberately Don't Test
 
