@@ -275,10 +275,10 @@ None. Changes are a single added guard (one comparison) in the claim handler and
 
 #### Automated
 
-- [x] 1.1 Backend builds: `dotnet build backend/Picnivo.API`
-- [x] 1.2 All backend tests pass: `dotnet test backend/Picnivo.Tests`
-- [x] 1.3 `WhenMultiDateAndNoChosenDate_ReturnsForbidden` exists and passes
-- [x] 1.4 No remaining test asserts `NoContent` for a multi-date, no-chosen-date, `Coming` claim
+- [x] 1.1 Backend builds: `dotnet build backend/Picnivo.API` — 5166fad
+- [x] 1.2 All backend tests pass: `dotnet test backend/Picnivo.Tests` — 5166fad
+- [x] 1.3 `WhenMultiDateAndNoChosenDate_ReturnsForbidden` exists and passes — 5166fad
+- [x] 1.4 No remaining test asserts `NoContent` for a multi-date, no-chosen-date, `Coming` claim — 5166fad
 
 #### Manual
 

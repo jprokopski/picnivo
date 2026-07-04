@@ -1,7 +1,7 @@
 ---
 change_id: testing-claim-path-integrity
 title: Testing claim path integrity
-status: implementing
+status: impl_reviewed
 created: 2026-07-04
 updated: 2026-07-04
 archived_at: null
