@@ -56,6 +56,27 @@ public class RemoveItemEndpointTests(ApiFixture fixture)
         ex.StatusCode.ShouldBe(403);
     }
 
+    [Fact]
+    public async Task CrossEventItemId_Returns404()
+    {
+        // Arrange
+        await using var ctx = await fixture.CheckOutAsync();
+        var (_, itemIdA, _) = await SeedEventAsync(ctx.Services, "testtoken01");
+        var (tokenB, _, organizerB) = await SeedEventAsync(ctx.Services, "testtoken02");
+
+        // Act
+        var ex = await Should.ThrowAsync<ApiException>(() =>
+            ctx.AuthedApiClient(organizerB).RemoveItemAsync(tokenB, itemIdA, null)
+        );
+
+        // Assert
+        ex.StatusCode.ShouldBe(404);
+
+        using var scope = ctx.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<PicnivoDbContext>();
+        (await db.EventItems.AnyAsync(i => i.Id == itemIdA)).ShouldBeTrue();
+    }
+
     private static async Task<(string Token, Guid ItemId, Guid OrganizerId)> SeedEventAsync(
         IServiceProvider services,
         string token = "testtoken01"
