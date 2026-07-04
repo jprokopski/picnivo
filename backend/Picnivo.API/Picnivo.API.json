@@ -472,6 +472,33 @@
             "description": "Not Found"
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "DeleteEvent"
+        ],
+        "operationId": "DeleteEvent",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
       }
     },
     "/api/events/{token}/items/{itemId}/claim": {
@@ -1201,6 +1228,9 @@
     },
     {
       "name": "GetEventByToken"
+    },
+    {
+      "name": "DeleteEvent"
     },
     {
       "name": "ReleaseClaim"

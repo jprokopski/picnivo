@@ -1,6 +1,7 @@
 import { Trans } from "@lingui/react/macro";
 import type { EventDetailResponse } from "@/api/picnivo-api";
 import { Haul } from "../../claim-items/components/haul";
+import { DeleteEvent } from "../../delete-event/components/delete-event";
 import { JoinBar } from "../../join-event/components/join-bar";
 import {
   ATTENDANCE_VALUES,
@@ -229,6 +230,7 @@ export function EventDetailView({
             />
           </SectionCard>
           <ShareAside shareUrl={shareUrl} />
+          {isOrganizer && <DeleteEvent token={token} title={event.title} />}
         </aside>
       </div>
     </div>

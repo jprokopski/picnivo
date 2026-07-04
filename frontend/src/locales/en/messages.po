@@ -19,7 +19,7 @@ msgid "{0} can't make it"
 msgstr "{0} can't make it"
 
 #. placeholder {0}: event.participants.length
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:222
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:223
 msgid "{0} invited"
 msgstr "{0} invited"
 
@@ -34,7 +34,7 @@ msgid "{0} of {totalParticipants} coming"
 msgstr "{0} of {totalParticipants} coming"
 
 #. placeholder {0}: event.participants.length
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:167
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:168
 msgid "{0} voted"
 msgstr "{0} voted"
 
@@ -50,7 +50,7 @@ msgid "{claimedCount} / {itemCount} claimed"
 msgstr "{claimedCount} / {itemCount} claimed"
 
 #. placeholder {0}: event.items.length
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:197
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:198
 msgid "{claimedCount}/{0} covered"
 msgstr "{claimedCount}/{0} covered"
 
@@ -196,6 +196,10 @@ msgstr "Can't make it · {0}"
 msgid "Can't make it anymore?"
 msgstr "Can't make it anymore?"
 
+#: src/features/events/delete-event/components/delete-event.tsx:68
+msgid "Cancel"
+msgstr "Cancel"
+
 #: src/features/events/claim-items/components/haul.tsx:166
 msgid "Claim"
 msgstr "Claim"
@@ -288,6 +292,15 @@ msgstr "Cups & plates"
 msgid "Custom"
 msgstr "Custom"
 
+#: src/features/events/delete-event/components/delete-event.tsx:57
+msgid "Delete \"{title}\"?"
+msgstr "Delete \"{title}\"?"
+
+#: src/features/events/delete-event/components/delete-event.tsx:51
+#: src/features/events/delete-event/components/delete-event.tsx:78
+msgid "Delete event"
+msgstr "Delete event"
+
 #: src/features/events/create-event/components/items-editor.tsx:17
 msgid "Dessert"
 msgstr "Dessert"
@@ -350,7 +363,7 @@ msgstr "Hosted by you"
 msgid "Hosting"
 msgstr "Hosting"
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:160
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:161
 msgid "How everyone voted"
 msgstr "How everyone voted"
 
@@ -625,6 +638,8 @@ msgstr "Something went wrong."
 #: src/features/events/claim-items/components/confirm-claim.tsx:33
 #: src/features/events/create-event/components/create-event-form.tsx:71
 #: src/features/events/create-event/components/create-event-form.tsx:77
+#: src/features/events/delete-event/components/delete-event.tsx:35
+#: src/features/events/delete-event/components/delete-event.tsx:40
 #: src/features/events/get-event-by-token/components/best-hero.tsx:44
 #: src/features/events/join-event/components/join-bar.tsx:35
 #: src/features/events/set-attendance/components/attendance-card.tsx:37
@@ -667,7 +682,7 @@ msgstr "That's the date that worked for most people. Can you still swing by, or 
 msgid "The basics"
 msgstr "The basics"
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:221
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:222
 msgid "The crew"
 msgstr "The crew"
 
@@ -696,17 +711,23 @@ msgstr "The group locked <0>{0}, {1} {2}</0>, which you said doesn't work."
 msgid "The group locked this date and you're down to come."
 msgstr "The group locked this date and you're down to come."
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:192
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:193
 msgid "The haul"
 msgstr "The haul"
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:245
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:247
 msgid "The link may be mistyped, or the event no longer exists."
 msgstr "The link may be mistyped, or the event no longer exists."
 
 #: src/features/events/list-events/components/events-list.tsx:59
 msgid "The plans you've set up. Share the link and see who's in."
 msgstr "The plans you've set up. Share the link and see who's in."
+
+#: src/features/events/delete-event/components/delete-event.tsx:60
+msgid "This permanently deletes the event and all participants, votes, and "
+"claimed items. This can't be undone."
+msgstr "This permanently deletes the event and all participants, votes, and "
+"claimed items. This can't be undone."
 
 #: src/features/events/list-events/components/event-card.tsx:78
 msgid "To be defined"
@@ -742,7 +763,7 @@ msgstr "Vote"
 msgid "Vote on dates and claim what you'll bring — no account needed."
 msgstr "Vote on dates and claim what you'll bring — no account needed."
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:162
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:163
 msgid "Vote on the dates"
 msgstr "Vote on the dates"
 
@@ -759,7 +780,7 @@ msgstr "Was {0}'s — needs a new owner"
 msgid "Watermelon"
 msgstr "Watermelon"
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:242
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:244
 msgid "We couldn't find that event."
 msgstr "We couldn't find that event."
 
@@ -783,7 +804,7 @@ msgstr "What's the plan?"
 msgid "When could it happen?"
 msgstr "When could it happen?"
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:157
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:158
 msgid "When works?"
 msgstr "When works?"
 
@@ -795,7 +816,7 @@ msgstr "Where"
 msgid "Where good hangs come together"
 msgstr "Where good hangs come together"
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:193
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:194
 msgid "Who brings what"
 msgstr "Who brings what"
 
