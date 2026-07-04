@@ -224,27 +224,27 @@ No schema change — the cascade FKs already exist. No data migration.
 
 #### Automated
 
-- [x] 1.1 Backend builds and regenerates OpenAPI JSON: `dotnet build backend/Picnivo.API`
-- [x] 1.2 Handler tests pass: `dotnet test backend/Picnivo.Tests --filter DeleteEventHandlerTests`
-- [x] 1.3 Endpoint tests pass: `dotnet test backend/Picnivo.Tests --filter DeleteEventEndpointTests`
-- [x] 1.4 Full backend test suite green: `dotnet test backend/Picnivo.Tests`
-- [x] 1.5 `Picnivo.API.json` contains a `delete` operation under `/api/events/{token}`
+- [x] 1.1 Backend builds and regenerates OpenAPI JSON: `dotnet build backend/Picnivo.API` — fc890f4
+- [x] 1.2 Handler tests pass: `dotnet test backend/Picnivo.Tests --filter DeleteEventHandlerTests` — fc890f4
+- [x] 1.3 Endpoint tests pass: `dotnet test backend/Picnivo.Tests --filter DeleteEventEndpointTests` — fc890f4
+- [x] 1.4 Full backend test suite green: `dotnet test backend/Picnivo.Tests` — fc890f4
+- [x] 1.5 `Picnivo.API.json` contains a `delete` operation under `/api/events/{token}` — fc890f4
 
 #### Manual
 
-- [x] 1.6 Authed DELETE returns 204 and event + children are gone from the DB
-- [x] 1.7 Non-organizer authed DELETE returns 403 and the event remains
-- [x] 1.8 Unauthenticated DELETE returns 401
+- [x] 1.6 Authed DELETE returns 204 and event + children are gone from the DB — fc890f4
+- [x] 1.7 Non-organizer authed DELETE returns 403 and the event remains — fc890f4
+- [x] 1.8 Unauthenticated DELETE returns 401 — fc890f4
 
 ### Phase 2: Frontend — delete UI
 
 #### Automated
 
-- [ ] 2.1 Orval regen succeeds and `deleteEvent` exists: `pnpm orval`
-- [ ] 2.2 Type-check passes: `pnpm typecheck`
-- [ ] 2.3 Lint passes: `pnpm lint`
-- [ ] 2.4 Lingui extraction finds new strings, no untranslated bare literals: `pnpm lingui extract`
-- [ ] 2.5 Frontend tests pass: `pnpm test`
+- [x] 2.1 Orval regen succeeds and `deleteEvent` exists: `pnpm orval`
+- [x] 2.2 Type-check passes: `pnpm typecheck`
+- [x] 2.3 Lint passes: `pnpm lint`
+- [x] 2.4 Lingui extraction finds new strings, no untranslated bare literals: `pnpm lingui extract`
+- [x] 2.5 Frontend tests pass: `pnpm test`
 
 #### Manual
 

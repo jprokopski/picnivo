@@ -7,6 +7,7 @@ import type { EventDetailResponse } from "@/api/picnivo-api";
 
 vi.mock("@tanstack/react-router", () => ({
   useRouter: () => ({ invalidate: vi.fn() }),
+  useNavigate: () => vi.fn(),
 }));
 
 window.matchMedia = vi.fn().mockImplementation((query: string) => ({
@@ -168,6 +169,34 @@ describe("EventDetailView", () => {
       </Wrapper>,
     );
     expect(screen.getByText("Best date so far")).toBeDefined();
+  });
+
+  it("shows the delete-event control only for the organizer", () => {
+    const { rerender } = render(
+      <Wrapper>
+        <EventDetailView
+          event={baseEvent}
+          token="tok1"
+          shareUrl="https://picnivo.test/e/tok1"
+          isOrganizer={false}
+          myParticipantId={null}
+        />
+      </Wrapper>,
+    );
+    expect(screen.queryByRole("button", { name: "Delete event" })).toBeNull();
+
+    rerender(
+      <Wrapper>
+        <EventDetailView
+          event={baseEvent}
+          token="tok1"
+          shareUrl="https://picnivo.test/e/tok1"
+          isOrganizer={true}
+          myParticipantId={null}
+        />
+      </Wrapper>,
+    );
+    expect(screen.getByRole("button", { name: "Delete event" })).toBeDefined();
   });
 
   it("renders the crew list with each participant", () => {

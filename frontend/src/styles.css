@@ -140,6 +140,17 @@ html {
   overflow-x: clip;
 }
 
+/* Radix's scroll-lock (react-remove-scroll) sets `overflow: hidden` on body
+   while a Dialog/AlertDialog is open. Since overflow != visible makes body a
+   scroll container, any `position: sticky` descendant (e.g. the header)
+   re-anchors to body's (always-0) internal scroll offset instead of the
+   viewport, so it visually scrolls away instead of staying pinned. The
+   actual scroll blocking during a modal comes from Radix's wheel/touch
+   listeners, not this CSS, so restoring overflow here is safe. */
+html body[data-scroll-locked] {
+  overflow: visible !important;
+}
+
 body {
   font-family: var(--font-sans);
   color: var(--ink);
