@@ -46,4 +46,21 @@ public class CastVotesValidatorTests
         // Assert
         result.ShouldNotHaveAnyValidationErrors();
     }
+
+    [Fact]
+    public async Task WithDuplicateDateOptionId_IsInvalid()
+    {
+        // Arrange
+        var dateOptionId = Guid.NewGuid();
+        var request = new CastVotesRequest([
+            new VoteDto(dateOptionId, VoteChoice.Yes),
+            new VoteDto(dateOptionId, VoteChoice.No),
+        ]);
+
+        // Act
+        var result = await _validator.TestValidateAsync(request);
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(r => r.Votes);
+    }
 }

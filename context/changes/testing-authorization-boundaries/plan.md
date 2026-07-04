@@ -355,22 +355,22 @@ None — no schema change. The `(ParticipantId, DateOptionId)` unique index alre
 ### Phase 1: Risk #3 — Authorization boundary tests
 
 #### Automated
-- [x] 1.1 Build + client regen succeeds: `dotnet build backend/Picnivo.API`
-- [x] 1.2 New RemoveItem/CastVotes tests pass: `dotnet test backend/Picnivo.Tests`
-- [x] 1.3 Full backend suite green: `dotnet test backend/Picnivo.Tests`
+- [x] 1.1 Build + client regen succeeds: `dotnet build backend/Picnivo.API` — f95676f
+- [x] 1.2 New RemoveItem/CastVotes tests pass: `dotnet test backend/Picnivo.Tests` — f95676f
+- [x] 1.3 Full backend suite green: `dotnet test backend/Picnivo.Tests` — f95676f
 
 #### Manual
-- [x] 1.4 Cross-event tests fail if the FK filter is removed (assertion is real, not tautological)
-- [x] 1.5 Impersonation test clearly labelled accepted-by-design (name + comment cite test-plan §2)
+- [x] 1.4 Cross-event tests fail if the FK filter is removed (assertion is real, not tautological) — f95676f
+- [x] 1.5 Impersonation test clearly labelled accepted-by-design (name + comment cite test-plan §2) — f95676f
 
 ### Phase 2: Risk #4 — Vote-integrity guardrail tests
 
 #### Automated
-- [ ] 2.1 Validator + constraint tests pass: `dotnet test backend/Picnivo.Tests`
-- [ ] 2.2 Full backend suite green: `dotnet test backend/Picnivo.Tests`
+- [x] 2.1 Validator + constraint tests pass: `dotnet test backend/Picnivo.Tests`
+- [x] 2.2 Full backend suite green: `dotnet test backend/Picnivo.Tests`
 
 #### Manual
-- [ ] 2.3 Constraint test genuinely exercises the Postgres index (would not throw on SQLite)
+- [x] 2.3 Constraint test genuinely exercises the Postgres index (would not throw on SQLite)
 
 ### Phase 3: Risk #4 — Harden concurrent first-vote race to idempotent success
 
