@@ -1,10 +1,10 @@
 ---
 change_id: delete-event
 title: Add organizer-only delete for Event with cascading cleanup
-status: impl_reviewed
+status: archived
 created: 2026-07-04
 updated: 2026-07-04
-archived_at: null
+archived_at: 2026-07-04T23:05:26Z
 ---
 
 ## Notes

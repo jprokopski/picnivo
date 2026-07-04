@@ -240,16 +240,16 @@ No schema change — the cascade FKs already exist. No data migration.
 
 #### Automated
 
-- [x] 2.1 Orval regen succeeds and `deleteEvent` exists: `pnpm orval`
-- [x] 2.2 Type-check passes: `pnpm typecheck`
-- [x] 2.3 Lint passes: `pnpm lint`
-- [x] 2.4 Lingui extraction finds new strings, no untranslated bare literals: `pnpm lingui extract`
-- [x] 2.5 Frontend tests pass: `pnpm test`
+- [x] 2.1 Orval regen succeeds and `deleteEvent` exists: `pnpm orval` — 68a89fb
+- [x] 2.2 Type-check passes: `pnpm typecheck` — 68a89fb
+- [x] 2.3 Lint passes: `pnpm lint` — 68a89fb
+- [x] 2.4 Lingui extraction finds new strings, no untranslated bare literals: `pnpm lingui extract` — 68a89fb
+- [x] 2.5 Frontend tests pass: `pnpm test` — 68a89fb
 
 #### Manual
 
-- [ ] 2.6 Danger-zone delete control visible to organizer, absent for non-organizer
-- [ ] 2.7 AlertDialog confirm opens; cancel leaves event intact
-- [ ] 2.8 Confirm deletes event and navigates to `/events` with the event removed from the list
-- [ ] 2.9 Simulated failure surfaces via `toast.error`, not inline text
-- [ ] 2.10 Delete not possible from UI for non-owned event (control hidden)
+- [x] 2.6 Danger-zone delete control visible to organizer, absent for non-organizer — 68a89fb
+- [x] 2.7 AlertDialog confirm opens; cancel leaves event intact — 68a89fb
+- [x] 2.8 Confirm deletes event and navigates to `/events` with the event removed from the list — 68a89fb
+- [x] 2.9 Simulated failure surfaces via `toast.error`, not inline text — 68a89fb
+- [x] 2.10 Delete not possible from UI for non-owned event (control hidden) — 68a89fb
