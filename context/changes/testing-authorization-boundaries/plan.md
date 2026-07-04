@@ -375,10 +375,10 @@ None — no schema change. The `(ParticipantId, DateOptionId)` unique index alre
 ### Phase 3: Risk #4 — Harden concurrent first-vote race to idempotent success
 
 #### Automated
-- [x] 3.1 Backend builds: `dotnet build backend/Picnivo.API`
-- [x] 3.2 Concurrency test passes after the handler change: `dotnet test backend/Picnivo.Tests`
-- [x] 3.3 Full backend suite green: `dotnet test backend/Picnivo.Tests`
+- [x] 3.1 Backend builds: `dotnet build backend/Picnivo.API` — 76200cb
+- [x] 3.2 Concurrency test passes after the handler change: `dotnet test backend/Picnivo.Tests` — 76200cb
+- [x] 3.3 Full backend suite green: `dotnet test backend/Picnivo.Tests` — 76200cb
 
 #### Manual
-- [x] 3.4 Reverting the handler change makes the concurrency test fail (verifies the test exercises the hardening)
-- [x] 3.5 No regression in `RepeatedVote_NeverYieldsTwoRows` upsert test
+- [x] 3.4 Reverting the handler change makes the concurrency test fail (verifies the test exercises the hardening) — 76200cb
+- [x] 3.5 No regression in `RepeatedVote_NeverYieldsTwoRows` upsert test — 76200cb
