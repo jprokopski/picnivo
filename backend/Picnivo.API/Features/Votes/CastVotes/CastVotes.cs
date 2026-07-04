@@ -1,3 +1,4 @@
+using EntityFramework.Exceptions.Common;
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
@@ -51,6 +52,48 @@ public static class CastVotes
             )
             .ToListAsync(ct);
 
+        ApplyVotes(db, req, participantId, existing);
+
+        try
+        {
+            await db.SaveChangesAsync(ct);
+        }
+        catch (UniqueConstraintException)
+        {
+            // A concurrent first-vote on the same (participant, dateOption) lost the race:
+            // our speculative INSERT collided with the winner's row. Drop it, re-read the
+            // now-existing row, and retry as an update — one vote request resolving to an
+            // idempotent 204 rather than leaking the global 409.
+            foreach (var entry in db.ChangeTracker.Entries<DateVote>().ToList())
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.State = EntityState.Detached;
+                }
+            }
+
+            var afterRace = await db
+                .DateVotes.Where(v =>
+                    v.ParticipantId == participantId && dateOptionIds.Contains(v.DateOptionId)
+                )
+                .ToListAsync(ct);
+
+            ApplyVotes(db, req, participantId, afterRace);
+            // Single retry only: a third caller colliding with this save is out of scope
+            // (two-caller race) and will surface as the global 409/500.
+            await db.SaveChangesAsync(ct);
+        }
+
+        return Results.NoContent();
+    }
+
+    private static void ApplyVotes(
+        PicnivoDbContext db,
+        CastVotesRequest req,
+        Guid participantId,
+        List<DateVote> existing
+    )
+    {
         foreach (var vote in req.Votes)
         {
             var current = existing.FirstOrDefault(v => v.DateOptionId == vote.DateOptionId);
@@ -71,8 +114,5 @@ public static class CastVotes
                 );
             }
         }
-
-        await db.SaveChangesAsync(ct);
-        return Results.NoContent();
     }
 }
