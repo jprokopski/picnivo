@@ -58,7 +58,7 @@ describe("BestHero", () => {
           organizerName="Maya"
           isOrganizer={false}
           locked={false}
-          yesVoterNames={["Alice"]}
+          comingNames={["Alice"]}
           totalParticipants={3}
         />
       </Wrapper>,
@@ -66,7 +66,7 @@ describe("BestHero", () => {
 
     expect(screen.getAllByText(/Jun/i).length).toBeGreaterThan(0);
     expect(screen.getByText("Best date so far")).toBeDefined();
-    expect(screen.getByText(/2 of 3 can make it/i)).toBeDefined();
+    expect(screen.getByText(/1 of 3 can make it/i)).toBeDefined();
   });
 
   it("shows the lock button only for the organizer", () => {
@@ -78,7 +78,7 @@ describe("BestHero", () => {
           organizerName="Maya"
           isOrganizer={false}
           locked={false}
-          yesVoterNames={[]}
+          comingNames={[]}
           totalParticipants={3}
         />
       </Wrapper>,
@@ -96,7 +96,7 @@ describe("BestHero", () => {
           organizerName="Maya"
           isOrganizer={true}
           locked={false}
-          yesVoterNames={[]}
+          comingNames={[]}
           totalParticipants={3}
         />
       </Wrapper>,
@@ -115,7 +115,7 @@ describe("BestHero", () => {
           organizerName="Maya"
           isOrganizer={true}
           locked={false}
-          yesVoterNames={[]}
+          comingNames={[]}
           totalParticipants={3}
         />
       </Wrapper>,
@@ -145,7 +145,7 @@ describe("BestHero", () => {
           organizerName="Maya"
           isOrganizer={true}
           locked={false}
-          yesVoterNames={[]}
+          comingNames={[]}
           totalParticipants={3}
         />
       </Wrapper>,
@@ -168,7 +168,7 @@ describe("BestHero", () => {
           organizerName="Maya"
           isOrganizer={true}
           locked={true}
-          yesVoterNames={[]}
+          comingNames={[]}
           totalParticipants={3}
         />
       </Wrapper>,

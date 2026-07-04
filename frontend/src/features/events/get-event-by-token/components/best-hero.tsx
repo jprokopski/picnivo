@@ -16,7 +16,7 @@ interface BestHeroProps {
   organizerName: string;
   isOrganizer: boolean;
   locked: boolean;
-  yesVoterNames: string[];
+  comingNames: string[];
   totalParticipants: number;
 }
 
@@ -27,14 +27,13 @@ export function BestHero({
   organizerName,
   isOrganizer,
   locked,
-  yesVoterNames,
+  comingNames,
   totalParticipants,
 }: BestHeroProps) {
   const router = useRouter();
   const { t } = useLingui();
   const [locking, setLocking] = useState(false);
   const parts = formatInstantParts(heroDate.startsAt);
-  const yes = Number(heroDate.yesCount);
 
   async function handleLock() {
     setLocking(true);
@@ -56,14 +55,14 @@ export function BestHero({
           <div className="font-mono text-[12px] text-(--accent-deep)">
             {parts.dow.toUpperCase()}
           </div>
-          <div className="my-1 font-display text-[64px] leading-none">
+          <div className="font-display my-1 text-[64px] leading-none">
             {parts.day}
           </div>
           <div className="font-mono text-[12px] text-(--ink-soft)">
             {parts.mon}
           </div>
         </div>
-        <div className="min-w-60 flex-1 bg-card px-7.5 py-6">
+        <div className="bg-card min-w-60 flex-1 px-7.5 py-6">
           <span
             className="inline-flex items-center gap-1.5 rounded-full px-2.75 py-1 text-[13px] font-semibold"
             style={{
@@ -80,7 +79,7 @@ export function BestHero({
               </>
             )}
           </span>
-          <h2 className="mt-3 font-display text-[26px] font-bold tracking-[-0.01em]">
+          <h2 className="font-display mt-3 text-[26px] font-bold tracking-[-0.01em]">
             {parts.dow}, {parts.mon} {parts.day}
           </h2>
           <div className="mt-1.5 flex items-center gap-1.75 text-[13px] text-(--ink-soft)">
@@ -92,12 +91,12 @@ export function BestHero({
             )}
           </div>
           <div className="mt-4 flex items-center gap-2.5">
-            {yesVoterNames.length > 0 && (
-              <AvatarStack names={yesVoterNames} size={30} max={6} />
+            {comingNames.length > 0 && (
+              <AvatarStack names={comingNames} size={30} max={6} />
             )}
             <span className="text-[14px] font-bold">
               <Trans>
-                {yes} of {totalParticipants} can make it
+                {comingNames.length} of {totalParticipants} can make it
               </Trans>
             </span>
           </div>

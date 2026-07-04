@@ -58,17 +58,19 @@ export function EventDetailView({
       .map((p) => p.displayName);
   }
 
-  // Announcements have no vote UI at all, so "who's coming" can't be read off
-  // DateVotes — it's driven entirely by the attendance RSVP. The organizer is
-  // already one of `event.participants`, so they're included/excluded on the
-  // same footing as any guest — no implicit yes.
-  function comingNamesForAnnouncement(dateOptionId: string): string[] {
+  // "Who's coming" for a given date combines the recorded vote with the
+  // attendance RSVP (see schema's isEffectivelyComing): once a date is
+  // chosen, a participant who clicks "I'm coming" must be reflected here,
+  // not just in the vote tally. The organizer is already one of
+  // `event.participants`, so they're included/excluded on the same footing
+  // as any guest — no implicit yes.
+  function comingNamesFor(dateOptionId: string): string[] {
     return event.participants
       .filter((p) => isEffectivelyComing(p.attendance, p.votes, dateOptionId))
       .map((p) => p.displayName);
   }
 
-  function outNamesForAnnouncement(dateOptionId: string): string[] {
+  function outNamesFor(dateOptionId: string): string[] {
     return event.participants
       .filter((p) => isEffectivelyOut(p.attendance, p.votes, dateOptionId))
       .map((p) => p.displayName);
@@ -130,8 +132,8 @@ export function EventDetailView({
               <AnnounceHero
                 date={heroDate}
                 location={event.location}
-                comingNames={comingNamesForAnnouncement(heroDate.id)}
-                outNames={outNamesForAnnouncement(heroDate.id)}
+                comingNames={comingNamesFor(heroDate.id)}
+                outNames={outNamesFor(heroDate.id)}
                 totalParticipants={event.participants.length}
               />
             ) : (
@@ -143,7 +145,7 @@ export function EventDetailView({
                   organizerName={event.organizerName}
                   isOrganizer={isOrganizer}
                   locked={locked}
-                  yesVoterNames={yesVoterNamesFor(heroDate.id)}
+                  comingNames={comingNamesFor(heroDate.id)}
                   totalParticipants={event.participants.length}
                 />
               )
@@ -161,7 +163,7 @@ export function EventDetailView({
                 )
               }
               right={
-                <span className="rounded-full border border-border bg-(--card-2) px-2.75 py-0.75 text-[13px] font-semibold">
+                <span className="border-border rounded-full border bg-(--card-2) px-2.75 py-0.75 text-[13px] font-semibold">
                   <Trans>{event.participants.length} voted</Trans>
                 </span>
               }
@@ -191,7 +193,7 @@ export function EventDetailView({
             title={<Trans>Who brings what</Trans>}
             right={
               locked && (
-                <span className="rounded-full border border-border bg-(--card-2) px-2.75 py-0.75 text-[13px] font-semibold">
+                <span className="border-border rounded-full border bg-(--card-2) px-2.75 py-0.75 text-[13px] font-semibold">
                   <Trans>
                     {claimedCount}/{event.items.length} covered
                   </Trans>
