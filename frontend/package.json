@@ -15,6 +15,7 @@
     "format": "prettier --write src/",
     "extract": "lingui extract --clean",
     "compile": "lingui compile --typescript",
+    "i18n:sync": "lingui extract --clean && lingui compile --typescript && git add src/locales",
     "format:check": "prettier --check src/",
     "preview:cf": "pnpm build && wrangler dev",
     "deploy": "pnpm build && wrangler deploy",
