@@ -291,10 +291,10 @@ None. Changes are a single added guard (one comparison) in the claim handler and
 
 #### Automated
 
-- [x] 2.1 All backend tests pass: `dotnet test backend/Picnivo.Tests`
-- [x] 2.2 `WhenVotedYesButAttendanceOut_ReturnsForbidden` exists and passes
-- [x] 2.3 `WhenIneligible_DirectApiCall_Returns403` exists and passes (403 + no persisted claim)
-- [x] 2.4 `test-plan.md §2` no longer contains "UI-only enforcement" / "bypassable by calling the API directly" for Risk #2
+- [x] 2.1 All backend tests pass: `dotnet test backend/Picnivo.Tests` — e466d1e
+- [x] 2.2 `WhenVotedYesButAttendanceOut_ReturnsForbidden` exists and passes — e466d1e
+- [x] 2.3 `WhenIneligible_DirectApiCall_Returns403` exists and passes (403 + no persisted claim) — e466d1e
+- [x] 2.4 `test-plan.md §2` no longer contains "UI-only enforcement" / "bypassable by calling the API directly" for Risk #2 — e466d1e
 
 #### Manual
 
