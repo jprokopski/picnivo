@@ -366,19 +366,19 @@ None — no schema change. The `(ParticipantId, DateOptionId)` unique index alre
 ### Phase 2: Risk #4 — Vote-integrity guardrail tests
 
 #### Automated
-- [x] 2.1 Validator + constraint tests pass: `dotnet test backend/Picnivo.Tests`
-- [x] 2.2 Full backend suite green: `dotnet test backend/Picnivo.Tests`
+- [x] 2.1 Validator + constraint tests pass: `dotnet test backend/Picnivo.Tests` — dfa1956
+- [x] 2.2 Full backend suite green: `dotnet test backend/Picnivo.Tests` — dfa1956
 
 #### Manual
-- [x] 2.3 Constraint test genuinely exercises the Postgres index (would not throw on SQLite)
+- [x] 2.3 Constraint test genuinely exercises the Postgres index (would not throw on SQLite) — dfa1956
 
 ### Phase 3: Risk #4 — Harden concurrent first-vote race to idempotent success
 
 #### Automated
-- [ ] 3.1 Backend builds: `dotnet build backend/Picnivo.API`
-- [ ] 3.2 Concurrency test passes after the handler change: `dotnet test backend/Picnivo.Tests`
-- [ ] 3.3 Full backend suite green: `dotnet test backend/Picnivo.Tests`
+- [x] 3.1 Backend builds: `dotnet build backend/Picnivo.API`
+- [x] 3.2 Concurrency test passes after the handler change: `dotnet test backend/Picnivo.Tests`
+- [x] 3.3 Full backend suite green: `dotnet test backend/Picnivo.Tests`
 
 #### Manual
-- [ ] 3.4 Reverting the handler change makes the concurrency test fail (verifies the test exercises the hardening)
-- [ ] 3.5 No regression in `RepeatedVote_NeverYieldsTwoRows` upsert test
+- [x] 3.4 Reverting the handler change makes the concurrency test fail (verifies the test exercises the hardening)
+- [x] 3.5 No regression in `RepeatedVote_NeverYieldsTwoRows` upsert test

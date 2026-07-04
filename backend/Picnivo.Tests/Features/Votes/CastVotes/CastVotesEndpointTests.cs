@@ -67,6 +67,33 @@ public class CastVotesEndpointTests(ApiFixture fixture)
     }
 
     [Fact]
+    public async Task ConcurrentFirstVotes_BothSucceedIdempotently()
+    {
+        // Arrange
+        await using var ctx = await fixture.CheckOutAsync();
+        var (token, participantId, dateOptionId) = await SeedEventWithParticipantAsync(
+            ctx.Services
+        );
+
+        // Act
+        var results = await Task.WhenAll(
+            SafeCastVotesAsync(ctx.ApiClient, token, participantId, dateOptionId, 1),
+            SafeCastVotesAsync(ctx.ApiClient, token, participantId, dateOptionId, 3)
+        );
+
+        // Assert
+        results.Count(r => r == 204).ShouldBe(2);
+
+        using var scope = ctx.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<PicnivoDbContext>();
+        (
+            await db.DateVotes.CountAsync(v =>
+                v.ParticipantId == participantId && v.DateOptionId == dateOptionId
+            )
+        ).ShouldBe(1);
+    }
+
+    [Fact]
     public async Task CrossEventParticipantId_Returns404()
     {
         // Arrange
@@ -160,6 +187,32 @@ public class CastVotesEndpointTests(ApiFixture fixture)
         var db = scope.ServiceProvider.GetRequiredService<PicnivoDbContext>();
         var vote = await db.DateVotes.SingleAsync(v => v.ParticipantId == bobId);
         vote.Choice.ShouldBe(VoteChoice.Yes);
+    }
+
+    private static async Task<int> SafeCastVotesAsync(
+        PicnivoApiClient client,
+        string token,
+        Guid participantId,
+        Guid dateOptionId,
+        int choice
+    )
+    {
+        try
+        {
+            await client.CastVotesAsync(
+                token,
+                participantId,
+                new CastVotesRequest
+                {
+                    Votes = [new VoteDto { DateOptionId = dateOptionId, Choice = choice }],
+                }
+            );
+            return 204;
+        }
+        catch (ApiException ex)
+        {
+            return ex.StatusCode;
+        }
     }
 
     private static async Task<(
