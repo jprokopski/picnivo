@@ -23,11 +23,11 @@ This repo holds two independent projects plus shared product context:
 
 ```
 picnivo/
-├── frontend/   TanStack Start (React 19) + Tailwind CSS v4 — see frontend/README.md
-├── backend/    .NET 10 ASP.NET Core Web API — see backend/README.md
-├── supabase/   Local Postgres + Auth config shared by both projects
-├── context/    Product vision, PRD, and cross-cutting architecture decisions
-└── dev.sh      Spins up Supabase, the backend, and the frontend together
+├── frontend/           TanStack Start (React 19) + Tailwind CSS v4 — see frontend/README.md
+├── backend/            .NET 10 ASP.NET Core Web API — see backend/README.md
+│   └── supabase/       Local Postgres + Auth config (config.toml), shared by both projects
+├── context/            Product vision, PRD, and cross-cutting architecture decisions
+└── dev.sh              Spins up Supabase, the backend, and the frontend together
 ```
 
 ## Quick Start
