@@ -284,8 +284,8 @@ None. Changes are a single added guard (one comparison) in the claim handler and
 
 #### Manual
 
-- [x] 1.5 Single-date and locked-date claim flows still work in the running app
-- [x] 1.6 Multi-date event with no locked date rejects a claim attempt (403)
+- [x] 1.5 Single-date and locked-date claim flows still work in the running app — 5166fad
+- [x] 1.6 Multi-date event with no locked date rejects a claim attempt (403) — 5166fad
 
 ### Phase 2: Close Risk #2 — eligibility matrix, direct-API bypass, doc correction
 
@@ -298,19 +298,19 @@ None. Changes are a single added guard (one comparison) in the claim handler and
 
 #### Manual
 
-- [x] 2.5 `test-plan.md §2` Risk #2 wording reads coherently against the server-enforced reality
-- [x] 2.6 Eligibility matrix comment/tests read as an intentional oracle (FR-009/FR-013), not lifted from handler output
+- [x] 2.5 `test-plan.md §2` Risk #2 wording reads coherently against the server-enforced reality — e466d1e
+- [x] 2.6 Eligibility matrix comment/tests read as an intentional oracle (FR-009/FR-013), not lifted from handler output — e466d1e
 
 ### Phase 3: Harden Risk #1 — 409 durability
 
 #### Automated
 
-- [x] 3.1 All backend tests pass: `dotnet test backend/Picnivo.Tests`
-- [x] 3.2 Existing `RaceForSameItem_OneWinsOneGetsConflict` still passes (no double-interception regression)
-- [x] 3.3 `SecondClaimOnClaimedItem_Returns409` exists and passes (409 + exactly one persisted claim)
-- [x] 3.4 Full suite green after the `ApiFixture` change
+- [x] 3.1 All backend tests pass: `dotnet test backend/Picnivo.Tests` — bdf7b2f
+- [x] 3.2 Existing `RaceForSameItem_OneWinsOneGetsConflict` still passes (no double-interception regression) — bdf7b2f
+- [x] 3.3 `SecondClaimOnClaimedItem_Returns409` exists and passes (409 + exactly one persisted claim) — bdf7b2f
+- [x] 3.4 Full suite green after the `ApiFixture` change — bdf7b2f
 
 #### Manual
 
-- [x] 3.5 Endpoint suite re-run 2–3 times confirms race test stability and no flakiness
-- [x] 3.6 `ApiFixture.cs` exception-processor registration visibly matches `Program.cs` prod wiring
+- [x] 3.5 Endpoint suite re-run 2–3 times confirms race test stability and no flakiness — bdf7b2f
+- [x] 3.6 `ApiFixture.cs` exception-processor registration visibly matches `Program.cs` prod wiring — bdf7b2f

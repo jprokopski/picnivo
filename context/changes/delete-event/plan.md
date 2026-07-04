@@ -240,11 +240,11 @@ No schema change — the cascade FKs already exist. No data migration.
 
 #### Automated
 
-- [x] 2.1 Orval regen succeeds and `deleteEvent` exists: `pnpm orval`
-- [x] 2.2 Type-check passes: `pnpm typecheck`
-- [x] 2.3 Lint passes: `pnpm lint`
-- [x] 2.4 Lingui extraction finds new strings, no untranslated bare literals: `pnpm lingui extract`
-- [x] 2.5 Frontend tests pass: `pnpm test`
+- [x] 2.1 Orval regen succeeds and `deleteEvent` exists: `pnpm orval` — 68a89fb
+- [x] 2.2 Type-check passes: `pnpm typecheck` — 68a89fb
+- [x] 2.3 Lint passes: `pnpm lint` — 68a89fb
+- [x] 2.4 Lingui extraction finds new strings, no untranslated bare literals: `pnpm lingui extract` — 68a89fb
+- [x] 2.5 Frontend tests pass: `pnpm test` — 68a89fb
 
 #### Manual
 
