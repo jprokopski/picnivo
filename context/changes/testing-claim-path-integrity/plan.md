@@ -150,6 +150,8 @@ Complete the server-enforced eligibility matrix at the SQLite handler layer (pin
 
 **Contract**: No new test if the matrix is complete after the above; document the covered matrix in a short comment at the top of the eligibility-related tests. Add a cell only if a gap is found (e.g. `Undecided`+`No`-vote → 403 if not implied by the ineligible case).
 
+**Correction landed alongside this check**: `WhenNotComingAndNoYesVote_ReturnsForbidden` (`ClaimItemHandlerTests.cs:20-37`) previously seeded `dateOptionCount: 2` with no chosen date — with two dates and no lock, `Event.ResolveEffectiveChosenDateOptionId` resolves `null`, so the test was actually tripping the Phase 1 "no chosen date" 403 guard, not the intended "Undecided, no Yes vote" ineligibility branch it names. Corrected to `dateOptionCount: 1` (single-date auto-resolves a non-null chosen date) so the test genuinely isolates the ineligible-participant cell, matching the Phase 1 pattern of correcting `WhenAttendanceComing_AllowsClaim` for the same class of oracle ambiguity.
+
 #### 3. Direct-API bypass confirmation (server-side enforcement)
 
 **File**: `backend/Picnivo.Tests/Features/Claims/ClaimItem/ClaimItemEndpointTests.cs`
@@ -289,15 +291,15 @@ None. Changes are a single added guard (one comparison) in the claim handler and
 
 #### Automated
 
-- [ ] 2.1 All backend tests pass: `dotnet test backend/Picnivo.Tests`
-- [ ] 2.2 `WhenVotedYesButAttendanceOut_ReturnsForbidden` exists and passes
-- [ ] 2.3 `WhenIneligible_DirectApiCall_Returns403` exists and passes (403 + no persisted claim)
-- [ ] 2.4 `test-plan.md §2` no longer contains "UI-only enforcement" / "bypassable by calling the API directly" for Risk #2
+- [x] 2.1 All backend tests pass: `dotnet test backend/Picnivo.Tests`
+- [x] 2.2 `WhenVotedYesButAttendanceOut_ReturnsForbidden` exists and passes
+- [x] 2.3 `WhenIneligible_DirectApiCall_Returns403` exists and passes (403 + no persisted claim)
+- [x] 2.4 `test-plan.md §2` no longer contains "UI-only enforcement" / "bypassable by calling the API directly" for Risk #2
 
 #### Manual
 
-- [ ] 2.5 `test-plan.md §2` Risk #2 wording reads coherently against the server-enforced reality
-- [ ] 2.6 Eligibility matrix comment/tests read as an intentional oracle (FR-009/FR-013), not lifted from handler output
+- [x] 2.5 `test-plan.md §2` Risk #2 wording reads coherently against the server-enforced reality
+- [x] 2.6 Eligibility matrix comment/tests read as an intentional oracle (FR-009/FR-013), not lifted from handler output
 
 ### Phase 3: Harden Risk #1 — 409 durability
 
