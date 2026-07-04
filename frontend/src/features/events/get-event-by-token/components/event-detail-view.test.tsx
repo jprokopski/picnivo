@@ -422,6 +422,35 @@ describe("EventDetailView attendance card", () => {
     expect(screen.queryByText(/are you still coming/i)).toBeNull();
     expect(screen.queryByText(/you're in/i)).toBeNull();
   });
+
+  it("counts an RSVP'd guest toward the locked date's tally even without a matching vote", () => {
+    const lockedWithRsvp: EventDetailResponse = {
+      ...locked,
+      participants: [
+        ...locked.participants,
+        {
+          id: "p2",
+          displayName: "Bob",
+          isOrganizer: false,
+          attendance: 2,
+          votes: [],
+        },
+      ],
+    };
+    render(
+      <Wrapper>
+        <EventDetailView
+          event={lockedWithRsvp}
+          token="tok1"
+          shareUrl="https://picnivo.test/e/tok1"
+          isOrganizer={false}
+          myParticipantId={null}
+        />
+      </Wrapper>,
+    );
+
+    expect(screen.getByText(/2 of 2 can make it/i)).toBeDefined();
+  });
 });
 
 describe("EventNotFound", () => {
