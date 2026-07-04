@@ -1,193 +1,80 @@
-Welcome to your new TanStack Start app! 
+# Picnivo Frontend
 
-# Getting Started
+TanStack Start (React 19) + Tailwind CSS v4 frontend for [Picnivo](../README.md), deployed to Cloudflare
+Workers.
 
-To run this application:
+## Prerequisites
 
-```bash
-npm install
-npm run dev
-```
+- [pnpm](https://pnpm.io/)
+- Backend running locally (see [`../backend/README.md`](../backend/README.md)), or use `../dev.sh` from
+  the repo root to boot everything together
 
-# Building For Production
-
-To build this application for production:
+## Getting Started
 
 ```bash
-npm run build
+pnpm install
+pnpm dev
 ```
 
-## Testing
+The app runs at `http://localhost:3000`.
 
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
+## Commands
 
-```bash
-npm run test
+| Task                  | Command                  |
+| --------------------- | ------------------------ |
+| Dev server            | `pnpm dev`               |
+| Build                 | `pnpm build`             |
+| Tests                 | `pnpm test`              |
+| Type check            | `pnpm exec tsc --noEmit` |
+| Lint                  | `pnpm lint`              |
+| Format                | `pnpm format`            |
+| Regenerate API client | `pnpm orval`             |
+| Deploy (production)   | `pnpm deploy`            |
+| Deploy (preview)      | `pnpm deploy:preview`    |
+| Local CF preview      | `pnpm preview:cf`        |
+| Tail CF logs          | `pnpm cf:tail`           |
+
+Prettier also runs automatically on save via an editor hook.
+
+## Project Structure
+
+```
+frontend/
+├── src/
+│   ├── features/
+│   │   └── <Feature>/
+│   │       └── <Action>/     # schema, server functions, tests, and components for one action
+│   ├── components/            # shared, feature-agnostic components (shadcn/ui primitives, layout chrome)
+│   ├── lib/                    # cross-cutting infrastructure (Supabase clients, auth middleware)
+│   ├── middleware/            # auth middleware for server functions
+│   ├── routes/                 # TanStack Router file-based routes
+│   └── api/                    # Orval-generated API client (do not edit manually)
+└── context/                    # frontend-specific architecture & conventions
 ```
 
-## Styling
+A component lives in `<Feature>/<Action>/components/` unless two or more actions use it, in which case it
+moves up to `src/components/`. Routes import from `src/features/`, never the reverse. See
+[`AGENTS.md`](AGENTS.md) for the full conventions.
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+## API Client
 
-### Removing Tailwind CSS
+[Orval](https://orval.dev/) generates the typed client (`src/api/picnivo-api.ts`) from the backend's
+OpenAPI spec (`backend/Picnivo.API/Picnivo.API.json`). Run `pnpm orval` after backend endpoint changes.
 
-If you prefer not to use Tailwind CSS:
+## Authentication
 
-1. Remove the demo pages in `src/routes/demo/`
-2. Replace the Tailwind import in `src/styles.css` with your own styles
-3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
-4. Uninstall the packages: `npm install @tailwindcss/vite tailwindcss -D`
+Supabase Auth via `@supabase/ssr` for cookie-based sessions. The `_authenticated` layout route guards
+protected pages, redirecting to `/login` when there's no session. See
+[`AGENTS.md`](AGENTS.md#authentication) for client/server setup details.
 
+## Design
 
+UI follows the references in `context/foundation/design/` (JSX mockups and CSS) — check there before
+improvising layout or styling. Built with [shadcn/ui](https://ui.shadcn.com/) on Tailwind v4, which
+configures design tokens via a CSS `@theme` block in `src/styles.css` rather than `tailwind.config.js`.
 
-## Routing
+## Deployment
 
-This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
-
-### Adding A Route
-
-To add a new route to your application just add a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
-```
-
-Then anywhere in your JSX you can use it like so:
-
-```tsx
-<Link to="/about">About</Link>
-```
-
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you render `{children}` in the `shellComponent`.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
-
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { title: 'My App' },
-    ],
-  }),
-  shellComponent: ({ children }) => (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <header>
-          <nav>
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
-          </nav>
-        </header>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  ),
-})
-```
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-## Server Functions
-
-TanStack Start provides server functions that allow you to write server-side code that seamlessly integrates with your client components.
-
-```tsx
-import { createServerFn } from '@tanstack/react-start'
-
-const getServerTime = createServerFn({
-  method: 'GET',
-}).handler(async () => {
-  return new Date().toISOString()
-})
-
-// Use in a component
-function MyComponent() {
-  const [time, setTime] = useState('')
-  
-  useEffect(() => {
-    getServerTime().then(setTime)
-  }, [])
-  
-  return <div>Server time: {time}</div>
-}
-```
-
-## API Routes
-
-You can create API routes by using the `server` property in your route definitions:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-import { json } from '@tanstack/react-start'
-
-export const Route = createFileRoute('/api/hello')({
-  server: {
-    handlers: {
-      GET: () => json({ message: 'Hello, World!' }),
-    },
-  },
-})
-```
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-
-export const Route = createFileRoute('/people')({
-  loader: async () => {
-    const response = await fetch('https://swapi.dev/api/people')
-    return response.json()
-  },
-  component: PeopleComponent,
-})
-
-function PeopleComponent() {
-  const data = Route.useLoaderData()
-  return (
-    <ul>
-      {data.results.map((person) => (
-        <li key={person.name}>{person.name}</li>
-      ))}
-    </ul>
-  )
-}
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-# Demo files
-
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
-
-For TanStack Start specific documentation, visit [TanStack Start](https://tanstack.com/start).
+Deployed to Cloudflare Workers via Wrangler. Local secrets go in `.dev.vars` (git-ignored); production
+secrets are set with `wrangler secret put KEY`. CI runs on every PR touching `frontend/`
+(`.github/workflows/ci-frontend.yml`).
