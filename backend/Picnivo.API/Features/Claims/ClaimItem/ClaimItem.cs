@@ -54,12 +54,15 @@ public static class ClaimItem
             @event.DateOptionIds
         );
 
+        if (chosenDateOptionId is null)
+        {
+            return Results.StatusCode(StatusCodes.Status403Forbidden);
+        }
+
+        var chosenId = chosenDateOptionId.Value;
+
         var isComing = participant.Attendance == AttendanceStatus.Coming;
-        if (
-            !isComing
-            && participant.Attendance == AttendanceStatus.Undecided
-            && chosenDateOptionId is { } chosenId
-        )
+        if (!isComing && participant.Attendance == AttendanceStatus.Undecided)
         {
             isComing = await db.DateVotes.AnyAsync(
                 v =>

@@ -36,7 +36,7 @@ public class ClaimItemHandlerTests
         await using var db = TestDb.Create();
         var (token, participantId, itemId, _, _) = await SeedEventAsync(
             db,
-            dateOptionCount: 2,
+            dateOptionCount: 1,
             attendance: AttendanceStatus.Coming
         );
 
@@ -53,6 +53,30 @@ public class ClaimItemHandlerTests
         result.ShouldBeOfType<NoContent>();
         var claim = await db.ItemClaims.SingleAsync(c => c.EventItemId == itemId);
         claim.ParticipantId.ShouldBe(participantId);
+    }
+
+    [Fact]
+    public async Task WhenMultiDateAndNoChosenDate_ReturnsForbidden()
+    {
+        // Arrange
+        await using var db = TestDb.Create();
+        var (token, participantId, itemId, _, _) = await SeedEventAsync(
+            db,
+            dateOptionCount: 2,
+            attendance: AttendanceStatus.Coming
+        );
+
+        // Act
+        var result = await ClaimItemHandler.Handle(
+            token,
+            itemId,
+            participantId,
+            db,
+            CancellationToken.None
+        );
+
+        // Assert
+        result.ShouldBeOfType<StatusCodeHttpResult>().StatusCode.ShouldBe(403);
     }
 
     [Fact]
