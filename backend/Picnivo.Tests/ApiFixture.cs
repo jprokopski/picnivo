@@ -1,4 +1,5 @@
 using System.Threading.Channels;
+using EntityFramework.Exceptions.PostgreSQL;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -178,7 +179,9 @@ public class CustomWebApplicationFactory(string connectionString) : WebApplicati
             if (descriptor is not null)
                 services.Remove(descriptor);
 
-            services.AddDbContext<PicnivoDbContext>(options => options.UseNpgsql(connectionString));
+            services.AddDbContext<PicnivoDbContext>(options =>
+                options.UseNpgsql(connectionString).UseExceptionProcessor()
+            );
 
             services
                 .AddAuthentication(TestAuthHandler.SchemeName)

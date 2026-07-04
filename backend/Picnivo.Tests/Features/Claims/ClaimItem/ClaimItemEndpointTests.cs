@@ -49,6 +49,49 @@ public class ClaimItemEndpointTests(ApiFixture fixture)
     }
 
     [Fact]
+    public async Task SecondClaimOnClaimedItem_Returns409()
+    {
+        // Arrange
+        await using var ctx = await fixture.CheckOutAsync();
+        var (token, itemId, aliceId, bobId) = await SeedEventWithTwoComingParticipantsAsync(
+            ctx.Services
+        );
+        await ctx.ApiClient.ClaimItemAsync(token, itemId, aliceId);
+
+        // Act
+        var result = await SafeClaimAsync(ctx.ApiClient, token, itemId, bobId);
+
+        // Assert
+        result.ShouldBe(409);
+
+        using var scope = ctx.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<PicnivoDbContext>();
+        (await db.ItemClaims.CountAsync(c => c.EventItemId == itemId)).ShouldBe(1);
+    }
+
+    [Fact]
+    public async Task WhenIneligible_DirectApiCall_Returns403()
+    {
+        // Arrange
+        await using var ctx = await fixture.CheckOutAsync();
+        var (token, itemId, participantId) = await SeedEventWithIneligibleParticipantAsync(
+            ctx.Services
+        );
+
+        // Act
+        var ex = await Should.ThrowAsync<ApiException>(() =>
+            ctx.ApiClient.ClaimItemAsync(token, itemId, participantId)
+        );
+
+        // Assert
+        ex.StatusCode.ShouldBe(403);
+
+        using var scope = ctx.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<PicnivoDbContext>();
+        (await db.ItemClaims.AnyAsync(c => c.EventItemId == itemId)).ShouldBeFalse();
+    }
+
+    [Fact]
     public async Task ReleaseAfterClaim_FreesTheItem()
     {
         // Arrange
@@ -147,5 +190,60 @@ public class ClaimItemEndpointTests(ApiFixture fixture)
 
         await db.SaveChangesAsync();
         return (token, item.Id, alice.Id, bob.Id);
+    }
+
+    private static async Task<(
+        string Token,
+        Guid ItemId,
+        Guid ParticipantId
+    )> SeedEventWithIneligibleParticipantAsync(
+        IServiceProvider services,
+        string token = "testtoken02"
+    )
+    {
+        using var scope = services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<PicnivoDbContext>();
+        var organizerId = Guid.NewGuid();
+        db.Organizers.Add(
+            new Organizer
+            {
+                Id = organizerId,
+                DisplayName = "Organizer",
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
+
+        var item = new EventItem { Id = Guid.CreateVersion7(), Label = "Sandwiches" };
+        var @event = new Event
+        {
+            Id = Guid.CreateVersion7(),
+            OrganizerId = organizerId,
+            Title = "Test Picnic",
+            Token = token,
+            CreatedAt = DateTimeOffset.UtcNow,
+            DateOptions =
+            [
+                new DateOption
+                {
+                    Id = Guid.CreateVersion7(),
+                    StartsAt = DateTimeOffset.UtcNow.AddDays(7),
+                },
+            ],
+            Items = [item],
+        };
+        db.Events.Add(@event);
+
+        var participant = new Participant
+        {
+            Id = Guid.CreateVersion7(),
+            EventId = @event.Id,
+            DisplayName = "Charlie",
+            Attendance = AttendanceStatus.Undecided,
+            CreatedAt = DateTimeOffset.UtcNow,
+        };
+        db.Participants.Add(participant);
+
+        await db.SaveChangesAsync();
+        return (token, item.Id, participant.Id);
     }
 }

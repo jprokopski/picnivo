@@ -7,6 +7,13 @@ using ClaimItemHandler = Picnivo.API.Features.Claims.ClaimItem.ClaimItem;
 
 namespace Picnivo.Tests.Features.Claims.ClaimItem;
 
+// Eligibility matrix (server-enforced, ClaimItem.cs:57-79):
+//   Coming                          -> allowed   (WhenAttendanceComing_AllowsClaim)
+//   Undecided + Yes on chosen date  -> allowed   (WhenVotedYesOnChosenDate_AllowsClaim)
+//   single-date event, Coming       -> allowed   (WithSingleDateEvent_AllowsClaimAfterConfirm)
+//   Undecided, no Yes vote          -> forbidden (WhenNotComingAndNoYesVote_ReturnsForbidden)
+//   Yes vote, then Out              -> forbidden (WhenVotedYesButAttendanceOut_ReturnsForbidden)
+//   multi-date, no chosen date      -> forbidden (WhenMultiDateAndNoChosenDate_ReturnsForbidden)
 public class ClaimItemHandlerTests
 {
     [Fact]
@@ -14,7 +21,7 @@ public class ClaimItemHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
-        var (token, participantId, itemId, _, _) = await SeedEventAsync(db, dateOptionCount: 2);
+        var (token, participantId, itemId, _, _) = await SeedEventAsync(db, dateOptionCount: 1);
 
         // Act
         var result = await ClaimItemHandler.Handle(
@@ -36,7 +43,7 @@ public class ClaimItemHandlerTests
         await using var db = TestDb.Create();
         var (token, participantId, itemId, _, _) = await SeedEventAsync(
             db,
-            dateOptionCount: 2,
+            dateOptionCount: 1,
             attendance: AttendanceStatus.Coming
         );
 
@@ -53,6 +60,30 @@ public class ClaimItemHandlerTests
         result.ShouldBeOfType<NoContent>();
         var claim = await db.ItemClaims.SingleAsync(c => c.EventItemId == itemId);
         claim.ParticipantId.ShouldBe(participantId);
+    }
+
+    [Fact]
+    public async Task WhenMultiDateAndNoChosenDate_ReturnsForbidden()
+    {
+        // Arrange
+        await using var db = TestDb.Create();
+        var (token, participantId, itemId, _, _) = await SeedEventAsync(
+            db,
+            dateOptionCount: 2,
+            attendance: AttendanceStatus.Coming
+        );
+
+        // Act
+        var result = await ClaimItemHandler.Handle(
+            token,
+            itemId,
+            participantId,
+            db,
+            CancellationToken.None
+        );
+
+        // Assert
+        result.ShouldBeOfType<StatusCodeHttpResult>().StatusCode.ShouldBe(403);
     }
 
     [Fact]
@@ -90,6 +121,44 @@ public class ClaimItemHandlerTests
 
         // Assert
         result.ShouldBeOfType<NoContent>();
+    }
+
+    [Fact]
+    public async Task WhenVotedYesButAttendanceOut_ReturnsForbidden()
+    {
+        // Arrange
+        await using var db = TestDb.Create();
+        var (token, participantId, itemId, eventId, dateOptionIds) = await SeedEventAsync(
+            db,
+            dateOptionCount: 2,
+            attendance: AttendanceStatus.Out
+        );
+        var chosenDateOptionId = dateOptionIds[0];
+        var @event = await db.Events.SingleAsync(e => e.Id == eventId);
+        @event.ChosenDateOptionId = chosenDateOptionId;
+        db.DateVotes.Add(
+            new DateVote
+            {
+                Id = Guid.CreateVersion7(),
+                ParticipantId = participantId,
+                DateOptionId = chosenDateOptionId,
+                Choice = VoteChoice.Yes,
+            }
+        );
+        await db.SaveChangesAsync();
+        db.ChangeTracker.Clear();
+
+        // Act
+        var result = await ClaimItemHandler.Handle(
+            token,
+            itemId,
+            participantId,
+            db,
+            CancellationToken.None
+        );
+
+        // Assert
+        result.ShouldBeOfType<StatusCodeHttpResult>().StatusCode.ShouldBe(403);
     }
 
     [Fact]

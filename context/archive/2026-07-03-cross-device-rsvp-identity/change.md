@@ -1,10 +1,10 @@
 ---
 change_id: cross-device-rsvp-identity
 title: Fix attendance dialog missing after organizer logs in on a new device
-status: implemented
+status: archived
 created: 2026-07-03
 updated: 2026-07-04
-archived_at: null
+archived_at: 2026-07-04T02:26:29Z
 ---
 
 ## Notes
