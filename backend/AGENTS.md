@@ -11,7 +11,8 @@
 
 ## Local Database
 
-Local Postgres runs via Supabase CLI on port 54322.
+Local Postgres runs via Supabase CLI on port 54322. Config (`config.toml`) lives in `supabase/` at the
+repo root, shared with the frontend — run these from the repo root, not `backend/`.
 
 - Start: `supabase start -x realtime,storage-api,imgproxy,postgrest,postgres-meta,studio,edge-runtime,logflare,vector,supavisor`
 - Stop: `supabase stop`
@@ -26,7 +27,7 @@ Local Postgres runs via Supabase CLI on port 54322.
 - Protected endpoints use `.RequireAuthorization()` — the `sub` claim carries the Supabase user ID
 - `organizers` table auto-provisioned via `handle_new_user()` trigger on `auth.users` INSERT
 - Production secrets: `Supabase__Authority`, `Frontend__Url` set via `fly secrets set`
-- Local Google OAuth: set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in `backend/supabase/.env` (gitignored)
+- Local Google OAuth: set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in `supabase/.env` at the repo root (gitignored)
 
 ## Project Structure
 

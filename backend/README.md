@@ -12,10 +12,12 @@ architecture, EF Core, and Supabase Auth.
 ## Getting Started
 
 ```bash
-dotnet tool restore    # one-time after clone
+dotnet tool restore    # one-time after clone, from backend/
 
+cd ..    # supabase/config.toml lives at the repo root, shared with the frontend
 supabase start -x realtime,storage-api,imgproxy,postgrest,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
 
+cd backend
 dotnet ef database update --project Picnivo.API
 
 cd Picnivo.API
