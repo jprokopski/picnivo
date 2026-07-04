@@ -1,7 +1,7 @@
 ---
 change_id: testing-authorization-boundaries
 title: Authorization boundaries
-status: implemented
+status: impl_reviewed
 created: 2026-07-04
 updated: 2026-07-04
 archived_at: null

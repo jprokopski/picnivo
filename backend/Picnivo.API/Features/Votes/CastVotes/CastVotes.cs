@@ -79,6 +79,8 @@ public static class CastVotes
                 .ToListAsync(ct);
 
             ApplyVotes(db, req, participantId, afterRace);
+            // Single retry only: a third caller colliding with this save is out of scope
+            // (two-caller race) and will surface as the global 409/500.
             await db.SaveChangesAsync(ct);
         }
 
