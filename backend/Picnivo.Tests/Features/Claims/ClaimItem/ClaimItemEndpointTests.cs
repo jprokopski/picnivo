@@ -49,6 +49,27 @@ public class ClaimItemEndpointTests(ApiFixture fixture)
     }
 
     [Fact]
+    public async Task SecondClaimOnClaimedItem_Returns409()
+    {
+        // Arrange
+        await using var ctx = await fixture.CheckOutAsync();
+        var (token, itemId, aliceId, bobId) = await SeedEventWithTwoComingParticipantsAsync(
+            ctx.Services
+        );
+        await ctx.ApiClient.ClaimItemAsync(token, itemId, aliceId);
+
+        // Act
+        var result = await SafeClaimAsync(ctx.ApiClient, token, itemId, bobId);
+
+        // Assert
+        result.ShouldBe(409);
+
+        using var scope = ctx.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<PicnivoDbContext>();
+        (await db.ItemClaims.CountAsync(c => c.EventItemId == itemId)).ShouldBe(1);
+    }
+
+    [Fact]
     public async Task WhenIneligible_DirectApiCall_Returns403()
     {
         // Arrange

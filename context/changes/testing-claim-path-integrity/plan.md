@@ -284,8 +284,8 @@ None. Changes are a single added guard (one comparison) in the claim handler and
 
 #### Manual
 
-- [ ] 1.5 Single-date and locked-date claim flows still work in the running app
-- [ ] 1.6 Multi-date event with no locked date rejects a claim attempt (403)
+- [x] 1.5 Single-date and locked-date claim flows still work in the running app
+- [x] 1.6 Multi-date event with no locked date rejects a claim attempt (403)
 
 ### Phase 2: Close Risk #2 — eligibility matrix, direct-API bypass, doc correction
 
@@ -305,12 +305,12 @@ None. Changes are a single added guard (one comparison) in the claim handler and
 
 #### Automated
 
-- [ ] 3.1 All backend tests pass: `dotnet test backend/Picnivo.Tests`
-- [ ] 3.2 Existing `RaceForSameItem_OneWinsOneGetsConflict` still passes (no double-interception regression)
-- [ ] 3.3 `SecondClaimOnClaimedItem_Returns409` exists and passes (409 + exactly one persisted claim)
-- [ ] 3.4 Full suite green after the `ApiFixture` change
+- [x] 3.1 All backend tests pass: `dotnet test backend/Picnivo.Tests`
+- [x] 3.2 Existing `RaceForSameItem_OneWinsOneGetsConflict` still passes (no double-interception regression)
+- [x] 3.3 `SecondClaimOnClaimedItem_Returns409` exists and passes (409 + exactly one persisted claim)
+- [x] 3.4 Full suite green after the `ApiFixture` change
 
 #### Manual
 
-- [ ] 3.5 Endpoint suite re-run 2–3 times confirms race test stability and no flakiness
-- [ ] 3.6 `ApiFixture.cs` exception-processor registration visibly matches `Program.cs` prod wiring
+- [x] 3.5 Endpoint suite re-run 2–3 times confirms race test stability and no flakiness
+- [x] 3.6 `ApiFixture.cs` exception-processor registration visibly matches `Program.cs` prod wiring
