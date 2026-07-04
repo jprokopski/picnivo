@@ -248,8 +248,8 @@ No schema change — the cascade FKs already exist. No data migration.
 
 #### Manual
 
-- [ ] 2.6 Danger-zone delete control visible to organizer, absent for non-organizer
-- [ ] 2.7 AlertDialog confirm opens; cancel leaves event intact
-- [ ] 2.8 Confirm deletes event and navigates to `/events` with the event removed from the list
-- [ ] 2.9 Simulated failure surfaces via `toast.error`, not inline text
-- [ ] 2.10 Delete not possible from UI for non-owned event (control hidden)
+- [x] 2.6 Danger-zone delete control visible to organizer, absent for non-organizer — 68a89fb
+- [x] 2.7 AlertDialog confirm opens; cancel leaves event intact — 68a89fb
+- [x] 2.8 Confirm deletes event and navigates to `/events` with the event removed from the list — 68a89fb
+- [x] 2.9 Simulated failure surfaces via `toast.error`, not inline text — 68a89fb
+- [x] 2.10 Delete not possible from UI for non-owned event (control hidden) — 68a89fb
