@@ -12,3 +12,8 @@ dist-ssr
 __unconfig*
 todos.json
 .dev.vars
+
+# Playwright
+/test-results/
+/playwright-report/
+tests/e2e/.auth/

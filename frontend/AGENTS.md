@@ -5,6 +5,7 @@
 - Dev server: `pnpm dev`
 - Build: `pnpm build`
 - Tests: `pnpm test` (Vitest + Testing Library)
+- E2E: `pnpm test:e2e` (Playwright — full workflow/rules in `context/foundation/test-plan.md` §6.7)
 - Type check: `pnpm exec tsc --noEmit`
 - Lint: `pnpm lint` (ESLint)
 - Format: `pnpm format` (Prettier — also runs automatically via hook on every edit)
@@ -74,6 +75,11 @@ src/features/
 - Auth middleware (`src/middleware/auth.ts`): validates session and injects `user` + `supabase` into server function context — use for protected server functions
 - `_authenticated` layout route guards nested routes — redirects to `/login` if `context.user` is null
 - Env vars: `.dev.vars` for server secrets (`SUPABASE_URL`, `SUPABASE_ANON_KEY`), `.env` for client (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`)
+
+## E2E Testing (Playwright)
+
+Full workflow, rules, and gotchas (auth setup, hydration race, locators):
+`context/foundation/test-plan.md` §6.7.
 
 <!-- intent-skills:start -->
 
