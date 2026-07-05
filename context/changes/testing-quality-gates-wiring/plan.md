@@ -394,14 +394,14 @@ verifying the gate mechanics.
 
 #### Automated
 
-- [x] 3.1 `backend/scripts/pre-commit-tests.sh` executable and passes `bash -n`
-- [x] 3.2 Path → filter mapping correct for a known risk file (`Features.Claims.ClaimItem`)
-- [x] 3.3 A scoped run executes standalone (`dotnet build … && dotnet test --no-build --no-restore --filter …`)
+- [x] 3.1 `backend/scripts/pre-commit-tests.sh` executable and passes `bash -n` — f4e9012
+- [x] 3.2 Path → filter mapping correct for a known risk file (`Features.Claims.ClaimItem`) — f4e9012
+- [x] 3.3 A scoped run executes standalone (`dotnet build … && dotnet test --no-build --no-restore --filter …`) — f4e9012
 
 #### Manual
 
-- [x] 3.4 Committing a staged risk `.cs` runs only the mapped slice tests
-- [x] 3.5 Multiple staged risk `.cs` across slices run the OR-joined union
-- [x] 3.6 Staging a cross-cutting file escalates to the full backend suite
-- [x] 3.7 A failing backend test aborts the commit
-- [x] 3.8 A commit with no staged backend `.cs` skips the backend gate
+- [x] 3.4 Committing a staged risk `.cs` runs only the mapped slice tests — f4e9012
+- [x] 3.5 Multiple staged risk `.cs` across slices run the OR-joined union — f4e9012
+- [x] 3.6 Staging a cross-cutting file escalates to the full backend suite — f4e9012
+- [x] 3.7 A failing backend test aborts the commit — f4e9012
+- [x] 3.8 A commit with no staged backend `.cs` skips the backend gate — f4e9012
