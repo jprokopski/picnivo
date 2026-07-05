@@ -24,7 +24,7 @@
     "cf:tail": "wrangler tail",
     "cf:tail:preview": "wrangler tail --env preview",
     "orval": "orval",
-    "prepare": "cd .. && husky frontend/.husky"
+    "prepare": "cd .. && husky .husky"
   },
   "dependencies": {
     "@lingui/core": "^6.2.0",

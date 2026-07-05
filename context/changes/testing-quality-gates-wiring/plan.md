@@ -367,28 +367,28 @@ verifying the gate mechanics.
 
 #### Automated
 
-- [x] 1.1 `.claude/settings.json` is valid JSON (`jq .`)
-- [x] 1.2 Frontend scoped test command works standalone (`pnpm exec vitest related … --run`)
+- [x] 1.1 `.claude/settings.json` is valid JSON (`jq .`) — 29f1f39
+- [x] 1.2 Frontend scoped test command works standalone (`pnpm exec vitest related … --run`) — 29f1f39
 
 #### Manual
 
-- [x] 1.3 Editing a risk-area file triggers the related test run in the hook
-- [x] 1.4 A failing related test blocks (`exit 2`) and output appears in agent context
-- [x] 1.5 Editing a non-risk frontend file does NOT trigger a test run
+- [x] 1.3 Editing a risk-area file triggers the related test run in the hook — 29f1f39
+- [x] 1.4 A failing related test blocks (`exit 2`) and output appears in agent context — 29f1f39
+- [x] 1.5 Editing a non-risk frontend file does NOT trigger a test run — 29f1f39
 
 ### Phase 2: Relocate Husky to a Repo-Root Dispatcher
 
 #### Automated
 
-- [ ] 2.1 `frontend/scripts/pre-commit.sh` and `.husky/pre-commit` are executable
-- [ ] 2.2 `git config core.hooksPath` reports the root `.husky/_` after prepare
-- [ ] 2.3 `frontend/package.json` valid JSON; `prepare` targets root `.husky`
+- [x] 2.1 `frontend/scripts/pre-commit.sh` and `.husky/pre-commit` are executable
+- [x] 2.2 `git config core.hooksPath` reports the root `.husky/_` after prepare
+- [x] 2.3 `frontend/package.json` valid JSON; `prepare` targets root `.husky`
 
 #### Manual
 
-- [ ] 2.4 A real commit runs the frontend gate via the relocated dispatcher (unchanged behavior)
-- [ ] 2.5 `pnpm run i18n:sync` still runs on commit
-- [ ] 2.6 The old `frontend/.husky/pre-commit` no longer fires (no double-run)
+- [x] 2.4 A real commit runs the frontend gate via the relocated dispatcher (unchanged behavior)
+- [x] 2.5 `pnpm run i18n:sync` still runs on commit
+- [x] 2.6 The old `frontend/.husky/pre-commit` no longer fires (no double-run)
 
 ### Phase 3: Backend Pre-Commit Scoped-Test Gate
 
