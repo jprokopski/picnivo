@@ -8,6 +8,10 @@
   The MVP event coordinator for small groups — pick a date, split the logistics, stop losing plans in group chat.
 </p>
 
+<p align="center">
+  <a href="https://picnivo.com">picnivo.com</a>
+</p>
+
 ## What is this?
 
 Organizing a grill, picnic, or trip with friends usually dies in a pile of chat messages: date polls,
