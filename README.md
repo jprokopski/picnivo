@@ -57,6 +57,4 @@ For working on just one side, see the setup steps in [`frontend/README.md`](fron
 ## Git Workflow
 
 Feature branches off `main`, merged via pull request. CI runs per-project (`.github/workflows/`) and only
-triggers on changes under `frontend/` or `backend/` respectively. `ci-e2e.yml` additionally runs the
-Playwright suite against the real stack (`dev.sh`) on any PR touching `frontend/`, `backend/`,
-`supabase/`, or `dev.sh`.
+triggers on changes under `frontend/` or `backend/` respectively.

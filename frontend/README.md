@@ -83,5 +83,4 @@ configures design tokens via a CSS `@theme` block in `src/styles.css` rather tha
 
 Deployed to Cloudflare Workers via Wrangler. Local secrets go in `.dev.vars` (git-ignored); production
 secrets are set with `wrangler secret put KEY`. CI runs on every PR touching `frontend/`
-(`.github/workflows/ci-frontend.yml`); the Playwright suite runs against the real stack via
-`.github/workflows/ci-e2e.yml` on PRs touching `frontend/`, `backend/`, `supabase/`, or `dev.sh`.
+(`.github/workflows/ci-frontend.yml`).

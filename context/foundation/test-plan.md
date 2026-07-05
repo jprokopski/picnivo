@@ -85,7 +85,7 @@ the MCP/tools actually exposed in the current session.
 | unit + integration (backend) | xUnit | 2.9.3 | `dotnet test`; tests mirror `Features/<Area>/<Action>/` with separate handler/endpoint/validator files |
 | endpoint/integration host (backend) | Microsoft.AspNetCore.Mvc.Testing (WebApplicationFactory) | 10.0.* | Spins the API in-process for endpoint round-trips |
 | integration DB (backend) | Microsoft.EntityFrameworkCore.Sqlite + Testcontainers.PostgreSql | 10.0.5 / 4.* | SQLite in-memory for fast handler tests; **real Postgres container available** — required where contention/constraints must match prod (see §3 Phase 1) |
-| e2e | Playwright | ^1.61.1 | `pnpm --dir frontend test:e2e`; real stack (Supabase + .NET backend + frontend dev server), no mocks; tests in `frontend/tests/e2e/` — see §6.7; wired into CI via `.github/workflows/ci-e2e.yml` |
+| e2e | Playwright | ^1.61.1 | `pnpm --dir frontend test:e2e`; real stack (Supabase + .NET backend + frontend dev server), no mocks; tests in `frontend/tests/e2e/` — see §6.7; run locally only, not wired into CI |
 
 **Stack grounding tools (current session):**
 - Docs: Context7 MCP — available; will ground xUnit/WebApplicationFactory concurrency-test setup and EF Core constraint/transaction behavior during per-phase research; checked: 2026-07-04
@@ -105,7 +105,7 @@ phase lands; before that, the gate is `planned`.
 | unit + integration | local + CI | required after §3 Phase 1 | logic regressions on the claim/auth/tally paths |
 | scoped tests per-edit | local (agent loop) | recommended after §3 Phase 4 | regressions at edit time on risk-area files |
 | scoped tests pre-commit | local (git hook) | recommended after §3 Phase 4 | what slipped past per-edit, on staged risk files (extends existing husky/lint-staged) |
-| e2e on critical flows  | local (`pnpm test:e2e`) + CI (`.github/workflows/ci-e2e.yml`) | required | broken end-to-end participant flow; runs the real stack (Supabase + .NET backend + frontend) via `dev.sh` on every PR touching `frontend/`, `backend/`, `supabase/`, or `dev.sh` |
+| e2e on critical flows  | local (`pnpm test:e2e`) only | recommended | broken end-to-end participant flow; runs the real stack (Supabase + .NET backend + frontend) via `dev.sh` — not wired into CI |
 
 ## 6. Cookbook Patterns
 
