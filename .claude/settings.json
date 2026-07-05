@@ -27,6 +27,12 @@
             "command": "jq -r '.tool_input.file_path // .tool_response.filePath' | { read -r f; case \"$f\" in /Users/jpro/code/picnivo/frontend/*.ts|/Users/jpro/code/picnivo/frontend/*.tsx) cd /Users/jpro/code/picnivo/frontend && out=$(pnpm exec tsc --noEmit 2>&1); code=$?; if [ $code -ne 0 ]; then echo \"$out\" >&2; exit 2; fi ;; esac; }",
             "timeout": 30,
             "statusMessage": "Typechecking..."
+          },
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path // .tool_response.filePath' | { read -r f; case \"$f\" in /Users/jpro/code/picnivo/frontend/src/features/events/get-event-by-token/*.ts|/Users/jpro/code/picnivo/frontend/src/features/events/get-event-by-token/*.tsx|/Users/jpro/code/picnivo/frontend/src/features/events/set-attendance/*.ts|/Users/jpro/code/picnivo/frontend/src/features/events/set-attendance/*.tsx) cd /Users/jpro/code/picnivo/frontend && out=$(pnpm exec vitest related \"$f\" --run 2>&1); code=$?; if [ $code -ne 0 ]; then echo \"$out\" >&2; exit 2; fi ;; esac; }",
+            "timeout": 30,
+            "statusMessage": "Testing..."
           }
         ]
       }

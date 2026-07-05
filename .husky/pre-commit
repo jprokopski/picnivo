@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+set -e
+frontend/scripts/pre-commit.sh
+backend/scripts/pre-commit-tests.sh

@@ -63,10 +63,10 @@ orchestrator updates Status as artifacts appear on disk.
 
 | # | Phase name | Goal (one line) | Risks covered | Test types | Status | Change folder |
 |---|---|---|---|---|---|---|
-| 1 | Claim-path integrity | Prove FCFS holds under contention and the eligibility gate is server-enforced and unbypassable | #1, #2 | integration + concurrency | complete | context/changes/testing-claim-path-integrity |
-| 2 | Authorization boundaries | Prove only owners act on owned resources and ballots cannot be stuffed | #3, #4 | endpoint + integration | complete | context/changes/testing-authorization-boundaries |
-| 3 | Aggregation correctness | Pin the best-date ranking, tie-break, and attendance inclusion | #5 | unit + integration | complete | context/changes/testing-aggregation-correctness |
-| 4 | Quality-gates wiring | Fire scoped tests on claim/auth/tally risk files per-edit and pre-commit | cross-cutting (locks #1–#5) | gates (per-edit hook + pre-commit) | not started | — |
+| 1 | Claim-path integrity | Prove FCFS holds under contention and the eligibility gate is server-enforced and unbypassable | #1, #2 | integration + concurrency | complete | context/archive/2026-07-04-testing-claim-path-integrity |
+| 2 | Authorization boundaries | Prove only owners act on owned resources and ballots cannot be stuffed | #3, #4 | endpoint + integration | complete | context/archive/2026-07-04-testing-authorization-boundaries |
+| 3 | Aggregation correctness | Pin the best-date ranking, tie-break, and attendance inclusion | #5 | unit + integration | complete | context/archive/2026-07-05-testing-aggregation-correctness |
+| 4 | Quality-gates wiring | Fire scoped tests on claim/auth/tally risk files per-edit and pre-commit | cross-cutting (locks #1–#5) | gates (per-edit hook + pre-commit) | complete | context/archive/2026-07-05-testing-quality-gates-wiring |
 
 **Status vocabulary** (fixed — parser literals): `not started` → `change opened` → `researched` → `planned` → `implementing` → `complete`.
 
