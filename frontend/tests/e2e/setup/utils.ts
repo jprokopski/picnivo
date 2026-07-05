@@ -1,11 +1,16 @@
 import type { Locator } from "@playwright/test";
 
-// TanStack Start streams each route and defers hydrating an interactive
-// boundary until it sees a real user event land on it. Playwright's
-// `.fill()` sets a value without dispatching a click, so filling a field as
-// the very first interaction on a freshly navigated page can silently no-op
-// against not-yet-hydrated React state. A genuine click on the first field
-// wakes hydration before any subsequent fill/click in the flow.
+// Vite's dev server transforms each route's client bundle lazily, on first
+// request from a real browser — cold enough after a fresh `pnpm dev` that a
+// test's first interaction can race past hydration and get silently dropped
+// (the fill lands before React's onChange is attached, and never replays).
+// `networkidle` can't detect this: TanStack Devtools keeps an SSE console
+// pipe open in dev, so the network never goes idle. Instead we wait for the
+// root route's post-hydration `useEffect` to stamp `data-hydrated` on
+// `<html>` (see `__root.tsx`) — a real, deterministic hydration signal.
 export async function wakeHydration(field: Locator) {
+  await field
+    .page()
+    .waitForSelector("html[data-hydrated='true']", { state: "attached" });
   await field.click();
 }

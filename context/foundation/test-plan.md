@@ -175,14 +175,21 @@ future pattern and points at §3.
   **explicit** empty storage state — `browser.newContext({ storageState: {
   cookies: [], origins: [] } })` — otherwise it silently inherits the
   organizer's `storageState`.
-- **Hydration race**: TanStack Start streams a route before client hydration
-  attaches handlers. `.fill()` alone can land before that and get silently
-  dropped (the DOM value is set but React state never updates, so a
-  dependent button stays disabled forever). Always `.click()` the first field
-  on a freshly navigated page before filling it — see `setup/utils.ts`'s
-  `wakeHydration`. `setup/global-setup.ts` also pre-warms the routes specs touch,
-  since Vite's dev server compiles each route's module graph lazily on first
-  request.
+- **Hydration race**: Vite's dev server compiles each route's *client* bundle
+  lazily, on the first real browser request for it — a plain server-side
+  fetch (e.g. from a Node `globalSetup`) does not warm this, since SSR and
+  client transforms are separate pipelines. On a cold `pnpm dev`, a test's
+  first interaction on a freshly navigated page can race past that compile
+  and past hydration, landing before React's `onChange` is attached — the
+  DOM value is set but React state never updates, so a dependent button
+  stays disabled forever. `networkidle` cannot detect this: TanStack
+  Devtools keeps an SSE console-pipe connection open in dev, so the network
+  never goes idle and the wait just hangs to its timeout. Instead, `__root.tsx`
+  stamps `document.documentElement.dataset.hydrated = "true"` from a
+  post-mount `useEffect` — a real, deterministic hydration signal —
+  and `setup/utils.ts`'s `wakeHydration` waits for `html[data-hydrated='true']`
+  before clicking the first field. Always route the first interaction on a
+  freshly navigated page through `wakeHydration` before filling it.
 - **Locators**: `getByRole` / `getByLabel` / `getByText` first; `getByTestId`
   only when accessibility attributes are ambiguous. Never CSS selectors,
   XPath, or DOM structure.

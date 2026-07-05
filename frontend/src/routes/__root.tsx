@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   HeadContent,
   Scripts,
@@ -33,6 +34,14 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  // Playwright's e2e suite needs a deterministic hydration-complete signal —
+  // networkidle never fires in dev (TanStack Devtools keeps an SSE console
+  // pipe open), and the client bundle can still be mid-transform on a cold
+  // `pnpm dev`. See setup/utils.ts's wakeHydration.
+  useEffect(() => {
+    document.documentElement.dataset.hydrated = "true";
+  }, []);
+
   return (
     <html lang="en">
       <head>
