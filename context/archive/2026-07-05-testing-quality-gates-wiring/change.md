@@ -1,10 +1,10 @@
 ---
 change_id: testing-quality-gates-wiring
 title: Wire per-edit and pre-commit quality gates for claim/auth/tally risk files
-status: impl_reviewed
+status: archived
 created: 2026-07-05
 updated: 2026-07-05
-archived_at: null
+archived_at: 2026-07-05T09:33:25Z
 ---
 
 ## Notes
