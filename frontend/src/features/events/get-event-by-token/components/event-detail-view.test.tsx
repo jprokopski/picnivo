@@ -171,6 +171,28 @@ describe("EventDetailView", () => {
     expect(screen.getByText("Best date so far")).toBeDefined();
   });
 
+  it("falls back to the first date option when neither chosenDateOptionId nor bestDateOptionId is set", () => {
+    const noBestDate: EventDetailResponse = {
+      ...baseEvent,
+      bestDateOptionId: null,
+      chosenDateOptionId: null,
+    };
+    render(
+      <Wrapper>
+        <EventDetailView
+          event={noBestDate}
+          token="tok1"
+          shareUrl="https://picnivo.test/e/tok1"
+          isOrganizer={false}
+          myParticipantId={null}
+        />
+      </Wrapper>,
+    );
+    expect(
+      screen.getByRole("heading", { level: 2, name: /Jun 20/i }),
+    ).toBeDefined();
+  });
+
   it("shows the delete-event control only for the organizer", () => {
     const { rerender } = render(
       <Wrapper>
