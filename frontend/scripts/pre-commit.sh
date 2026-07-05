@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 set -e
 
-cd frontend
+cd "$(dirname "$0")/.."
 npx lint-staged
 pnpm run i18n:sync
