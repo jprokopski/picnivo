@@ -281,24 +281,24 @@ None — test-only change.
 
 #### Automated
 
-- [x] 1.1 Backend tests pass: `dotnet test backend/Picnivo.Tests`
-- [x] 1.2 Backend builds clean: `dotnet build backend/Picnivo.API`
-- [x] 1.3 All four new tests present and green in `GetEventByTokenHandlerTests.cs`
+- [x] 1.1 Backend tests pass: `dotnet test backend/Picnivo.Tests` — 71b641f
+- [x] 1.2 Backend builds clean: `dotnet build backend/Picnivo.API` — 71b641f
+- [x] 1.3 All four new tests present and green in `GetEventByTokenHandlerTests.cs` — 71b641f
 
 #### Manual
 
-- [x] 1.4 Each new test's expected best-date is derivable from the ranking rule alone (oracle hygiene)
-- [x] 1.5 `StartsAt` and attendance tests are named as characterization tests, not FR-011 guarantees
+- [x] 1.4 Each new test's expected best-date is derivable from the ranking rule alone (oracle hygiene) — 71b641f
+- [x] 1.5 `StartsAt` and attendance tests are named as characterization tests, not FR-011 guarantees — 71b641f
 
 ### Phase 2: Frontend hero-selection fallback test + phase close-out
 
 #### Automated
 
-- [ ] 2.1 Frontend tests pass: `pnpm --dir frontend test`
-- [ ] 2.2 Frontend type-checks: `pnpm --dir frontend exec tsc --noEmit`
-- [ ] 2.3 New fallback test present and green in `event-detail-view.test.tsx`
+- [x] 2.1 Frontend tests pass: `pnpm --dir frontend test`
+- [x] 2.2 Frontend type-checks: `pnpm --dir frontend exec tsc --noEmit`
+- [x] 2.3 New fallback test present and green in `event-detail-view.test.tsx`
 
 #### Manual
 
-- [ ] 2.4 §6.5 is filled in (no longer "TBD") and names the Phase 1 reference tests
-- [ ] 2.5 §3 Phase 3 Status reads `complete`; `change.md` status is `complete`
+- [x] 2.4 §6.5 is filled in (no longer "TBD") and names the Phase 1 reference tests
+- [x] 2.5 §3 Phase 3 Status reads `complete`; `change.md` status is `complete`

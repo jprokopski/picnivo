@@ -65,7 +65,7 @@ orchestrator updates Status as artifacts appear on disk.
 |---|---|---|---|---|---|---|
 | 1 | Claim-path integrity | Prove FCFS holds under contention and the eligibility gate is server-enforced and unbypassable | #1, #2 | integration + concurrency | complete | context/changes/testing-claim-path-integrity |
 | 2 | Authorization boundaries | Prove only owners act on owned resources and ballots cannot be stuffed | #3, #4 | endpoint + integration | complete | context/changes/testing-authorization-boundaries |
-| 3 | Aggregation correctness | Pin the best-date ranking, tie-break, and attendance inclusion | #5 | unit + integration | not started | — |
+| 3 | Aggregation correctness | Pin the best-date ranking, tie-break, and attendance inclusion | #5 | unit + integration | complete | context/changes/testing-aggregation-correctness |
 | 4 | Quality-gates wiring | Fire scoped tests on claim/auth/tally risk files per-edit and pre-commit | cross-cutting (locks #1–#5) | gates (per-edit hook + pre-commit) | not started | — |
 
 **Status vocabulary** (fixed — parser literals): `not started` → `change opened` → `researched` → `planned` → `implementing` → `complete`.
@@ -141,7 +141,10 @@ future pattern and points at §3.
 
 ### 6.5 Adding a test for the best-date aggregation
 
-- TBD — see §3 Phase 3 (Aggregation correctness): derive the expected best date from the ranking rule and fixtures, never from the implementation output.
+- **Layer split**: the backend owns *ranking* and *raw per-date vote tallies*; the frontend owns the *attendance-inclusive "X of N can make it"* display and hero-selection fallback. Never write a backend test asserting attendance moves the tally, or a frontend test asserting the client re-ranks dates — it doesn't.
+- **Backend test type**: SQLite in-memory unit test on the static `Handle`, seeding `DateOption`/`Participant`/`DateVote` directly via `DbContext`. No Postgres container — ranking is in-memory LINQ, fully deterministic. **Reference tests**: `backend/Picnivo.Tests/Features/Events/GetEventByToken/GetEventByTokenHandlerTests.cs` — `WithEqualYesCounts_TieBreaksByFewestNo` (fewest-No tie-break), `EqualYesAndNo_TieBreaksByEarliestStartsAt_Characterization` (StartsAt tie-break, named as a characterization test since FR-011 doesn't specify it), `MaybeVotes_AreInertToRanking` (Maybe never feeds the sort), `AttendanceStatus_DoesNotMoveBackendTally_Characterization` (attendance-blind by design).
+- **Frontend test type**: Testing Library render test for the attendance-inclusive predicate (`set-attendance/schema.test.ts`) and the hero-selection fallback chain (`event-detail-view.test.tsx`). **Reference tests**: `set-attendance/schema.test.ts` (every `isEffectivelyComing`/`isEffectivelyOut` branch); `event-detail-view.test.tsx` — `"counts an RSVP'd guest toward the locked date's tally even without a matching vote"` (the `49244ca` regression), `"falls back to the first date option when neither chosenDateOptionId nor bestDateOptionId is set"` (the `chosenDateOptionId ?? bestDateOptionId ?? dateOptions[0]` fallback).
+- **Anti-pattern to avoid**: deriving the expected best-date from running `Handle` (or the component) and asserting the observed output — always derive it from the ranking rule text (most Yes → fewest No → earliest StartsAt) or the PRD/predicate semantics first, then write the fixture to match.
 
 ### 6.6 Adding a vote-integrity / uniqueness-guardrail test
 
