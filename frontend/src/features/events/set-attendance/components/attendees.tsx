@@ -126,7 +126,6 @@ function PersonRow({ participant, myParticipantId }: PersonRowProps) {
           )}
         </div>
       </div>
-      {status}
     </div>
   );
 }

@@ -6,7 +6,7 @@
 >
 > Refresh: re-run `/10x-test-plan --refresh` when stale (see §8).
 >
-> Last updated: 2026-07-04
+> Last updated: 2026-07-05
 
 ## 1. Strategy
 
@@ -85,7 +85,7 @@ the MCP/tools actually exposed in the current session.
 | unit + integration (backend) | xUnit | 2.9.3 | `dotnet test`; tests mirror `Features/<Area>/<Action>/` with separate handler/endpoint/validator files |
 | endpoint/integration host (backend) | Microsoft.AspNetCore.Mvc.Testing (WebApplicationFactory) | 10.0.* | Spins the API in-process for endpoint round-trips |
 | integration DB (backend) | Microsoft.EntityFrameworkCore.Sqlite + Testcontainers.PostgreSql | 10.0.5 / 4.* | SQLite in-memory for fast handler tests; **real Postgres container available** — required where contention/constraints must match prod (see §3 Phase 1) |
-| e2e | none yet | — | No browser MCP in session; e2e would need its own setup and is out of scope for the current rollout |
+| e2e | Playwright | ^1.61.1 | `pnpm --dir frontend test:e2e`; real stack (Supabase + .NET backend + frontend dev server), no mocks; tests in `frontend/tests/e2e/` — see §6.7; run locally only, not wired into CI |
 
 **Stack grounding tools (current session):**
 - Docs: Context7 MCP — available; will ground xUnit/WebApplicationFactory concurrency-test setup and EF Core constraint/transaction behavior during per-phase research; checked: 2026-07-04
@@ -105,7 +105,7 @@ phase lands; before that, the gate is `planned`.
 | unit + integration | local + CI | required after §3 Phase 1 | logic regressions on the claim/auth/tally paths |
 | scoped tests per-edit | local (agent loop) | recommended after §3 Phase 4 | regressions at edit time on risk-area files |
 | scoped tests pre-commit | local (git hook) | recommended after §3 Phase 4 | what slipped past per-edit, on staged risk files (extends existing husky/lint-staged) |
-| e2e on critical flows | CI on PR | optional | broken end-to-end participant flow; deferred (no browser tooling yet) |
+| e2e on critical flows  | local (`pnpm test:e2e`) only | recommended | broken end-to-end participant flow; runs the real stack (Supabase + .NET backend + frontend) via `dev.sh` — not wired into CI |
 
 ## 6. Cookbook Patterns
 
@@ -152,7 +152,63 @@ future pattern and points at §3.
 - **Anti-pattern to avoid**: asserting only the handler's upsert convenience behavior (re-voting updates one row) — that proves convenience logic, not the actual DB guardrail.
 - **Reference tests**: `backend/Picnivo.Tests/Features/Votes/CastVotes/CastVotesValidatorTests.cs` (`WithDuplicateDateOptionId_IsInvalid`); `backend/Picnivo.Tests/Features/Votes/CastVotes/CastVotesConstraintTests.cs` (`DuplicateParticipantAndDateOption_ThrowsUniqueConstraintException`).
 
-### 6.7 Per-rollout-phase notes
+### 6.7 Adding an e2e test
+
+- **Workflow**: use the `/10x-e2e` skill — risk → seed test + rules → generate
+  → review against the five anti-patterns → re-prompt → verify. Its
+  `references/` carry the full rules, anti-patterns, seed pattern, and
+  prompt-template.
+- **Real stack, no mocks**: Supabase (Postgres + Auth), the .NET backend, and
+  the frontend dev server. `playwright.config.ts`'s `webServer` boots
+  `../dev.sh` if nothing is already listening on `:3000`.
+- **Location**: `frontend/tests/e2e/<case>/<case>.spec.ts` — one folder per
+  test case, one test per file. Shared setup and helpers live in
+  `frontend/tests/e2e/setup/`. `seed/seed.spec.ts` is the exemplar every
+  generated test should be modeled on.
+- **Run**: `pnpm --dir frontend test:e2e` (all specs) or `pnpm --dir frontend
+  exec playwright test <file>` (one spec). `pnpm --dir frontend test:e2e:ui`
+  opens the UI runner.
+- **Auth**: the `setup` project (`setup/auth.setup.ts`) signs up a fresh
+  organizer once via the real UI and saves `setup/.auth/organizer.json`; the `chromium`
+  project reuses it as `storageState` — specs never log in through the UI
+  themselves. A genuinely anonymous participant/guest context needs an
+  **explicit** empty storage state — `browser.newContext({ storageState: {
+  cookies: [], origins: [] } })` — otherwise it silently inherits the
+  organizer's `storageState`.
+- **Hydration race**: Vite's dev server compiles each route's *client* bundle
+  lazily, on the first real browser request for it — a plain server-side
+  fetch (e.g. from a Node `globalSetup`) does not warm this, since SSR and
+  client transforms are separate pipelines. On a cold `pnpm dev`, a test's
+  first interaction on a freshly navigated page can race past that compile
+  and past hydration, landing before React's `onChange` is attached — the
+  DOM value is set but React state never updates, so a dependent button
+  stays disabled forever. `networkidle` cannot detect this: TanStack
+  Devtools keeps an SSE console-pipe connection open in dev, so the network
+  never goes idle and the wait just hangs to its timeout. Instead, `__root.tsx`
+  stamps `document.documentElement.dataset.hydrated = "true"` from a
+  post-mount `useEffect` — a real, deterministic hydration signal —
+  and `setup/utils.ts`'s `wakeHydration` waits for `html[data-hydrated='true']`
+  before clicking the first field. Always route the first interaction on a
+  freshly navigated page through `wakeHydration` before filling it.
+- **Locators**: `getByRole` / `getByLabel` / `getByText` first; `getByTestId`
+  only when accessibility attributes are ambiguous. Never CSS selectors,
+  XPath, or DOM structure.
+- **Never `page.waitForTimeout()`.** Wait for state: `toBeVisible()`,
+  `waitForURL()`, `waitForResponse()`.
+- **Test independence + cleanup**: each test runs standalone — its own setup,
+  action, assertion, and cleanup; unique ids (timestamp suffix) so parallel
+  runs and re-runs don't collide.
+- **Assert the business outcome**, not implementation details. Name the test
+  after the risk it protects (this test plan), not `test('test 1', ...)`.
+- **DOM (snapshot) is the default.** Vision (`--caps=vision`) is a supplement
+  for visual-only risks (layout, z-index, animation); for pixel regression
+  prefer deterministic tools (`toMatchSnapshot`, Argos, Lost Pixel).
+- **Healer helps on selectors, harms on logic.** A changed selector → healer
+  re-finds it (route through PR review). A changed business behavior → healer
+  masks the bug.
+- **Reference test**: `frontend/tests/e2e/seed/seed.spec.ts`.
+
+### 6.8 Per-rollout-phase notes
 
 - Phase 1 (Claim-path integrity): the 409-vs-500 exception-translation path only fires correctly when the test fixture's exception-processor registration (`ApiFixture.cs`) matches `Program.cs` prod wiring exactly — a mismatch silently drops the 409 mapping instead of failing loudly.
 - Phase 2 (Authorization boundaries): two error codes encode two distinct boundaries on the same endpoint — a foreign *entity* id is a 404 (event-scoped FK filter), a foreign-but-referenced id used in an otherwise valid request is a 400 (membership validation). Tests must distinguish these precisely, not collapse both to "some 4xx".
