@@ -1,1 +1,2 @@
 frontend/scripts/pre-commit.sh
+backend/scripts/pre-commit-tests.sh

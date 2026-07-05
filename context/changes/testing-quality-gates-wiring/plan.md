@@ -380,28 +380,28 @@ verifying the gate mechanics.
 
 #### Automated
 
-- [x] 2.1 `frontend/scripts/pre-commit.sh` and `.husky/pre-commit` are executable
-- [x] 2.2 `git config core.hooksPath` reports the root `.husky/_` after prepare
-- [x] 2.3 `frontend/package.json` valid JSON; `prepare` targets root `.husky`
+- [x] 2.1 `frontend/scripts/pre-commit.sh` and `.husky/pre-commit` are executable — 5fa2c65
+- [x] 2.2 `git config core.hooksPath` reports the root `.husky/_` after prepare — 5fa2c65
+- [x] 2.3 `frontend/package.json` valid JSON; `prepare` targets root `.husky` — 5fa2c65
 
 #### Manual
 
-- [x] 2.4 A real commit runs the frontend gate via the relocated dispatcher (unchanged behavior)
-- [x] 2.5 `pnpm run i18n:sync` still runs on commit
-- [x] 2.6 The old `frontend/.husky/pre-commit` no longer fires (no double-run)
+- [x] 2.4 A real commit runs the frontend gate via the relocated dispatcher (unchanged behavior) — 5fa2c65
+- [x] 2.5 `pnpm run i18n:sync` still runs on commit — 5fa2c65
+- [x] 2.6 The old `frontend/.husky/pre-commit` no longer fires (no double-run) — 5fa2c65
 
 ### Phase 3: Backend Pre-Commit Scoped-Test Gate
 
 #### Automated
 
-- [ ] 3.1 `backend/scripts/pre-commit-tests.sh` executable and passes `bash -n`
-- [ ] 3.2 Path → filter mapping correct for a known risk file (`Features.Claims.ClaimItem`)
-- [ ] 3.3 A scoped run executes standalone (`dotnet build … && dotnet test --no-build --no-restore --filter …`)
+- [x] 3.1 `backend/scripts/pre-commit-tests.sh` executable and passes `bash -n`
+- [x] 3.2 Path → filter mapping correct for a known risk file (`Features.Claims.ClaimItem`)
+- [x] 3.3 A scoped run executes standalone (`dotnet build … && dotnet test --no-build --no-restore --filter …`)
 
 #### Manual
 
-- [ ] 3.4 Committing a staged risk `.cs` runs only the mapped slice tests
-- [ ] 3.5 Multiple staged risk `.cs` across slices run the OR-joined union
-- [ ] 3.6 Staging a cross-cutting file escalates to the full backend suite
-- [ ] 3.7 A failing backend test aborts the commit
-- [ ] 3.8 A commit with no staged backend `.cs` skips the backend gate
+- [x] 3.4 Committing a staged risk `.cs` runs only the mapped slice tests
+- [x] 3.5 Multiple staged risk `.cs` across slices run the OR-joined union
+- [x] 3.6 Staging a cross-cutting file escalates to the full backend suite
+- [x] 3.7 A failing backend test aborts the commit
+- [x] 3.8 A commit with no staged backend `.cs` skips the backend gate
