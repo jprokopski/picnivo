@@ -1,8 +1,6 @@
-import type { ReactNode } from "react";
 import { Trans } from "@lingui/react/macro";
 import { Avatar } from "@/components/avatar";
 import type { ParticipantDto } from "@/api/picnivo-api";
-import { VOTE_CHOICE_VALUES } from "../../vote-on-dates/schema";
 import { isEffectivelyComing, isEffectivelyOut } from "../schema";
 
 interface AttendeesProps {
@@ -76,7 +74,6 @@ export function Attendees({
                   key={p.id}
                   participant={p}
                   myParticipantId={myParticipantId}
-                  status={maybeStatus(p, chosenDateOptionId)}
                 />
               ))}
             </div>
@@ -106,30 +103,12 @@ export function Attendees({
   );
 }
 
-function maybeStatus(
-  participant: ParticipantDto,
-  chosenDateOptionId: string,
-): ReactNode {
-  const choice = participant.votes.find(
-    (v) => v.dateOptionId === chosenDateOptionId,
-  )?.choice;
-  if (choice === VOTE_CHOICE_VALUES.maybe) {
-    return (
-      <span className="text-[13px] font-bold text-(--maybe)">
-        <Trans>Maybe</Trans>
-      </span>
-    );
-  }
-  return undefined;
-}
-
 interface PersonRowProps {
   participant: ParticipantDto;
   myParticipantId: string | null;
-  status?: ReactNode;
 }
 
-function PersonRow({ participant, myParticipantId, status }: PersonRowProps) {
+function PersonRow({ participant, myParticipantId }: PersonRowProps) {
   const isMe = participant.id === myParticipantId;
 
   return (
