@@ -1,5 +1,5 @@
 import path from "path";
-import { defineConfig } from "vitest/config";
+import { defineConfig, configDefaults } from "vitest/config";
 import viteReactSwc from "@vitejs/plugin-react-swc";
 import { lingui } from "@lingui/vite-plugin";
 
@@ -13,6 +13,9 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     globals: false,
+    // E2E specs (tests/e2e/*.spec.ts) are Playwright, not Vitest — exclude
+    // them so `vitest related` (pre-commit) never tries to run test() here.
+    exclude: [...configDefaults.exclude, "tests/e2e/**"],
     env: {
       VITE_SUPABASE_URL: "http://localhost:54321",
       VITE_SUPABASE_ANON_KEY: "test-anon-key",
