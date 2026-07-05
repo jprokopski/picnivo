@@ -1,10 +1,10 @@
 ---
 change_id: testing-aggregation-correctness
 title: Pin the best-date ranking, tie-break, and attendance inclusion (risk #5)
-status: impl_reviewed
+status: archived
 created: 2026-07-05
 updated: 2026-07-05
-archived_at: null
+archived_at: 2026-07-05T09:31:47Z
 ---
 
 ## Notes
