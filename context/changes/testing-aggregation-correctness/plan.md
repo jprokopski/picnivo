@@ -294,11 +294,11 @@ None — test-only change.
 
 #### Automated
 
-- [x] 2.1 Frontend tests pass: `pnpm --dir frontend test`
-- [x] 2.2 Frontend type-checks: `pnpm --dir frontend exec tsc --noEmit`
-- [x] 2.3 New fallback test present and green in `event-detail-view.test.tsx`
+- [x] 2.1 Frontend tests pass: `pnpm --dir frontend test` — 3362e29
+- [x] 2.2 Frontend type-checks: `pnpm --dir frontend exec tsc --noEmit` — 3362e29
+- [x] 2.3 New fallback test present and green in `event-detail-view.test.tsx` — 3362e29
 
 #### Manual
 
-- [x] 2.4 §6.5 is filled in (no longer "TBD") and names the Phase 1 reference tests
-- [x] 2.5 §3 Phase 3 Status reads `complete`; `change.md` status is `complete`
+- [x] 2.4 §6.5 is filled in (no longer "TBD") and names the Phase 1 reference tests — 3362e29
+- [x] 2.5 §3 Phase 3 Status reads `complete`; `change.md` status is `complete` — 3362e29
