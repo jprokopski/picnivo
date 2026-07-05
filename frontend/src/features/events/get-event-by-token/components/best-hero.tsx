@@ -86,7 +86,7 @@ export function BestHero({
             <ClockIcon size={14} /> {parts.time}
             {location && (
               <>
-                · <MapPinIcon size={14} /> {location}
+                <MapPinIcon size={14} /> {location}
               </>
             )}
           </div>

@@ -77,7 +77,7 @@ describe("Attendees", () => {
     expect(screen.getByText(/Can't make it · 1/i)).toBeDefined();
   });
 
-  it("labels a maybe-voter as Maybe rather than Coming", () => {
+  it("places a maybe-voter under Undecided rather than Coming, without a Maybe label", () => {
     render(
       <Wrapper>
         <Attendees
@@ -89,7 +89,8 @@ describe("Attendees", () => {
       </Wrapper>,
     );
 
-    expect(screen.getByText("Maybe")).toBeDefined();
+    expect(screen.getByText("Cara")).toBeDefined();
+    expect(screen.queryByText("Maybe")).toBeNull();
   });
 
   it("hides a section entirely when no one is in it", () => {

@@ -188,7 +188,7 @@ msgid "Can't make it"
 msgstr "Can't make it"
 
 #. placeholder {0}: out.length
-#: src/features/events/set-attendance/components/attendees.tsx:91
+#: src/features/events/set-attendance/components/attendees.tsx:88
 msgid "Can't make it · {0}"
 msgstr "Can't make it · {0}"
 
@@ -214,7 +214,7 @@ msgid "Close"
 msgstr "Close"
 
 #. placeholder {0}: coming.length
-#: src/features/events/set-attendance/components/attendees.tsx:53
+#: src/features/events/set-attendance/components/attendees.tsx:51
 msgid "Coming · {0}"
 msgstr "Coming · {0}"
 
@@ -351,7 +351,7 @@ msgstr "Heads up"
 msgid "Hide"
 msgstr "Hide"
 
-#: src/features/events/set-attendance/components/attendees.tsx:145
+#: src/features/events/set-attendance/components/attendees.tsx:124
 msgid "HOST"
 msgstr "HOST"
 
@@ -432,7 +432,6 @@ msgstr "Log in"
 msgid "Maya Chen"
 msgstr "Maya Chen"
 
-#: src/features/events/set-attendance/components/attendees.tsx:119
 #: src/features/events/vote-on-dates/components/vote-control.tsx:29
 msgid "Maybe"
 msgstr "Maybe"
@@ -746,7 +745,7 @@ msgid "Try again"
 msgstr "Try again"
 
 #. placeholder {0}: undecided.length
-#: src/features/events/set-attendance/components/attendees.tsx:71
+#: src/features/events/set-attendance/components/attendees.tsx:69
 msgid "Undecided · {0}"
 msgstr "Undecided · {0}"
 
@@ -834,7 +833,7 @@ msgstr "Yes"
 
 #: src/components/header.tsx:53
 #: src/features/events/claim-items/components/haul.tsx:161
-#: src/features/events/set-attendance/components/attendees.tsx:141
+#: src/features/events/set-attendance/components/attendees.tsx:120
 msgid "You"
 msgstr "You"
 
