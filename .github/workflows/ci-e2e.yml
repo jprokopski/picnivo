@@ -43,9 +43,25 @@ jobs:
         working-directory: frontend
         run: pnpm install --frozen-lockfile
 
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('frontend/pnpm-lock.yaml') }}
+
+      # On a cache hit the Chromium binary is already present, so this only
+      # (re)installs the apt system libraries — which can't be cached — and
+      # skips the ~20s browser download.
       - name: Install Playwright browsers
         working-directory: frontend
         run: pnpm exec playwright install --with-deps chromium
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('backend/**/*.csproj', 'backend/.config/dotnet-tools.json') }}
+          restore-keys: ${{ runner.os }}-nuget-
 
       - name: Restore backend tools & packages
         working-directory: backend
@@ -53,12 +69,27 @@ jobs:
           dotnet tool restore
           dotnet restore Picnivo.API
 
+      # Supabase's Docker images (Postgres/Auth/Kong) are the single biggest
+      # download in this job (~2min uncached). They're pinned by the CLI
+      # version, so cache a `docker save` tarball keyed on it and `docker load`
+      # on a hit — turning the pull into a much faster local load.
+      - name: Cache Supabase Docker images
+        id: supabase-images
+        uses: actions/cache@v4
+        with:
+          path: ~/supabase-images.tar
+          key: supabase-images-${{ runner.os }}-2.104.0
+
+      - name: Load cached Supabase images
+        if: steps.supabase-images.outputs.cache-hit == 'true'
+        run: docker load -i ~/supabase-images.tar
+
       # Playwright's webServer (frontend/playwright.config.ts) boots the real
       # stack itself via `../dev.sh`, which runs `supabase start` on its own.
       # We start-then-stop once here first purely to pull the Postgres/Auth
-      # images and read out the local anon key — so the start inside dev.sh
-      # only has to boot already-cached containers within the webServer
-      # timeout.
+      # images (no-op when loaded from cache) and read out the local anon key
+      # — so the start inside dev.sh only has to boot already-present
+      # containers within the webServer timeout.
       - name: Prime Supabase and write frontend env
         run: |
           supabase start -x realtime,storage-api,imgproxy,postgrest,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
@@ -67,6 +98,14 @@ jobs:
           echo "VITE_SUPABASE_ANON_KEY=${ANON_KEY}" >> frontend/.env
           echo "VITE_API_URL=http://localhost:5000" >> frontend/.env
           supabase stop --no-backup
+
+      # Only runs on a cache miss; the tarball is uploaded by actions/cache at
+      # job end so the next run can skip the registry pull.
+      - name: Save Supabase images for cache
+        if: steps.supabase-images.outputs.cache-hit != 'true'
+        run: |
+          docker save -o ~/supabase-images.tar \
+            $(docker images --format '{{.Repository}}:{{.Tag}}' | grep -Ei 'supabase|kong' | grep -v '<none>')
 
       - name: Run e2e tests
         working-directory: frontend
