@@ -25,6 +25,8 @@ The app runs at `http://localhost:3000`.
 | Dev server            | `pnpm dev`               |
 | Build                 | `pnpm build`             |
 | Tests                 | `pnpm test`              |
+| E2E tests             | `pnpm test:e2e`          |
+| E2E tests (UI runner) | `pnpm test:e2e:ui`       |
 | Type check            | `pnpm exec tsc --noEmit` |
 | Lint                  | `pnpm lint`              |
 | Format                | `pnpm format`            |
@@ -44,12 +46,16 @@ frontend/
 │   ├── features/
 │   │   └── <Feature>/
 │   │       └── <Action>/     # schema, server functions, tests, and components for one action
-│   ├── components/            # shared, feature-agnostic components (shadcn/ui primitives, layout chrome)
-│   ├── lib/                    # cross-cutting infrastructure (Supabase clients, auth middleware)
-│   ├── middleware/            # auth middleware for server functions
-│   ├── routes/                 # TanStack Router file-based routes
-│   └── api/                    # Orval-generated API client (do not edit manually)
-└── context/                    # frontend-specific architecture & conventions
+│   ├── components/           # shared, feature-agnostic components (shadcn/ui primitives, layout chrome)
+│   ├── lib/                  # cross-cutting infrastructure (Supabase clients, auth middleware)
+│   ├── middleware/           # auth middleware for server functions
+│   ├── routes/               # TanStack Router file-based routes
+│   ├── locales/              # Lingui i18n message catalogs
+│   └── api/                  # Orval-generated API client (do not edit manually)
+├── tests/e2e/                # Playwright end-to-end tests (see test-plan.md §6.7)
+│   ├── setup/                # auth + global setup, shared helpers, .auth state
+│   └── <case>/               # one folder per test case (e.g. seed/, vote-persistence/)
+└── context/                  # frontend-specific architecture & conventions
 ```
 
 A component lives in `<Feature>/<Action>/components/` unless two or more actions use it, in which case it
@@ -77,4 +83,5 @@ configures design tokens via a CSS `@theme` block in `src/styles.css` rather tha
 
 Deployed to Cloudflare Workers via Wrangler. Local secrets go in `.dev.vars` (git-ignored); production
 secrets are set with `wrangler secret put KEY`. CI runs on every PR touching `frontend/`
-(`.github/workflows/ci-frontend.yml`).
+(`.github/workflows/ci-frontend.yml`); the Playwright suite runs against the real stack via
+`.github/workflows/ci-e2e.yml` on PRs touching `frontend/`, `backend/`, `supabase/`, or `dev.sh`.

@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { wakeHydration } from "./utils";
+import { wakeHydration } from "../setup/utils";
 
 const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const MON = [

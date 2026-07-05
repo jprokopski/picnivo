@@ -161,13 +161,15 @@ future pattern and points at §3.
 - **Real stack, no mocks**: Supabase (Postgres + Auth), the .NET backend, and
   the frontend dev server. `playwright.config.ts`'s `webServer` boots
   `../dev.sh` if nothing is already listening on `:3000`.
-- **Location**: `frontend/tests/e2e/<feature>.spec.ts`, one test per file.
-  `seed.spec.ts` is the exemplar every generated test should be modeled on.
+- **Location**: `frontend/tests/e2e/<case>/<case>.spec.ts` — one folder per
+  test case, one test per file. Shared setup and helpers live in
+  `frontend/tests/e2e/setup/`. `seed/seed.spec.ts` is the exemplar every
+  generated test should be modeled on.
 - **Run**: `pnpm --dir frontend test:e2e` (all specs) or `pnpm --dir frontend
   exec playwright test <file>` (one spec). `pnpm --dir frontend test:e2e:ui`
   opens the UI runner.
-- **Auth**: the `setup` project (`auth.setup.ts`) signs up a fresh organizer
-  once via the real UI and saves `.auth/organizer.json`; the `chromium`
+- **Auth**: the `setup` project (`setup/auth.setup.ts`) signs up a fresh
+  organizer once via the real UI and saves `setup/.auth/organizer.json`; the `chromium`
   project reuses it as `storageState` — specs never log in through the UI
   themselves. A genuinely anonymous participant/guest context needs an
   **explicit** empty storage state — `browser.newContext({ storageState: {
@@ -177,8 +179,8 @@ future pattern and points at §3.
   attaches handlers. `.fill()` alone can land before that and get silently
   dropped (the DOM value is set but React state never updates, so a
   dependent button stays disabled forever). Always `.click()` the first field
-  on a freshly navigated page before filling it — see `utils.ts`'s
-  `wakeHydration`. `global-setup.ts` also pre-warms the routes specs touch,
+  on a freshly navigated page before filling it — see `setup/utils.ts`'s
+  `wakeHydration`. `setup/global-setup.ts` also pre-warms the routes specs touch,
   since Vite's dev server compiles each route's module graph lazily on first
   request.
 - **Locators**: `getByRole` / `getByLabel` / `getByText` first; `getByTestId`
@@ -197,7 +199,7 @@ future pattern and points at §3.
 - **Healer helps on selectors, harms on logic.** A changed selector → healer
   re-finds it (route through PR review). A changed business behavior → healer
   masks the bug.
-- **Reference test**: `frontend/tests/e2e/seed.spec.ts`.
+- **Reference test**: `frontend/tests/e2e/seed/seed.spec.ts`.
 
 ### 6.8 Per-rollout-phase notes
 

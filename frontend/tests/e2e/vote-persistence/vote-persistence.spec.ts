@@ -1,12 +1,12 @@
 import { test, expect } from "@playwright/test";
-import { wakeHydration } from "./utils";
+import { wakeHydration } from "../setup/utils";
 
 // Provenance
 //   Risk:  context/foundation/test-plan.md §5 quality gate — "broken
 //          end-to-end participant flow". A joined participant's vote on a date
 //          can register optimistically client-side yet never reach the server,
 //          so it silently vanishes the moment the page is reloaded.
-//   Seed:  tests/e2e/seed.spec.ts (RSVP-survives-reload). This is its sibling
+//   Seed:  tests/e2e/seed/seed.spec.ts (RSVP-survives-reload). This is its sibling
 //          for the *voting* leg of the participant journey — and it needs a
 //          MULTI-date event, because a single-date event is an "announcement"
 //          (isAnnouncement = dateOptions.length === 1) and renders no vote

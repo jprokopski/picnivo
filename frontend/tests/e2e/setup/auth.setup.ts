@@ -1,7 +1,7 @@
 import { test as setup } from "@playwright/test";
 import { wakeHydration } from "./utils";
 
-const authFile = "tests/e2e/.auth/organizer.json";
+const authFile = "tests/e2e/setup/.auth/organizer.json";
 
 // One organizer account per full test-suite run — signed up once here via the
 // real UI, then every spec reuses the saved storageState instead of logging

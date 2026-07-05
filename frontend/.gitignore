@@ -16,4 +16,4 @@ todos.json
 # Playwright
 /test-results/
 /playwright-report/
-tests/e2e/.auth/
+tests/e2e/setup/.auth/
