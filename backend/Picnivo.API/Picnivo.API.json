@@ -84,6 +84,32 @@
         }
       }
     },
+    "/api/events/{token}/stream": {
+      "get": {
+        "tags": [
+          "StreamEvent"
+        ],
+        "operationId": "StreamEvent",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/api/events/{token}/participants/{participantId}/attendance": {
       "put": {
         "tags": [
@@ -1201,6 +1227,9 @@
     },
     {
       "name": "CastVotes"
+    },
+    {
+      "name": "StreamEvent"
     },
     {
       "name": "SetAttendance"
