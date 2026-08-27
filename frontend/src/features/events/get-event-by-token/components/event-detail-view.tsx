@@ -1,5 +1,6 @@
 import { Trans } from "@lingui/react/macro";
 import type { EventDetailResponse } from "@/api/picnivo-api";
+import { useEventStream } from "../use-event-stream";
 import { Haul } from "../../claim-items/components/haul";
 import { DeleteEvent } from "../../delete-event/components/delete-event";
 import { JoinBar } from "../../join-event/components/join-bar";
@@ -36,6 +37,8 @@ export function EventDetailView({
   shareUrl,
   myParticipantId,
 }: EventDetailViewProps) {
+  useEventStream(token, Number(event.revision));
+
   const joined = !!event.you;
   const locked = !!event.chosenDateOptionId;
   const isAnnouncement = event.dateOptions.length === 1;

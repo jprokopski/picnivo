@@ -503,30 +503,30 @@ inline logic). `best-hero` — a `changed` result opens the dialog; confirming r
 
 #### Automated
 
-- [x] 2.1 Backend builds: `dotnet build`
-- [x] 2.2 Handler-publish + read-model tests pass: `dotnet test`
-- [x] 2.3 Regenerated OpenAPI spec includes `revision` on the event response
+- [x] 2.1 Backend builds: `dotnet build` — 5d09542
+- [x] 2.2 Handler-publish + read-model tests pass: `dotnet test` — 5d09542
+- [x] 2.3 Regenerated OpenAPI spec includes `revision` on the event response — 5d09542
 
 #### Manual
 
-- [ ] 2.4 Each action type emits a `changed` event with a higher revision on an open stream
-- [ ] 2.5 `GET /api/events/{token}` returns a `revision` matching the latest streamed id
+- [x] 2.4 Each action type emits a `changed` event with a higher revision on an open stream — 5d09542
+- [x] 2.5 `GET /api/events/{token}` returns a `revision` matching the latest streamed id — 5d09542
 
 ### Phase 3: Frontend — Live Subscription
 
 #### Automated
 
-- [ ] 3.1 Type check passes: `pnpm exec tsc --noEmit`
-- [ ] 3.2 Lint passes: `pnpm lint`
-- [ ] 3.3 Unit tests pass: `pnpm test`
-- [ ] 3.4 Generated client contains `revision` (post-`pnpm orval`)
+- [x] 3.1 Type check passes: `pnpm exec tsc --noEmit`
+- [x] 3.2 Lint passes: `pnpm lint`
+- [x] 3.3 Unit tests pass: `pnpm test`
+- [x] 3.4 Generated client contains `revision` (post-`pnpm orval`)
 
 #### Manual
 
-- [ ] 3.5 Two browsers: mutation in one appears in the other within ~2s, no manual refresh
-- [ ] 3.6 Acting user's own page does not double-refetch (single update, no flicker)
-- [ ] 3.7 Backend down / disabled → page usable on own-action refresh; reconnect resumes live
-- [ ] 3.8 Tab reconnect refetches once and shows current state
+- [x] 3.5 Two browsers: mutation in one appears in the other within ~2s, no manual refresh
+- [x] 3.6 Acting user's own page does not double-refetch (single update, no flicker)
+- [x] 3.7 Backend down / disabled → page usable on own-action refresh; reconnect resumes live
+- [x] 3.8 Tab reconnect refetches once and shows current state
 
 ### Phase 4: Stale-Lock Confirm Guard
 
