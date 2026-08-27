@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
+using Picnivo.API.Features.Streaming;
 
 namespace Picnivo.API.Features.Participants.SetAttendance;
 
@@ -11,6 +12,7 @@ public static class SetAttendance
         Guid participantId,
         SetAttendanceRequest req,
         PicnivoDbContext db,
+        IEventStreamBroker broker,
         CancellationToken ct
     )
     {
@@ -57,6 +59,7 @@ public static class SetAttendance
         }
 
         await db.SaveChangesAsync(ct);
+        broker.Publish(token);
         return Results.NoContent();
     }
 }

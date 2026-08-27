@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
+using Picnivo.API.Features.Streaming;
 using ReleaseClaimHandler = Picnivo.API.Features.Claims.ReleaseClaim.ReleaseClaim;
 
 namespace Picnivo.Tests.Features.Claims.ReleaseClaim;
@@ -13,6 +14,7 @@ public class ReleaseClaimHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, participantId, itemId) = await SeedClaimedItemAsync(db);
 
         // Act
@@ -21,6 +23,7 @@ public class ReleaseClaimHandlerTests
             itemId,
             participantId,
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -36,6 +39,7 @@ public class ReleaseClaimHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, _, itemId) = await SeedClaimedItemAsync(db);
 
         // Act
@@ -44,6 +48,7 @@ public class ReleaseClaimHandlerTests
             itemId,
             Guid.NewGuid(),
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -56,6 +61,7 @@ public class ReleaseClaimHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
 
         // Act
         var result = await ReleaseClaimHandler.Handle(
@@ -63,6 +69,7 @@ public class ReleaseClaimHandlerTests
             Guid.NewGuid(),
             Guid.NewGuid(),
             db,
+            broker,
             CancellationToken.None
         );
 

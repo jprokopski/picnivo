@@ -48,5 +48,6 @@ public record EventDetailResponse(
     IReadOnlyList<DateOptionDto> DateOptions,
     IReadOnlyList<EventItemDto> Items,
     IReadOnlyList<ParticipantDto> Participants,
-    YouDto? You
+    YouDto? You,
+    long Revision
 );

@@ -489,23 +489,23 @@ inline logic). `best-hero` — a `changed` result opens the dialog; confirming r
 
 #### Automated
 
-- [x] 1.1 Backend builds: `dotnet build`
-- [x] 1.2 Broker + endpoint tests pass: `dotnet test`
-- [x] 1.3 OpenAPI spec regenerates without error
+- [x] 1.1 Backend builds: `dotnet build` — 3741fad
+- [x] 1.2 Broker + endpoint tests pass: `dotnet test` — 3741fad
+- [x] 1.3 OpenAPI spec regenerates without error — 3741fad
 
 #### Manual
 
-- [x] 1.4 `curl -N` holds connection, emits initial revision + heartbeats + `changed` on manual publish
-- [x] 1.5 `Streaming__Enabled=false` returns 404 / immediate close
-- [x] 1.6 Client disconnect frees the subscriber (no leak under connect/disconnect loop)
+- [x] 1.4 `curl -N` holds connection, emits initial revision + heartbeats + `changed` on manual publish — 3741fad
+- [x] 1.5 `Streaming__Enabled=false` returns 404 / immediate close — 3741fad
+- [x] 1.6 Client disconnect frees the subscriber (no leak under connect/disconnect loop) — 3741fad
 
 ### Phase 2: Backend — Wire Mutations & Expose Revision
 
 #### Automated
 
-- [ ] 2.1 Backend builds: `dotnet build`
-- [ ] 2.2 Handler-publish + read-model tests pass: `dotnet test`
-- [ ] 2.3 Regenerated OpenAPI spec includes `revision` on the event response
+- [x] 2.1 Backend builds: `dotnet build`
+- [x] 2.2 Handler-publish + read-model tests pass: `dotnet test`
+- [x] 2.3 Regenerated OpenAPI spec includes `revision` on the event response
 
 #### Manual
 

@@ -2,6 +2,7 @@ using EntityFramework.Exceptions.Common;
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
+using Picnivo.API.Features.Streaming;
 
 namespace Picnivo.API.Features.Votes.CastVotes;
 
@@ -12,6 +13,7 @@ public static class CastVotes
         Guid participantId,
         CastVotesRequest req,
         PicnivoDbContext db,
+        IEventStreamBroker broker,
         CancellationToken ct
     )
     {
@@ -83,6 +85,8 @@ public static class CastVotes
             // (two-caller race) and will surface as the global 409/500.
             await db.SaveChangesAsync(ct);
         }
+
+        broker.Publish(token);
 
         return Results.NoContent();
     }

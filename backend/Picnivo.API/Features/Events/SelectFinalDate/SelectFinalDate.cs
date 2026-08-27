@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
+using Picnivo.API.Features.Streaming;
 
 namespace Picnivo.API.Features.Events.SelectFinalDate;
 
@@ -11,6 +12,7 @@ public static class SelectFinalDate
         SelectFinalDateRequest req,
         ClaimsPrincipal user,
         PicnivoDbContext db,
+        IEventStreamBroker broker,
         CancellationToken ct
     )
     {
@@ -47,6 +49,7 @@ public static class SelectFinalDate
         var entity = await db.Events.FirstAsync(e => e.Id == @event.Id, ct);
         entity.ChosenDateOptionId = req.DateOptionId;
         await db.SaveChangesAsync(ct);
+        broker.Publish(token);
 
         return Results.NoContent();
     }

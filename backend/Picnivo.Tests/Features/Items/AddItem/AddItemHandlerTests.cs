@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
 using Picnivo.API.Features.Items.AddItem;
+using Picnivo.API.Features.Streaming;
 using AddItemHandler = Picnivo.API.Features.Items.AddItem.AddItem;
 
 namespace Picnivo.Tests.Features.Items.AddItem;
@@ -14,6 +15,7 @@ public class AddItemHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, participantId) = await SeedEventWithParticipantAsync(db);
 
         // Act
@@ -21,6 +23,7 @@ public class AddItemHandlerTests
             token,
             new AddItemRequest(participantId, "Drinks"),
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -36,11 +39,13 @@ public class AddItemHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, participantId) = await SeedEventWithParticipantAsync(db);
         await AddItemHandler.Handle(
             token,
             new AddItemRequest(participantId, "Drinks"),
             db,
+            broker,
             CancellationToken.None
         );
         db.ChangeTracker.Clear();
@@ -50,6 +55,7 @@ public class AddItemHandlerTests
             token,
             new AddItemRequest(participantId, "drinks"),
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -63,6 +69,7 @@ public class AddItemHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, participantId) = await SeedEventWithParticipantAsync(db, existingItemCount: 50);
 
         // Act
@@ -70,6 +77,7 @@ public class AddItemHandlerTests
             token,
             new AddItemRequest(participantId, "One More"),
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -82,6 +90,7 @@ public class AddItemHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, _) = await SeedEventWithParticipantAsync(db);
 
         // Act
@@ -89,6 +98,7 @@ public class AddItemHandlerTests
             token,
             new AddItemRequest(Guid.NewGuid(), "Drinks"),
             db,
+            broker,
             CancellationToken.None
         );
 

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
 using Picnivo.API.Features.Events.SelectFinalDate;
+using Picnivo.API.Features.Streaming;
 using SelectFinalDateHandler = Picnivo.API.Features.Events.SelectFinalDate.SelectFinalDate;
 
 namespace Picnivo.Tests.Features.Events.SelectFinalDate;
@@ -15,7 +16,9 @@ public class SelectFinalDateHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, eventId, organizerId, dateOptionIds) = await SeedEventAsync(db);
+        var before = broker.CurrentRevision(token);
 
         // Act
         var result = await SelectFinalDateHandler.Handle(
@@ -23,6 +26,7 @@ public class SelectFinalDateHandlerTests
             new SelectFinalDateRequest(dateOptionIds[0]),
             UserWith(organizerId),
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -30,6 +34,7 @@ public class SelectFinalDateHandlerTests
         result.ShouldBeOfType<NoContent>();
         var @event = await db.Events.SingleAsync(e => e.Id == eventId);
         @event.ChosenDateOptionId.ShouldBe(dateOptionIds[0]);
+        broker.CurrentRevision(token).ShouldBeGreaterThan(before);
     }
 
     [Fact]
@@ -37,7 +42,9 @@ public class SelectFinalDateHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, _, _, dateOptionIds) = await SeedEventAsync(db);
+        var before = broker.CurrentRevision(token);
 
         // Act
         var result = await SelectFinalDateHandler.Handle(
@@ -45,11 +52,13 @@ public class SelectFinalDateHandlerTests
             new SelectFinalDateRequest(dateOptionIds[0]),
             UserWith(Guid.NewGuid()),
             db,
+            broker,
             CancellationToken.None
         );
 
         // Assert
         result.ShouldBeOfType<StatusCodeHttpResult>().StatusCode.ShouldBe(403);
+        broker.CurrentRevision(token).ShouldBe(before);
     }
 
     [Fact]
@@ -57,6 +66,7 @@ public class SelectFinalDateHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, _, organizerId, _) = await SeedEventAsync(db);
 
         // Act
@@ -65,6 +75,7 @@ public class SelectFinalDateHandlerTests
             new SelectFinalDateRequest(Guid.NewGuid()),
             UserWith(organizerId),
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -77,12 +88,14 @@ public class SelectFinalDateHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, eventId, organizerId, dateOptionIds) = await SeedEventAsync(db);
         await SelectFinalDateHandler.Handle(
             token,
             new SelectFinalDateRequest(dateOptionIds[0]),
             UserWith(organizerId),
             db,
+            broker,
             CancellationToken.None
         );
         db.ChangeTracker.Clear();
@@ -93,6 +106,7 @@ public class SelectFinalDateHandlerTests
             new SelectFinalDateRequest(null),
             UserWith(organizerId),
             db,
+            broker,
             CancellationToken.None
         );
 

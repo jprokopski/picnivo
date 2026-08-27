@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
+using Picnivo.API.Features.Streaming;
 
 namespace Picnivo.API.Features.Events.GetEventByToken;
 
@@ -10,6 +11,7 @@ public static class GetEventByToken
         string token,
         Guid? participantId,
         PicnivoDbContext db,
+        IEventStreamBroker broker,
         CancellationToken ct
     )
     {
@@ -139,7 +141,8 @@ public static class GetEventByToken
                         ]
                     )),
                 ],
-                you
+                you,
+                broker.CurrentRevision(token)
             )
         );
     }

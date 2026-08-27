@@ -784,7 +784,8 @@
           "dateOptions",
           "items",
           "participants",
-          "you"
+          "you",
+          "revision"
         ],
         "type": "object",
         "properties": {
@@ -851,6 +852,14 @@
                 "$ref": "#/components/schemas/YouDto"
               }
             ]
+          },
+          "revision": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
           }
         }
       },

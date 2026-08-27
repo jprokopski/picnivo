@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
+using Picnivo.API.Features.Streaming;
 using ClaimItemHandler = Picnivo.API.Features.Claims.ClaimItem.ClaimItem;
 
 namespace Picnivo.Tests.Features.Claims.ClaimItem;
@@ -21,7 +22,9 @@ public class ClaimItemHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, participantId, itemId, _, _) = await SeedEventAsync(db, dateOptionCount: 1);
+        var before = broker.CurrentRevision(token);
 
         // Act
         var result = await ClaimItemHandler.Handle(
@@ -29,11 +32,13 @@ public class ClaimItemHandlerTests
             itemId,
             participantId,
             db,
+            broker,
             CancellationToken.None
         );
 
         // Assert
         result.ShouldBeOfType<StatusCodeHttpResult>().StatusCode.ShouldBe(403);
+        broker.CurrentRevision(token).ShouldBe(before);
     }
 
     [Fact]
@@ -41,11 +46,13 @@ public class ClaimItemHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, participantId, itemId, _, _) = await SeedEventAsync(
             db,
             dateOptionCount: 1,
             attendance: AttendanceStatus.Coming
         );
+        var before = broker.CurrentRevision(token);
 
         // Act
         var result = await ClaimItemHandler.Handle(
@@ -53,6 +60,7 @@ public class ClaimItemHandlerTests
             itemId,
             participantId,
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -60,6 +68,7 @@ public class ClaimItemHandlerTests
         result.ShouldBeOfType<NoContent>();
         var claim = await db.ItemClaims.SingleAsync(c => c.EventItemId == itemId);
         claim.ParticipantId.ShouldBe(participantId);
+        broker.CurrentRevision(token).ShouldBeGreaterThan(before);
     }
 
     [Fact]
@@ -67,6 +76,7 @@ public class ClaimItemHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, participantId, itemId, _, _) = await SeedEventAsync(
             db,
             dateOptionCount: 2,
@@ -79,6 +89,7 @@ public class ClaimItemHandlerTests
             itemId,
             participantId,
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -91,6 +102,7 @@ public class ClaimItemHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, participantId, itemId, eventId, dateOptionIds) = await SeedEventAsync(
             db,
             dateOptionCount: 2
@@ -116,6 +128,7 @@ public class ClaimItemHandlerTests
             itemId,
             participantId,
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -128,6 +141,7 @@ public class ClaimItemHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, participantId, itemId, eventId, dateOptionIds) = await SeedEventAsync(
             db,
             dateOptionCount: 2,
@@ -154,6 +168,7 @@ public class ClaimItemHandlerTests
             itemId,
             participantId,
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -166,6 +181,7 @@ public class ClaimItemHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, participantId, itemId, _, _) = await SeedEventAsync(
             db,
             dateOptionCount: 1,
@@ -178,6 +194,7 @@ public class ClaimItemHandlerTests
             itemId,
             participantId,
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -190,6 +207,7 @@ public class ClaimItemHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, participantId, itemId, eventId, _) = await SeedEventAsync(
             db,
             dateOptionCount: 1,
@@ -215,6 +233,7 @@ public class ClaimItemHandlerTests
             itemId,
             participantId,
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -229,6 +248,7 @@ public class ClaimItemHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, participantId, itemId, eventId, _) = await SeedEventAsync(
             db,
             dateOptionCount: 1,
@@ -260,7 +280,14 @@ public class ClaimItemHandlerTests
 
         // Act & Assert
         await Should.ThrowAsync<UniqueConstraintException>(() =>
-            ClaimItemHandler.Handle(token, itemId, otherParticipant.Id, db, CancellationToken.None)
+            ClaimItemHandler.Handle(
+                token,
+                itemId,
+                otherParticipant.Id,
+                db,
+                broker,
+                CancellationToken.None
+            )
         );
     }
 
@@ -269,6 +296,7 @@ public class ClaimItemHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, participantId, _, _, _) = await SeedEventAsync(
             db,
             dateOptionCount: 1,
@@ -281,6 +309,7 @@ public class ClaimItemHandlerTests
             Guid.NewGuid(),
             participantId,
             db,
+            broker,
             CancellationToken.None
         );
 

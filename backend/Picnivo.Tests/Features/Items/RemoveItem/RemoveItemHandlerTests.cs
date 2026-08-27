@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
+using Picnivo.API.Features.Streaming;
 using RemoveItemHandler = Picnivo.API.Features.Items.RemoveItem.RemoveItem;
 
 namespace Picnivo.Tests.Features.Items.RemoveItem;
@@ -14,6 +15,7 @@ public class RemoveItemHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, itemId, participantId, _) = await SeedEventAsync(db);
 
         // Act
@@ -23,6 +25,7 @@ public class RemoveItemHandlerTests
             participantId,
             AnonymousUser(),
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -36,6 +39,7 @@ public class RemoveItemHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, itemId, _, organizerId) = await SeedEventAsync(db);
 
         // Act
@@ -45,6 +49,7 @@ public class RemoveItemHandlerTests
             null,
             UserWith(organizerId),
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -58,6 +63,7 @@ public class RemoveItemHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, itemId, _, _) = await SeedEventAsync(db);
 
         // Act
@@ -67,6 +73,7 @@ public class RemoveItemHandlerTests
             Guid.NewGuid(),
             AnonymousUser(),
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -79,6 +86,7 @@ public class RemoveItemHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, itemId, participantId, _) = await SeedEventAsync(db);
         db.ItemClaims.Add(
             new ItemClaim
@@ -99,6 +107,7 @@ public class RemoveItemHandlerTests
             participantId,
             AnonymousUser(),
             db,
+            broker,
             CancellationToken.None
         );
 

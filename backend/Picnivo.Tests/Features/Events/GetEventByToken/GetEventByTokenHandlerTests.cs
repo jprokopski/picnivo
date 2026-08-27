@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
 using Picnivo.API.Features.Events.GetEventByToken;
+using Picnivo.API.Features.Streaming;
 using GetEventByTokenHandler = Picnivo.API.Features.Events.GetEventByToken.GetEventByToken;
 
 namespace Picnivo.Tests.Features.Events.GetEventByToken;
@@ -14,6 +15,7 @@ public class GetEventByTokenHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var organizerId = Guid.NewGuid();
         db.Organizers.Add(
             new Organizer
@@ -36,7 +38,13 @@ public class GetEventByTokenHandlerTests
         );
 
         // Act
-        var result = await GetEventByTokenHandler.Handle(token, null, db, CancellationToken.None);
+        var result = await GetEventByTokenHandler.Handle(
+            token,
+            null,
+            db,
+            broker,
+            CancellationToken.None
+        );
 
         // Assert
         var ok = result.ShouldBeOfType<Ok<EventDetailResponse>>();
@@ -49,16 +57,52 @@ public class GetEventByTokenHandlerTests
     }
 
     [Fact]
+    public async Task ReturnsBrokersCurrentRevision()
+    {
+        // Arrange
+        await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
+        var organizerId = Guid.NewGuid();
+        db.Organizers.Add(
+            new Organizer
+            {
+                Id = organizerId,
+                DisplayName = "Organizer A",
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
+        await db.SaveChangesAsync();
+        db.ChangeTracker.Clear();
+        var token = await SeedEventAsync(db, organizerId, title: "Revision Test");
+        var expectedRevision = broker.Publish(token);
+
+        // Act
+        var result = await GetEventByTokenHandler.Handle(
+            token,
+            null,
+            db,
+            broker,
+            CancellationToken.None
+        );
+
+        // Assert
+        var ok = result.ShouldBeOfType<Ok<EventDetailResponse>>();
+        ok.Value!.Revision.ShouldBe(expectedRevision);
+    }
+
+    [Fact]
     public async Task WithUnknownToken_ReturnsNotFound()
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
 
         // Act
         var result = await GetEventByTokenHandler.Handle(
             "unknowntoken",
             null,
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -71,6 +115,7 @@ public class GetEventByTokenHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var organizerId = Guid.NewGuid();
         db.Organizers.Add(
             new Organizer
@@ -135,7 +180,13 @@ public class GetEventByTokenHandlerTests
         db.ChangeTracker.Clear();
 
         // Act
-        var result = await GetEventByTokenHandler.Handle(token, null, db, CancellationToken.None);
+        var result = await GetEventByTokenHandler.Handle(
+            token,
+            null,
+            db,
+            broker,
+            CancellationToken.None
+        );
 
         // Assert
         var ok = result.ShouldBeOfType<Ok<EventDetailResponse>>();
@@ -152,6 +203,7 @@ public class GetEventByTokenHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var organizerId = Guid.NewGuid();
         db.Organizers.Add(
             new Organizer
@@ -237,7 +289,13 @@ public class GetEventByTokenHandlerTests
         db.ChangeTracker.Clear();
 
         // Act
-        var result = await GetEventByTokenHandler.Handle(token, null, db, CancellationToken.None);
+        var result = await GetEventByTokenHandler.Handle(
+            token,
+            null,
+            db,
+            broker,
+            CancellationToken.None
+        );
 
         // Assert: both dates tie 2xYes; dateA has 0xNo, dateB has 1xNo, so the rule
         // (fewest-No breaks the tie) picks dateA — derived from the rule, not from Handle.
@@ -250,6 +308,7 @@ public class GetEventByTokenHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var organizerId = Guid.NewGuid();
         db.Organizers.Add(
             new Organizer
@@ -321,7 +380,13 @@ public class GetEventByTokenHandlerTests
         db.ChangeTracker.Clear();
 
         // Act
-        var result = await GetEventByTokenHandler.Handle(token, null, db, CancellationToken.None);
+        var result = await GetEventByTokenHandler.Handle(
+            token,
+            null,
+            db,
+            broker,
+            CancellationToken.None
+        );
 
         // Assert: both dates tie 2xYes/0xNo; the earlier StartsAt wins. This pins an
         // implementation fallback beyond FR-011 (which only specifies Yes-then-No) —
@@ -335,6 +400,7 @@ public class GetEventByTokenHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var organizerId = Guid.NewGuid();
         db.Organizers.Add(
             new Organizer
@@ -420,7 +486,13 @@ public class GetEventByTokenHandlerTests
         db.ChangeTracker.Clear();
 
         // Act
-        var result = await GetEventByTokenHandler.Handle(token, null, db, CancellationToken.None);
+        var result = await GetEventByTokenHandler.Handle(
+            token,
+            null,
+            db,
+            broker,
+            CancellationToken.None
+        );
 
         // Assert: 3xMaybe never feeds the ranking sort (only Yes/No do), so the
         // 1xYes date wins outright even though the Maybe-heavy date has more total votes.
@@ -434,6 +506,7 @@ public class GetEventByTokenHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var organizerId = Guid.NewGuid();
         db.Organizers.Add(
             new Organizer
@@ -468,7 +541,13 @@ public class GetEventByTokenHandlerTests
         db.ChangeTracker.Clear();
 
         // Act
-        var result = await GetEventByTokenHandler.Handle(token, null, db, CancellationToken.None);
+        var result = await GetEventByTokenHandler.Handle(
+            token,
+            null,
+            db,
+            broker,
+            CancellationToken.None
+        );
 
         // Assert: Alice is "Coming" with zero DateVote rows — the backend tally is
         // attendance-blind by design, so YesCount stays 0 and best-date selection is
@@ -483,6 +562,7 @@ public class GetEventByTokenHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var organizerId = Guid.NewGuid();
         db.Organizers.Add(
             new Organizer
@@ -547,7 +627,13 @@ public class GetEventByTokenHandlerTests
         db.ChangeTracker.Clear();
 
         // Act
-        var result = await GetEventByTokenHandler.Handle(token, null, db, CancellationToken.None);
+        var result = await GetEventByTokenHandler.Handle(
+            token,
+            null,
+            db,
+            broker,
+            CancellationToken.None
+        );
 
         // Assert
         var ok = result.ShouldBeOfType<Ok<EventDetailResponse>>();
@@ -565,6 +651,7 @@ public class GetEventByTokenHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var organizerId = Guid.NewGuid();
         db.Organizers.Add(
             new Organizer
@@ -587,7 +674,13 @@ public class GetEventByTokenHandlerTests
             .SingleAsync(d => d.Event!.Token == token);
 
         // Act
-        var result = await GetEventByTokenHandler.Handle(token, null, db, CancellationToken.None);
+        var result = await GetEventByTokenHandler.Handle(
+            token,
+            null,
+            db,
+            broker,
+            CancellationToken.None
+        );
 
         // Assert
         var ok = result.ShouldBeOfType<Ok<EventDetailResponse>>();
@@ -599,6 +692,7 @@ public class GetEventByTokenHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var organizerId = Guid.NewGuid();
         db.Organizers.Add(
             new Organizer
@@ -618,7 +712,13 @@ public class GetEventByTokenHandlerTests
         );
 
         // Act
-        var result = await GetEventByTokenHandler.Handle(token, null, db, CancellationToken.None);
+        var result = await GetEventByTokenHandler.Handle(
+            token,
+            null,
+            db,
+            broker,
+            CancellationToken.None
+        );
 
         // Assert
         var ok = result.ShouldBeOfType<Ok<EventDetailResponse>>();
@@ -632,6 +732,7 @@ public class GetEventByTokenHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var organizerId = Guid.NewGuid();
         db.Organizers.Add(
             new Organizer
@@ -651,7 +752,13 @@ public class GetEventByTokenHandlerTests
         );
 
         // Act
-        var result = await GetEventByTokenHandler.Handle(token, null, db, CancellationToken.None);
+        var result = await GetEventByTokenHandler.Handle(
+            token,
+            null,
+            db,
+            broker,
+            CancellationToken.None
+        );
 
         // Assert
         var ok = result.ShouldBeOfType<Ok<EventDetailResponse>>();
@@ -663,6 +770,7 @@ public class GetEventByTokenHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var organizerId = Guid.NewGuid();
         db.Organizers.Add(
             new Organizer
@@ -682,7 +790,13 @@ public class GetEventByTokenHandlerTests
         );
 
         // Act
-        var result = await GetEventByTokenHandler.Handle(token, null, db, CancellationToken.None);
+        var result = await GetEventByTokenHandler.Handle(
+            token,
+            null,
+            db,
+            broker,
+            CancellationToken.None
+        );
 
         // Assert
         var ok = result.ShouldBeOfType<Ok<EventDetailResponse>>();
@@ -694,6 +808,7 @@ public class GetEventByTokenHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var organizerId = Guid.NewGuid();
         db.Organizers.Add(
             new Organizer
@@ -740,6 +855,7 @@ public class GetEventByTokenHandlerTests
             token,
             alice.Id,
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -756,6 +872,7 @@ public class GetEventByTokenHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var organizerId = Guid.NewGuid();
         db.Organizers.Add(
             new Organizer
@@ -774,6 +891,7 @@ public class GetEventByTokenHandlerTests
             token,
             Guid.NewGuid(),
             db,
+            broker,
             CancellationToken.None
         );
 
