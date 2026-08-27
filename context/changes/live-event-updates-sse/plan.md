@@ -516,17 +516,17 @@ inline logic). `best-hero` — a `changed` result opens the dialog; confirming r
 
 #### Automated
 
-- [x] 3.1 Type check passes: `pnpm exec tsc --noEmit`
-- [x] 3.2 Lint passes: `pnpm lint`
-- [x] 3.3 Unit tests pass: `pnpm test`
-- [x] 3.4 Generated client contains `revision` (post-`pnpm orval`)
+- [x] 3.1 Type check passes: `pnpm exec tsc --noEmit` — 4133603
+- [x] 3.2 Lint passes: `pnpm lint` — 4133603
+- [x] 3.3 Unit tests pass: `pnpm test` — 4133603
+- [x] 3.4 Generated client contains `revision` (post-`pnpm orval`) — 4133603
 
 #### Manual
 
-- [x] 3.5 Two browsers: mutation in one appears in the other within ~2s, no manual refresh
-- [x] 3.6 Acting user's own page does not double-refetch (single update, no flicker)
-- [x] 3.7 Backend down / disabled → page usable on own-action refresh; reconnect resumes live
-- [x] 3.8 Tab reconnect refetches once and shows current state
+- [x] 3.5 Two browsers: mutation in one appears in the other within ~2s, no manual refresh — 4133603
+- [x] 3.6 Acting user's own page does not double-refetch (single update, no flicker) — 4133603
+- [x] 3.7 Backend down / disabled → page usable on own-action refresh; reconnect resumes live — 4133603
+- [x] 3.8 Tab reconnect refetches once and shows current state — 4133603
 
 ### Phase 4: Stale-Lock Confirm Guard
 
