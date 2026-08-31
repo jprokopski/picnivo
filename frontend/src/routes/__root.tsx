@@ -10,26 +10,51 @@ import { I18nProvider } from "@lingui/react";
 import { Toaster } from "../components/ui/sonner";
 import { i18n } from "../lib/i18n";
 import { getSessionFn } from "../lib/supabase/session";
+import { getOriginFn } from "../lib/seo/origin";
+import { buildMeta } from "../lib/seo/meta";
+import {
+  DEFAULT_DESCRIPTION,
+  OG_CARD_ALT,
+  SITE_NAME,
+} from "../lib/seo/constants";
 import type { RouterContext } from "../router";
 
 import appCss from "../styles.css?url";
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   beforeLoad: async () => {
-    const user = await getSessionFn();
-    return { user };
+    const [user, origin] = await Promise.all([getSessionFn(), getOriginFn()]);
+    return { user, origin };
   },
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Picnivo" },
-    ],
-    links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
-    ],
-  }),
+  // Brand-level defaults every route inherits. `links` deliberately omits the
+  // `canonical` entry buildMeta() would emit for "/" — TanStack Router only
+  // dedupes `meta` by name/property (deepest match wins), not `links` by
+  // `rel`, so a route-level canonical would render alongside this one rather
+  // than replacing it. Canonical is left to pages that actually describe a
+  // URL (login, event); root has none of its own — "/" always redirects.
+  head: ({ match }) => {
+    const { origin } = match.context;
+    const { meta } = buildMeta({
+      title: SITE_NAME,
+      description: i18n._(DEFAULT_DESCRIPTION),
+      path: "/",
+      origin,
+      imageAlt: i18n._(OG_CARD_ALT),
+    });
+
+    return {
+      meta: [
+        { charSet: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { name: "theme-color", content: "#fbf4e9" },
+        ...meta,
+      ],
+      links: [
+        { rel: "stylesheet", href: appCss },
+        { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+      ],
+    };
+  },
   shellComponent: RootDocument,
 });
 

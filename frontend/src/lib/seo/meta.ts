@@ -1,4 +1,3 @@
-import type { MetaDescriptor } from "@tanstack/react-router";
 import {
   OG_CARD_HEIGHT,
   OG_CARD_PATH,
@@ -30,8 +29,20 @@ export type BuildMetaOptions = {
   type?: "website" | "article";
 };
 
+// Narrower than router-core's own `MetaDescriptor` union, which also
+// includes a `'script:ld+json'` variant. That variant shares zero
+// properties with the `MetaHTMLAttributes`-shaped type TanStack Router's
+// `head()` actually expects for `meta`, so importing the full union here
+// breaks assignability at every real `head()` call site even though
+// buildMeta() never produces that variant.
+export type SeoMetaTag =
+  | { charSet: "utf-8" }
+  | { title: string }
+  | { name: string; content: string }
+  | { property: string; content: string };
+
 export type BuildMetaResult = {
-  meta: MetaDescriptor[];
+  meta: SeoMetaTag[];
   links: Array<{ rel: string; href: string }>;
 };
 
@@ -54,7 +65,7 @@ export function buildMeta({
   const url = new URL(path, origin).toString();
   const absoluteImage = new URL(image, origin).toString();
 
-  const meta: MetaDescriptor[] = [
+  const meta: SeoMetaTag[] = [
     { title: truncatedTitle },
     { name: "description", content: truncatedDescription },
     { property: "og:title", content: truncatedTitle },

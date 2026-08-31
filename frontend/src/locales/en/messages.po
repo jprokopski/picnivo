@@ -557,7 +557,7 @@ msgstr "Past"
 msgid "Pick a custom date"
 msgstr "Pick a custom date"
 
-#: src/lib/seo/constants.ts:16
+#: src/lib/seo/constants.ts:21
 msgid "Pick a date together on Picnivo."
 msgstr "Pick a date together on Picnivo."
 
@@ -574,6 +574,10 @@ msgstr "Pick at least one day to continue."
 #: src/features/events/create-event/components/create-event-form.tsx:166
 msgid "Pick some days"
 msgstr "Pick some days"
+
+#: src/lib/seo/constants.ts:19
+msgid "Picnivo — plan the hang, together"
+msgstr "Picnivo — plan the hang, together"
 
 #: src/lib/seo/constants.ts:14
 msgid "Picnivo — plan the hang, together."

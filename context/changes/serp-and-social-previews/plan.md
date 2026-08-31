@@ -566,17 +566,17 @@ stale empty card for days.
 
 #### Automated
 
-- [ ] 3.1 Type checking passes
-- [ ] 3.2 Unit tests pass
-- [ ] 3.3 Linting passes
-- [ ] 3.4 Raw `/login` response contains `og:image`, `og:title`, `twitter:card`, and canonical
+- [x] 3.1 Type checking passes
+- [x] 3.2 Unit tests pass
+- [x] 3.3 Linting passes
+- [x] 3.4 Raw `/login` response contains `og:image`, `og:title`, `twitter:card`, and canonical
 
 #### Manual
 
-- [ ] 3.5 Browser tab title correct on `/login` and `/register`
-- [ ] 3.6 Redirect chain from `/` terminates on a page carrying the full tag set
-- [ ] 3.7 Facebook Sharing Debugger renders the brand card with no warnings
-- [ ] 3.8 LinkedIn Post Inspector renders the same card
+- [x] 3.5 Browser tab title correct on `/login` and `/register`
+- [x] 3.6 Redirect chain from `/` terminates on a page carrying the full tag set
+- [x] 3.7 Facebook Sharing Debugger renders the brand card with no warnings
+- [x] 3.8 LinkedIn Post Inspector renders the same card
 
 ### Phase 4: Event Page Previews and Index Exclusion
 
