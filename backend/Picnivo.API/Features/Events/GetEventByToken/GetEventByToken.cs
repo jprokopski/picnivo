@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
+using Picnivo.API.Features.Streaming;
 
 namespace Picnivo.API.Features.Events.GetEventByToken;
 
@@ -10,6 +11,7 @@ public static class GetEventByToken
         string token,
         Guid? participantId,
         PicnivoDbContext db,
+        IEventStreamBroker broker,
         CancellationToken ct
     )
     {
@@ -74,12 +76,16 @@ public static class GetEventByToken
         int CountFor(Guid dateOptionId, VoteChoice choice) =>
             allVotes.Count(v => v.DateOptionId == dateOptionId && v.Choice == choice);
 
-        var bestDateOptionId = raw
-            .DateOptions.OrderByDescending(d => CountFor(d.Id, VoteChoice.Yes))
-            .ThenBy(d => CountFor(d.Id, VoteChoice.No))
-            .ThenBy(d => d.StartsAt)
-            .Select(d => (Guid?)d.Id)
-            .FirstOrDefault();
+        var bestDateOptionId = Event.ResolveBestDateOptionId(
+            [
+                .. raw.DateOptions.Select(d => new DateOptionTally(
+                    d.Id,
+                    d.StartsAt,
+                    CountFor(d.Id, VoteChoice.Yes),
+                    CountFor(d.Id, VoteChoice.No)
+                )),
+            ]
+        );
 
         YouDto? you = null;
         if (participantId is { } pid && raw.Participants.Any(p => p.Id == pid))
@@ -139,7 +145,8 @@ public static class GetEventByToken
                         ]
                     )),
                 ],
-                you
+                you,
+                broker.CurrentRevision(token)
             )
         );
     }

@@ -17,6 +17,15 @@ window.matchMedia = vi.fn().mockImplementation((query: string) => ({
   removeEventListener: vi.fn(),
 })) as unknown as typeof window.matchMedia;
 
+// jsdom has no EventSource; useEventStream opens one on mount, so stub a
+// no-op implementation for the component to connect to.
+class FakeEventSource {
+  addEventListener = vi.fn();
+  removeEventListener = vi.fn();
+  close = vi.fn();
+}
+vi.stubGlobal("EventSource", FakeEventSource);
+
 afterEach(() => cleanup());
 
 function Wrapper({ children }: { children: React.ReactNode }) {
@@ -75,6 +84,7 @@ const baseEvent: EventDetailResponse = {
     },
   ],
   you: null,
+  revision: 1,
 };
 
 describe("EventDetailView", () => {

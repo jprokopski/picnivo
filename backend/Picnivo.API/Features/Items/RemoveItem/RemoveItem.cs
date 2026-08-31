@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
+using Picnivo.API.Features.Streaming;
 
 namespace Picnivo.API.Features.Items.RemoveItem;
 
@@ -12,6 +13,7 @@ public static class RemoveItem
         Guid? participantId,
         ClaimsPrincipal user,
         PicnivoDbContext db,
+        IEventStreamBroker broker,
         CancellationToken ct
     )
     {
@@ -47,6 +49,7 @@ public static class RemoveItem
 
         db.EventItems.Remove(item);
         await db.SaveChangesAsync(ct);
+        broker.Publish(token);
 
         return Results.NoContent();
     }

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Picnivo.API;
 using Picnivo.API.Data;
 using Picnivo.API.ExceptionHandling;
+using Picnivo.API.Features.Streaming;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,10 @@ builder.Services.AddDbContext<PicnivoDbContext>(options =>
 );
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.Configure<StreamingOptions>(
+    builder.Configuration.GetSection(StreamingOptions.SectionName)
+);
+builder.Services.AddSingleton<IEventStreamBroker, EventStreamBroker>();
 
 var frontendUrl = builder.Configuration["Frontend:Url"];
 

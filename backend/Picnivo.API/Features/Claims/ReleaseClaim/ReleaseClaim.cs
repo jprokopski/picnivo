@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
+using Picnivo.API.Features.Streaming;
 
 namespace Picnivo.API.Features.Claims.ReleaseClaim;
 
@@ -10,6 +11,7 @@ public static class ReleaseClaim
         Guid itemId,
         Guid participantId,
         PicnivoDbContext db,
+        IEventStreamBroker broker,
         CancellationToken ct
     )
     {
@@ -45,6 +47,7 @@ public static class ReleaseClaim
 
         db.ItemClaims.Remove(claim);
         await db.SaveChangesAsync(ct);
+        broker.Publish(token);
 
         return Results.NoContent();
     }

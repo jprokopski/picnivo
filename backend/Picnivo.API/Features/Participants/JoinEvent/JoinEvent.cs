@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
+using Picnivo.API.Features.Streaming;
 
 namespace Picnivo.API.Features.Participants.JoinEvent;
 
@@ -10,6 +11,7 @@ public static class JoinEvent
         string token,
         JoinEventRequest req,
         PicnivoDbContext db,
+        IEventStreamBroker broker,
         CancellationToken ct
     )
     {
@@ -40,6 +42,7 @@ public static class JoinEvent
 
         db.Participants.Add(participant);
         await db.SaveChangesAsync(ct);
+        broker.Publish(token);
 
         return Results.Ok(new JoinEventResponse(participant.Id, duplicateName));
     }

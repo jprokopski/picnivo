@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
 using Picnivo.API.Features.Participants.JoinEvent;
+using Picnivo.API.Features.Streaming;
 using JoinEventHandler = Picnivo.API.Features.Participants.JoinEvent.JoinEvent;
 
 namespace Picnivo.Tests.Features.Participants.JoinEvent;
@@ -14,6 +15,7 @@ public class JoinEventHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var token = await SeedEventAsync(db);
 
         // Act
@@ -21,6 +23,7 @@ public class JoinEventHandlerTests
             token,
             new JoinEventRequest("Alice"),
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -39,11 +42,13 @@ public class JoinEventHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var token = await SeedEventAsync(db);
         await JoinEventHandler.Handle(
             token,
             new JoinEventRequest("Alice"),
             db,
+            broker,
             CancellationToken.None
         );
         db.ChangeTracker.Clear();
@@ -53,6 +58,7 @@ public class JoinEventHandlerTests
             token,
             new JoinEventRequest("alice"),
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -67,12 +73,14 @@ public class JoinEventHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
 
         // Act
         var result = await JoinEventHandler.Handle(
             "unknowntoken",
             new JoinEventRequest("Alice"),
             db,
+            broker,
             CancellationToken.None
         );
 

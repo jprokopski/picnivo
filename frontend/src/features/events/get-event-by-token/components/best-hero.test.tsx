@@ -34,7 +34,11 @@ function Wrapper({ children }: { children: React.ReactNode }) {
 afterEach(() => cleanup());
 
 beforeEach(() => {
-  vi.mocked(selectFinalDateFn).mockReset().mockResolvedValue({ error: null });
+  vi.mocked(selectFinalDateFn).mockReset().mockResolvedValue({
+    error: null,
+    changed: false,
+    currentBestDateOptionId: null,
+  });
   vi.mocked(toast.error).mockClear();
   invalidate.mockClear();
 });
@@ -47,6 +51,16 @@ const heroDate: DateOptionDto = {
   noCount: 0,
 };
 
+const otherDate: DateOptionDto = {
+  id: "d2",
+  startsAt: "2099-06-27T19:00:00.000Z",
+  yesCount: 3,
+  maybeCount: 0,
+  noCount: 0,
+};
+
+const dateOptions = [heroDate, otherDate];
+
 describe("BestHero", () => {
   it("renders the best date", () => {
     render(
@@ -54,6 +68,7 @@ describe("BestHero", () => {
         <BestHero
           token="tok1"
           heroDate={heroDate}
+          dateOptions={dateOptions}
           location="Ocean Beach"
           organizerName="Maya"
           isOrganizer={false}
@@ -75,6 +90,7 @@ describe("BestHero", () => {
         <BestHero
           token="tok1"
           heroDate={heroDate}
+          dateOptions={dateOptions}
           organizerName="Maya"
           isOrganizer={false}
           locked={false}
@@ -93,6 +109,7 @@ describe("BestHero", () => {
         <BestHero
           token="tok1"
           heroDate={heroDate}
+          dateOptions={dateOptions}
           organizerName="Maya"
           isOrganizer={true}
           locked={false}
@@ -112,6 +129,7 @@ describe("BestHero", () => {
         <BestHero
           token="tok1"
           heroDate={heroDate}
+          dateOptions={dateOptions}
           organizerName="Maya"
           isOrganizer={true}
           locked={false}
@@ -125,7 +143,7 @@ describe("BestHero", () => {
 
     await waitFor(() => {
       expect(selectFinalDateFn).toHaveBeenCalledWith({
-        data: { token: "tok1", dateOptionId: "d1" },
+        data: { token: "tok1", dateOptionId: "d1", force: false },
       });
     });
     await waitFor(() => {
@@ -136,12 +154,15 @@ describe("BestHero", () => {
   it("shows an error toast and does not invalidate when the lock fails", async () => {
     vi.mocked(selectFinalDateFn).mockResolvedValue({
       error: "Not the organizer.",
+      changed: false,
+      currentBestDateOptionId: null,
     });
     render(
       <Wrapper>
         <BestHero
           token="tok1"
           heroDate={heroDate}
+          dateOptions={dateOptions}
           organizerName="Maya"
           isOrganizer={true}
           locked={false}
@@ -165,6 +186,7 @@ describe("BestHero", () => {
         <BestHero
           token="tok1"
           heroDate={heroDate}
+          dateOptions={dateOptions}
           organizerName="Maya"
           isOrganizer={true}
           locked={true}
@@ -178,5 +200,99 @@ describe("BestHero", () => {
     expect(
       screen.queryByRole("button", { name: /lock in this date/i }),
     ).toBeNull();
+  });
+
+  it("opens a confirm dialog naming the new leader when the lock is stale", async () => {
+    vi.mocked(selectFinalDateFn).mockResolvedValueOnce({
+      error: null,
+      changed: true,
+      currentBestDateOptionId: "d2",
+    });
+    render(
+      <Wrapper>
+        <BestHero
+          token="tok1"
+          heroDate={heroDate}
+          dateOptions={dateOptions}
+          organizerName="Maya"
+          isOrganizer={true}
+          locked={false}
+          comingNames={[]}
+          totalParticipants={3}
+        />
+      </Wrapper>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /lock in this date/i }));
+
+    expect(await screen.findByText(/the leading date changed/i)).toBeDefined();
+    expect(screen.getAllByText(/Jun 27/i).length).toBeGreaterThan(0);
+    expect(invalidate).not.toHaveBeenCalled();
+  });
+
+  it("resends with force on confirm and invalidates the router", async () => {
+    vi.mocked(selectFinalDateFn)
+      .mockResolvedValueOnce({
+        error: null,
+        changed: true,
+        currentBestDateOptionId: "d2",
+      })
+      .mockResolvedValueOnce({
+        error: null,
+        changed: false,
+        currentBestDateOptionId: null,
+      });
+    render(
+      <Wrapper>
+        <BestHero
+          token="tok1"
+          heroDate={heroDate}
+          dateOptions={dateOptions}
+          organizerName="Maya"
+          isOrganizer={true}
+          locked={false}
+          comingNames={[]}
+          totalParticipants={3}
+        />
+      </Wrapper>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /lock in this date/i }));
+    await screen.findByText(/the leading date changed/i);
+
+    fireEvent.click(screen.getByRole("button", { name: /lock it in anyway/i }));
+
+    await waitFor(() => {
+      expect(selectFinalDateFn).toHaveBeenLastCalledWith({
+        data: { token: "tok1", dateOptionId: "d1", force: true },
+      });
+    });
+    await waitFor(() => {
+      expect(invalidate).toHaveBeenCalled();
+    });
+  });
+
+  it("locks immediately with no dialog when the leader has not moved", async () => {
+    render(
+      <Wrapper>
+        <BestHero
+          token="tok1"
+          heroDate={heroDate}
+          dateOptions={dateOptions}
+          organizerName="Maya"
+          isOrganizer={true}
+          locked={false}
+          comingNames={[]}
+          totalParticipants={3}
+        />
+      </Wrapper>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /lock in this date/i }));
+
+    await waitFor(() => {
+      expect(invalidate).toHaveBeenCalled();
+    });
+    expect(screen.queryByText(/the leading date changed/i)).toBeNull();
   });
 });

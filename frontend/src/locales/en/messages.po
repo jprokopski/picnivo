@@ -19,12 +19,12 @@ msgid "{0} can't make it"
 msgstr "{0} can't make it"
 
 #. placeholder {0}: event.participants.length
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:223
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:227
 msgid "{0} invited"
 msgstr "{0} invited"
 
 #. placeholder {0}: comingNames.length
-#: src/features/events/get-event-by-token/components/best-hero.tsx:98
+#: src/features/events/get-event-by-token/components/best-hero.tsx:123
 msgid "{0} of {totalParticipants} can make it"
 msgstr "{0} of {totalParticipants} can make it"
 
@@ -34,7 +34,7 @@ msgid "{0} of {totalParticipants} coming"
 msgstr "{0} of {totalParticipants} coming"
 
 #. placeholder {0}: event.participants.length
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:168
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:172
 msgid "{0} voted"
 msgstr "{0} voted"
 
@@ -45,12 +45,22 @@ msgstr "{0} voted"
 msgid "{0}, {1} {2} — are you coming?"
 msgstr "{0}, {1} {2} — are you coming?"
 
+#. placeholder {0}: newLeaderParts.dow
+#. placeholder {1}: newLeaderParts.mon
+#. placeholder {2}: newLeaderParts.day
+#. placeholder {3}: parts.dow
+#. placeholder {4}: parts.mon
+#. placeholder {5}: parts.day
+#: src/features/events/get-event-by-token/components/best-hero.tsx:159
+msgid "{0}, {1} {2} is now ahead. Lock in {3}, {4} {5} anyway?"
+msgstr "{0}, {1} {2} is now ahead. Lock in {3}, {4} {5} anyway?"
+
 #: src/features/events/list-events/components/event-card.tsx:55
 msgid "{claimedCount} / {itemCount} claimed"
 msgstr "{claimedCount} / {itemCount} claimed"
 
 #. placeholder {0}: event.items.length
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:198
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:202
 msgid "{claimedCount}/{0} covered"
 msgstr "{claimedCount}/{0} covered"
 
@@ -82,7 +92,7 @@ msgstr "{no} no"
 msgid "{organizerName} is hosting"
 msgstr "{organizerName} is hosting"
 
-#: src/features/events/get-event-by-token/components/best-hero.tsx:115
+#: src/features/events/get-event-by-token/components/best-hero.tsx:140
 msgid "{organizerName} picks the final date once everyone's voted."
 msgstr "{organizerName} picks the final date once everyone's voted."
 
@@ -102,7 +112,7 @@ msgstr "{yes} yes"
 msgid "<0>{comingCount} coming</0> — grab what you'll bring."
 msgstr "<0>{comingCount} coming</0> — grab what you'll bring."
 
-#: src/features/events/get-event-by-token/components/best-hero.tsx:74
+#: src/features/events/get-event-by-token/components/best-hero.tsx:99
 msgid "✓ It's official"
 msgstr "✓ It's official"
 
@@ -171,7 +181,7 @@ msgstr "Back"
 msgid "Beach umbrella"
 msgstr "Beach umbrella"
 
-#: src/features/events/get-event-by-token/components/best-hero.tsx:78
+#: src/features/events/get-event-by-token/components/best-hero.tsx:103
 msgid "Best date so far"
 msgstr "Best date so far"
 
@@ -197,6 +207,7 @@ msgid "Can't make it anymore?"
 msgstr "Can't make it anymore?"
 
 #: src/features/events/delete-event/components/delete-event.tsx:68
+#: src/features/events/get-event-by-token/components/best-hero.tsx:174
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -363,7 +374,7 @@ msgstr "Hosted by you"
 msgid "Hosting"
 msgstr "Hosting"
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:161
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:165
 msgid "How everyone voted"
 msgstr "How everyone voted"
 
@@ -416,9 +427,13 @@ msgstr "Let the group know so the haul and headcount stay accurate."
 msgid "Live preview"
 msgstr "Live preview"
 
-#: src/features/events/get-event-by-token/components/best-hero.tsx:109
+#: src/features/events/get-event-by-token/components/best-hero.tsx:134
 msgid "Lock in this date"
 msgstr "Lock in this date"
+
+#: src/features/events/get-event-by-token/components/best-hero.tsx:180
+msgid "Lock it in anyway"
+msgstr "Lock it in anyway"
 
 #: src/features/events/claim-items/components/haul-gated.tsx:26
 msgid "Lock the date above to open the haul."
@@ -639,7 +654,7 @@ msgstr "Something went wrong."
 #: src/features/events/create-event/components/create-event-form.tsx:77
 #: src/features/events/delete-event/components/delete-event.tsx:35
 #: src/features/events/delete-event/components/delete-event.tsx:40
-#: src/features/events/get-event-by-token/components/best-hero.tsx:44
+#: src/features/events/get-event-by-token/components/best-hero.tsx:60
 #: src/features/events/join-event/components/join-bar.tsx:35
 #: src/features/events/set-attendance/components/attendance-card.tsx:37
 #: src/features/events/vote-on-dates/components/vote-control.tsx:40
@@ -681,7 +696,7 @@ msgstr "That's the date that worked for most people. Can you still swing by, or 
 msgid "The basics"
 msgstr "The basics"
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:222
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:226
 msgid "The crew"
 msgstr "The crew"
 
@@ -710,11 +725,15 @@ msgstr "The group locked <0>{0}, {1} {2}</0>, which you said doesn't work."
 msgid "The group locked this date and you're down to come."
 msgstr "The group locked this date and you're down to come."
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:193
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:197
 msgid "The haul"
 msgstr "The haul"
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:247
+#: src/features/events/get-event-by-token/components/best-hero.tsx:155
+msgid "The leading date changed"
+msgstr "The leading date changed"
+
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:251
 msgid "The link may be mistyped, or the event no longer exists."
 msgstr "The link may be mistyped, or the event no longer exists."
 
@@ -762,9 +781,18 @@ msgstr "Vote"
 msgid "Vote on dates and claim what you'll bring — no account needed."
 msgstr "Vote on dates and claim what you'll bring — no account needed."
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:163
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:167
 msgid "Vote on the dates"
 msgstr "Vote on the dates"
+
+#. placeholder {0}: parts.dow
+#. placeholder {1}: parts.mon
+#. placeholder {2}: parts.day
+#: src/features/events/get-event-by-token/components/best-hero.tsx:165
+msgid "Votes have shifted since you loaded this page. Lock in {0}, {1} {2} "
+"anyway?"
+msgstr "Votes have shifted since you loaded this page. Lock in {0}, {1} {2} "
+"anyway?"
 
 #: src/features/events/list-events/components/event-card.tsx:40
 msgid "Voting open"
@@ -779,7 +807,7 @@ msgstr "Was {0}'s — needs a new owner"
 msgid "Watermelon"
 msgstr "Watermelon"
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:244
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:248
 msgid "We couldn't find that event."
 msgstr "We couldn't find that event."
 
@@ -803,7 +831,7 @@ msgstr "What's the plan?"
 msgid "When could it happen?"
 msgstr "When could it happen?"
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:158
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:162
 msgid "When works?"
 msgstr "When works?"
 
@@ -815,7 +843,7 @@ msgstr "Where"
 msgid "Where good hangs come together"
 msgstr "Where good hangs come together"
 
-#: src/features/events/get-event-by-token/components/event-detail-view.tsx:194
+#: src/features/events/get-event-by-token/components/event-detail-view.tsx:198
 msgid "Who brings what"
 msgstr "Who brings what"
 

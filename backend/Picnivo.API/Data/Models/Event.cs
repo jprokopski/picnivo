@@ -1,5 +1,12 @@
 namespace Picnivo.API.Data.Models;
 
+public readonly record struct DateOptionTally(
+    Guid Id,
+    DateTimeOffset StartsAt,
+    int YesCount,
+    int NoCount
+);
+
 public class Event
 {
     public Guid Id { get; set; }
@@ -25,4 +32,17 @@ public class Event
         Guid? chosenDateOptionId,
         IReadOnlyCollection<Guid> dateOptionIds
     ) => chosenDateOptionId ?? (dateOptionIds.Count == 1 ? dateOptionIds.Single() : null);
+
+    /// <summary>
+    /// Ranks date options by most Yes votes, then fewest No votes, then earliest start —
+    /// the single authoritative "best date" ordering shared by the read model and the
+    /// organizer's lock-date staleness guard, so they never disagree.
+    /// </summary>
+    public static Guid? ResolveBestDateOptionId(IReadOnlyCollection<DateOptionTally> tallies) =>
+        tallies
+            .OrderByDescending(t => t.YesCount)
+            .ThenBy(t => t.NoCount)
+            .ThenBy(t => t.StartsAt)
+            .Select(t => (Guid?)t.Id)
+            .FirstOrDefault();
 }

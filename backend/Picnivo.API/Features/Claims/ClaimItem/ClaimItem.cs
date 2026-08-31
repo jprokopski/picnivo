@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
+using Picnivo.API.Features.Streaming;
 
 namespace Picnivo.API.Features.Claims.ClaimItem;
 
@@ -11,6 +12,7 @@ public static class ClaimItem
         Guid itemId,
         Guid participantId,
         PicnivoDbContext db,
+        IEventStreamBroker broker,
         CancellationToken ct
     )
     {
@@ -90,6 +92,7 @@ public static class ClaimItem
         item.OrphanedFromParticipantId = null;
 
         await db.SaveChangesAsync(ct);
+        broker.Publish(token);
 
         return Results.NoContent();
     }

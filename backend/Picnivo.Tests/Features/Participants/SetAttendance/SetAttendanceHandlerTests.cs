@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
 using Picnivo.API.Features.Participants.SetAttendance;
+using Picnivo.API.Features.Streaming;
 using SetAttendanceHandler = Picnivo.API.Features.Participants.SetAttendance.SetAttendance;
 
 namespace Picnivo.Tests.Features.Participants.SetAttendance;
@@ -14,6 +15,7 @@ public class SetAttendanceHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, participantId, _) = await SeedEventWithParticipantAsync(db);
 
         // Act
@@ -22,6 +24,7 @@ public class SetAttendanceHandlerTests
             participantId,
             new SetAttendanceRequest(AttendanceStatus.Coming),
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -36,6 +39,7 @@ public class SetAttendanceHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, participantId, itemId) = await SeedEventWithParticipantAsync(db);
         db.ItemClaims.Add(
             new ItemClaim
@@ -55,6 +59,7 @@ public class SetAttendanceHandlerTests
             participantId,
             new SetAttendanceRequest(AttendanceStatus.Out),
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -72,6 +77,7 @@ public class SetAttendanceHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, participantId, itemId) = await SeedEventWithParticipantAsync(db);
 
         // Act
@@ -80,6 +86,7 @@ public class SetAttendanceHandlerTests
             participantId,
             new SetAttendanceRequest(AttendanceStatus.Out),
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -94,6 +101,7 @@ public class SetAttendanceHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, _, _) = await SeedEventWithParticipantAsync(db);
 
         // Act
@@ -102,6 +110,7 @@ public class SetAttendanceHandlerTests
             Guid.NewGuid(),
             new SetAttendanceRequest(AttendanceStatus.Coming),
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -114,6 +123,7 @@ public class SetAttendanceHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
 
         // Act
         var result = await SetAttendanceHandler.Handle(
@@ -121,6 +131,7 @@ public class SetAttendanceHandlerTests
             Guid.NewGuid(),
             new SetAttendanceRequest(AttendanceStatus.Coming),
             db,
+            broker,
             CancellationToken.None
         );
 

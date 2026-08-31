@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
+using Picnivo.API.Features.Streaming;
 
 namespace Picnivo.API.Features.Items.AddItem;
 
@@ -12,6 +13,7 @@ public static class AddItem
         string token,
         AddItemRequest req,
         PicnivoDbContext db,
+        IEventStreamBroker broker,
         CancellationToken ct
     )
     {
@@ -63,6 +65,7 @@ public static class AddItem
 
         db.EventItems.Add(item);
         await db.SaveChangesAsync(ct);
+        broker.Publish(token);
 
         return Results.Created(
             $"/api/events/{token}/items/{item.Id}",

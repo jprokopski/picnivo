@@ -5,7 +5,9 @@
 - Run: `dotnet run` (from `Picnivo.API/`)
 - Build: `dotnet build` (from `Picnivo.API/`)
 - Test: `dotnet test` (from `backend/`)
-- Deploy (manual): `fly deploy` (from `backend/`)
+- Deploy (manual): `fly deploy --ha=false` (from `backend/`) — `--ha` defaults to `true` and spins up a
+  spare machine, which breaks the in-process SSE broker (see `context/changes/live-event-updates-sse/`);
+  keep it single-instance until multi-instance fan-out is implemented
 - Logs: `fly logs --app picnivo`
 - SSH: `fly ssh console --app picnivo`
 

@@ -84,6 +84,32 @@
         }
       }
     },
+    "/api/events/{token}/stream": {
+      "get": {
+        "tags": [
+          "StreamEvent"
+        ],
+        "operationId": "StreamEvent",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/api/events/{token}/participants/{participantId}/attendance": {
       "put": {
         "tags": [
@@ -332,6 +358,16 @@
           },
           "404": {
             "description": "Not Found"
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SelectFinalDateConflictResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -758,7 +794,8 @@
           "dateOptions",
           "items",
           "participants",
-          "you"
+          "you",
+          "revision"
         ],
         "type": "object",
         "properties": {
@@ -825,6 +862,14 @@
                 "$ref": "#/components/schemas/YouDto"
               }
             ]
+          },
+          "revision": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
           }
         }
       },
@@ -1106,6 +1151,21 @@
           }
         }
       },
+      "SelectFinalDateConflictResponse": {
+        "required": [
+          "currentBestDateOptionId"
+        ],
+        "type": "object",
+        "properties": {
+          "currentBestDateOptionId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          }
+        }
+      },
       "SelectFinalDateRequest": {
         "required": [
           "dateOptionId"
@@ -1118,6 +1178,10 @@
               "string"
             ],
             "format": "uuid"
+          },
+          "force": {
+            "type": "boolean",
+            "default": false
           }
         }
       },
@@ -1201,6 +1265,9 @@
     },
     {
       "name": "CastVotes"
+    },
+    {
+      "name": "StreamEvent"
     },
     {
       "name": "SetAttendance"

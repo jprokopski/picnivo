@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Picnivo.API.Data;
 using Picnivo.API.Data.Models;
+using Picnivo.API.Features.Streaming;
 using Picnivo.API.Features.Votes.CastVotes;
 using CastVotesHandler = Picnivo.API.Features.Votes.CastVotes.CastVotes;
 
@@ -10,10 +11,57 @@ namespace Picnivo.Tests.Features.Votes.CastVotes;
 public class CastVotesHandlerTests
 {
     [Fact]
+    public async Task OnSuccess_PublishesRevision()
+    {
+        // Arrange
+        await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
+        var (token, participantId, dateOptionId, _) = await SeedEventWithParticipantAsync(db);
+        var before = broker.CurrentRevision(token);
+
+        // Act
+        await CastVotesHandler.Handle(
+            token,
+            participantId,
+            new CastVotesRequest([new VoteDto(dateOptionId, VoteChoice.Yes)]),
+            db,
+            broker,
+            CancellationToken.None
+        );
+
+        // Assert
+        broker.CurrentRevision(token).ShouldBeGreaterThan(before);
+    }
+
+    [Fact]
+    public async Task OnRejection_DoesNotPublish()
+    {
+        // Arrange
+        await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
+        var (token, participantId, _, _) = await SeedEventWithParticipantAsync(db);
+        var before = broker.CurrentRevision(token);
+
+        // Act
+        await CastVotesHandler.Handle(
+            token,
+            participantId,
+            new CastVotesRequest([new VoteDto(Guid.NewGuid(), VoteChoice.Yes)]),
+            db,
+            broker,
+            CancellationToken.None
+        );
+
+        // Assert
+        broker.CurrentRevision(token).ShouldBe(before);
+    }
+
+    [Fact]
     public async Task UpsertsVote_ChangingChoiceWithoutAddingRows()
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, participantId, dateOptionId, _) = await SeedEventWithParticipantAsync(db);
 
         // Act
@@ -22,6 +70,7 @@ public class CastVotesHandlerTests
             participantId,
             new CastVotesRequest([new VoteDto(dateOptionId, VoteChoice.Yes)]),
             db,
+            broker,
             CancellationToken.None
         );
         db.ChangeTracker.Clear();
@@ -30,6 +79,7 @@ public class CastVotesHandlerTests
             participantId,
             new CastVotesRequest([new VoteDto(dateOptionId, VoteChoice.No)]),
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -45,6 +95,7 @@ public class CastVotesHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, participantId, _, _) = await SeedEventWithParticipantAsync(db);
 
         // Act
@@ -53,6 +104,7 @@ public class CastVotesHandlerTests
             participantId,
             new CastVotesRequest([new VoteDto(Guid.NewGuid(), VoteChoice.Yes)]),
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -65,6 +117,7 @@ public class CastVotesHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, _, dateOptionId, _) = await SeedEventWithParticipantAsync(db);
 
         // Act
@@ -73,6 +126,7 @@ public class CastVotesHandlerTests
             Guid.NewGuid(),
             new CastVotesRequest([new VoteDto(dateOptionId, VoteChoice.Yes)]),
             db,
+            broker,
             CancellationToken.None
         );
 
@@ -85,6 +139,7 @@ public class CastVotesHandlerTests
     {
         // Arrange
         await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
         var (token, participantId, dateOptionId, _) = await SeedEventWithParticipantAsync(
             db,
             dateOptionCount: 1
@@ -96,6 +151,7 @@ public class CastVotesHandlerTests
             participantId,
             new CastVotesRequest([new VoteDto(dateOptionId, VoteChoice.Yes)]),
             db,
+            broker,
             CancellationToken.None
         );
 

@@ -90,6 +90,11 @@ export type EventDetailResponseChosenDateOptionId = null | string;
 
 export type EventDetailResponseYou = null | YouDto;
 
+/**
+ * @pattern ^-?(?:0|[1-9]\d*)$
+ */
+export type EventDetailResponseRevision = number | string;
+
 export interface EventDetailResponse {
   title: string;
   description: EventDetailResponseDescription;
@@ -102,6 +107,8 @@ export interface EventDetailResponse {
   items: EventItemDto[];
   participants: ParticipantDto[];
   you: EventDetailResponseYou;
+  /** @pattern ^-?(?:0|[1-9]\d*)$ */
+  revision: EventDetailResponseRevision;
 }
 
 export type EventItemDtoClaimedByParticipantId = null | string;
@@ -220,10 +227,19 @@ export interface ParticipantVoteDto {
   choice: VoteChoice;
 }
 
+export type SelectFinalDateConflictResponseCurrentBestDateOptionId =
+  | null
+  | string;
+
+export interface SelectFinalDateConflictResponse {
+  currentBestDateOptionId: SelectFinalDateConflictResponseCurrentBestDateOptionId;
+}
+
 export type SelectFinalDateRequestDateOptionId = null | string;
 
 export interface SelectFinalDateRequest {
   dateOptionId: SelectFinalDateRequestDateOptionId;
+  force?: boolean;
 }
 
 export interface SetAttendanceRequest {
@@ -608,6 +624,147 @@ export const useCastVotes = <
   return useMutation(mutationOptions, queryClient);
 };
 
+export const streamEvent = (
+  token: string,
+  options?: SecondParameter<typeof axiosInstance>,
+  signal?: AbortSignal,
+) => {
+  return axiosInstance<void>(
+    { url: `/api/events/${token}/stream`, method: "GET", signal },
+    options,
+  );
+};
+
+export const getStreamEventQueryKey = (token?: string) => {
+  return [`/api/events/${token}/stream`] as const;
+};
+
+export const getStreamEventQueryOptions = <
+  TData = Awaited<ReturnType<typeof streamEvent>>,
+  TError = void,
+>(
+  token: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof streamEvent>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getStreamEventQueryKey(token);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof streamEvent>>> = ({
+    signal,
+  }) => streamEvent(token, requestOptions, signal);
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!token,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof streamEvent>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type StreamEventQueryResult = NonNullable<
+  Awaited<ReturnType<typeof streamEvent>>
+>;
+export type StreamEventQueryError = void;
+
+export function useStreamEvent<
+  TData = Awaited<ReturnType<typeof streamEvent>>,
+  TError = void,
+>(
+  token: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof streamEvent>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof streamEvent>>,
+          TError,
+          Awaited<ReturnType<typeof streamEvent>>
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useStreamEvent<
+  TData = Awaited<ReturnType<typeof streamEvent>>,
+  TError = void,
+>(
+  token: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof streamEvent>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof streamEvent>>,
+          TError,
+          Awaited<ReturnType<typeof streamEvent>>
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useStreamEvent<
+  TData = Awaited<ReturnType<typeof streamEvent>>,
+  TError = void,
+>(
+  token: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof streamEvent>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+
+export function useStreamEvent<
+  TData = Awaited<ReturnType<typeof streamEvent>>,
+  TError = void,
+>(
+  token: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof streamEvent>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getStreamEventQueryOptions(token, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
 export const setAttendance = (
   token: string,
   participantId: string,
@@ -963,7 +1120,7 @@ export const selectFinalDate = (
 };
 
 export const getSelectFinalDateMutationOptions = <
-  TError = void,
+  TError = void | SelectFinalDateConflictResponse,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -1004,9 +1161,13 @@ export type SelectFinalDateMutationResult = NonNullable<
   Awaited<ReturnType<typeof selectFinalDate>>
 >;
 export type SelectFinalDateMutationBody = SelectFinalDateRequest;
-export type SelectFinalDateMutationError = void;
+export type SelectFinalDateMutationError =
+  void | SelectFinalDateConflictResponse;
 
-export const useSelectFinalDate = <TError = void, TContext = unknown>(
+export const useSelectFinalDate = <
+  TError = void | SelectFinalDateConflictResponse,
+  TContext = unknown,
+>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof selectFinalDate>>,
