@@ -799,6 +799,10 @@ msgstr "Vote"
 msgid "Vote on dates and claim what you'll bring — no account needed."
 msgstr "Vote on dates and claim what you'll bring — no account needed."
 
+#: src/features/events/get-event-by-token/seo.ts:19
+msgid "Vote on dates and claim what you'll bring."
+msgstr "Vote on dates and claim what you'll bring."
+
 #: src/features/events/get-event-by-token/components/event-detail-view.tsx:167
 msgid "Vote on the dates"
 msgstr "Vote on the dates"

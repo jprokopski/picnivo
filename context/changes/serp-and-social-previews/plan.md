@@ -566,27 +566,27 @@ stale empty card for days.
 
 #### Automated
 
-- [x] 3.1 Type checking passes
-- [x] 3.2 Unit tests pass
-- [x] 3.3 Linting passes
-- [x] 3.4 Raw `/login` response contains `og:image`, `og:title`, `twitter:card`, and canonical
+- [x] 3.1 Type checking passes — 11ea321
+- [x] 3.2 Unit tests pass — 11ea321
+- [x] 3.3 Linting passes — 11ea321
+- [x] 3.4 Raw `/login` response contains `og:image`, `og:title`, `twitter:card`, and canonical — 11ea321
 
 #### Manual
 
-- [x] 3.5 Browser tab title correct on `/login` and `/register`
-- [x] 3.6 Redirect chain from `/` terminates on a page carrying the full tag set
-- [x] 3.7 Facebook Sharing Debugger renders the brand card with no warnings
-- [x] 3.8 LinkedIn Post Inspector renders the same card
+- [x] 3.5 Browser tab title correct on `/login` and `/register` — 11ea321
+- [x] 3.6 Redirect chain from `/` terminates on a page carrying the full tag set — 11ea321
+- [x] 3.7 Facebook Sharing Debugger renders the brand card with no warnings — 11ea321
+- [x] 3.8 LinkedIn Post Inspector renders the same card — 11ea321
 
 ### Phase 4: Event Page Previews and Index Exclusion
 
 #### Automated
 
-- [ ] 4.1 Unit tests pass
-- [ ] 4.2 E2E suite passes
-- [ ] 4.3 Type checking passes
-- [ ] 4.4 Linting passes
-- [ ] 4.5 Full monorepo check passes (`/verify`)
+- [x] 4.1 Unit tests pass
+- [x] 4.2 E2E suite passes
+- [x] 4.3 Type checking passes
+- [x] 4.4 Linting passes
+- [x] 4.5 Full monorepo check passes (`/verify`)
 
 #### Manual
 

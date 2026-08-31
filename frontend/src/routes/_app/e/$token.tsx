@@ -8,6 +8,14 @@ import {
   getMyParticipantIdFn,
   getShareOriginFn,
 } from "../../../features/events/get-event-by-token/functions";
+import { buildEventCard } from "../../../features/events/get-event-by-token/seo";
+import { buildMeta } from "../../../lib/seo/meta";
+import {
+  DEFAULT_DESCRIPTION,
+  OG_CARD_ALT,
+  SITE_NAME,
+} from "../../../lib/seo/constants";
+import { i18n } from "../../../lib/i18n";
 
 export const Route = createFileRoute("/_app/e/$token")({
   loader: async ({ params, context }) => {
@@ -33,6 +41,43 @@ export const Route = createFileRoute("/_app/e/$token")({
       shareUrl: `${origin}/e/${params.token}`,
       myParticipantId,
     };
+  },
+  // `head` runs before the component, so it must tolerate the same `null`
+  // event the component guards against below — emitting generic site
+  // metadata rather than a broken card referencing a nonexistent event.
+  // Always `noindex` — event pages must stay crawlable for social scrapers
+  // (see robots.txt) but never reach Google. `shareUrl` is already an
+  // absolute URL from the loader, so no extra origin resolution is needed
+  // here; it doubles as the source for both `path` and `origin` in either
+  // branch.
+  head: ({ loaderData, match }) => {
+    // `loaderData` is undefined only before the loader has resolved (e.g. a
+    // pending initial render) — root's own defaults cover that instant, so
+    // this just needs a valid origin to still produce a well-formed result.
+    if (!loaderData) {
+      return buildMeta({
+        title: SITE_NAME,
+        description: i18n._(DEFAULT_DESCRIPTION),
+        path: match.pathname,
+        origin: match.context.origin,
+        imageAlt: i18n._(OG_CARD_ALT),
+        noindex: true,
+      });
+    }
+
+    const shareUrl = new URL(loaderData.shareUrl);
+    const { title, description } = loaderData.event
+      ? buildEventCard(loaderData.event)
+      : { title: SITE_NAME, description: i18n._(DEFAULT_DESCRIPTION) };
+
+    return buildMeta({
+      title,
+      description,
+      path: shareUrl.pathname,
+      origin: shareUrl.origin,
+      imageAlt: i18n._(OG_CARD_ALT),
+      noindex: true,
+    });
   },
   component: EventPage,
 });
