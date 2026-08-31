@@ -358,6 +358,16 @@
           },
           "404": {
             "description": "Not Found"
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SelectFinalDateConflictResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -1141,6 +1151,21 @@
           }
         }
       },
+      "SelectFinalDateConflictResponse": {
+        "required": [
+          "currentBestDateOptionId"
+        ],
+        "type": "object",
+        "properties": {
+          "currentBestDateOptionId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          }
+        }
+      },
       "SelectFinalDateRequest": {
         "required": [
           "dateOptionId"
@@ -1153,6 +1178,10 @@
               "string"
             ],
             "format": "uuid"
+          },
+          "force": {
+            "type": "boolean",
+            "default": false
           }
         }
       },

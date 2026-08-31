@@ -4,6 +4,16 @@ import { useRouter } from "@tanstack/react-router";
 import { ClockIcon, MapPinIcon, SparklesIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { AvatarStack } from "@/components/avatar";
 import type { DateOptionDto } from "@/api/picnivo-api";
 import { formatInstantParts } from "@/lib/format-instant";
@@ -12,6 +22,7 @@ import { selectFinalDateFn } from "../../select-final-date/functions";
 interface BestHeroProps {
   token: string;
   heroDate: DateOptionDto;
+  dateOptions: DateOptionDto[];
   location?: string | null;
   organizerName: string;
   isOrganizer: boolean;
@@ -23,6 +34,7 @@ interface BestHeroProps {
 export function BestHero({
   token,
   heroDate,
+  dateOptions,
   location,
   organizerName,
   isOrganizer,
@@ -33,20 +45,33 @@ export function BestHero({
   const router = useRouter();
   const { t } = useLingui();
   const [locking, setLocking] = useState(false);
+  const [newLeaderId, setNewLeaderId] = useState<string | null>();
   const parts = formatInstantParts(heroDate.startsAt);
+  const newLeader = dateOptions.find((d) => d.id === newLeaderId);
 
-  async function handleLock() {
+  async function lock(force: boolean) {
     setLocking(true);
     const result = await selectFinalDateFn({
-      data: { token, dateOptionId: heroDate.id },
+      data: { token, dateOptionId: heroDate.id, force },
     });
-    if (result.error) {
+    if (result.changed) {
+      setNewLeaderId(result.currentBestDateOptionId);
+    } else if (result.error) {
       toast.error(result.error || t`Something went wrong. Please try again.`);
     } else {
       await router.invalidate();
     }
     setLocking(false);
   }
+
+  async function handleConfirm() {
+    await lock(true);
+    setNewLeaderId(undefined);
+  }
+
+  const newLeaderParts = newLeader
+    ? formatInstantParts(newLeader.startsAt)
+    : null;
 
   return (
     <div className="overflow-hidden rounded-(--r-lg) shadow-(--sh-lg)">
@@ -104,7 +129,7 @@ export function BestHero({
             <Button
               className="mt-4.5"
               disabled={locking}
-              onClick={() => void handleLock()}
+              onClick={() => void lock(false)}
             >
               <Trans>Lock in this date</Trans>
             </Button>
@@ -120,6 +145,43 @@ export function BestHero({
           )}
         </div>
       </div>
+      <AlertDialog
+        open={newLeaderId !== undefined}
+        onOpenChange={(open) => !open && setNewLeaderId(undefined)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              <Trans>The leading date changed</Trans>
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {newLeaderParts ? (
+                <Trans>
+                  {newLeaderParts.dow}, {newLeaderParts.mon}{" "}
+                  {newLeaderParts.day} is now ahead. Lock in {parts.dow},{" "}
+                  {parts.mon} {parts.day} anyway?
+                </Trans>
+              ) : (
+                <Trans>
+                  Votes have shifted since you loaded this page. Lock in{" "}
+                  {parts.dow}, {parts.mon} {parts.day} anyway?
+                </Trans>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setNewLeaderId(undefined)}>
+              <Trans>Cancel</Trans>
+            </AlertDialogCancel>
+            <AlertDialogAction
+              disabled={locking}
+              onClick={() => void handleConfirm()}
+            >
+              <Trans>Lock it in anyway</Trans>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

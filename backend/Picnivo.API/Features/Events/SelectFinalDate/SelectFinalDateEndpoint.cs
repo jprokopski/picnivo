@@ -11,5 +11,6 @@ public class SelectFinalDateEndpoint : IEndpoint
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status403Forbidden)
-            .Produces(StatusCodes.Status404NotFound);
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces<SelectFinalDateConflictResponse>(StatusCodes.Status409Conflict);
 }

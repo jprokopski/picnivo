@@ -227,10 +227,19 @@ export interface ParticipantVoteDto {
   choice: VoteChoice;
 }
 
+export type SelectFinalDateConflictResponseCurrentBestDateOptionId =
+  | null
+  | string;
+
+export interface SelectFinalDateConflictResponse {
+  currentBestDateOptionId: SelectFinalDateConflictResponseCurrentBestDateOptionId;
+}
+
 export type SelectFinalDateRequestDateOptionId = null | string;
 
 export interface SelectFinalDateRequest {
   dateOptionId: SelectFinalDateRequestDateOptionId;
+  force?: boolean;
 }
 
 export interface SetAttendanceRequest {
@@ -1111,7 +1120,7 @@ export const selectFinalDate = (
 };
 
 export const getSelectFinalDateMutationOptions = <
-  TError = void,
+  TError = void | SelectFinalDateConflictResponse,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -1152,9 +1161,13 @@ export type SelectFinalDateMutationResult = NonNullable<
   Awaited<ReturnType<typeof selectFinalDate>>
 >;
 export type SelectFinalDateMutationBody = SelectFinalDateRequest;
-export type SelectFinalDateMutationError = void;
+export type SelectFinalDateMutationError =
+  void | SelectFinalDateConflictResponse;
 
-export const useSelectFinalDate = <TError = void, TContext = unknown>(
+export const useSelectFinalDate = <
+  TError = void | SelectFinalDateConflictResponse,
+  TContext = unknown,
+>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof selectFinalDate>>,

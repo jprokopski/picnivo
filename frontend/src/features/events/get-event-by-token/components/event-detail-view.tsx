@@ -145,6 +145,7 @@ export function EventDetailView({
                 <BestHero
                   token={token}
                   heroDate={heroDate}
+                  dateOptions={event.dateOptions}
                   location={event.location}
                   organizerName={event.organizerName}
                   isOrganizer={isOrganizer}

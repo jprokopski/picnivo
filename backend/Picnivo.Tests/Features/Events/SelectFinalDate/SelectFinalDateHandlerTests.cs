@@ -84,6 +84,127 @@ public class SelectFinalDateHandlerTests
     }
 
     [Fact]
+    public async Task LockingStaleDate_ReturnsConflictWithCurrentBest()
+    {
+        // Arrange
+        await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
+        var (token, _, organizerId, dateOptionIds) = await SeedEventAsync(db);
+        var voterId = Guid.NewGuid();
+        db.Participants.Add(
+            new Participant
+            {
+                Id = voterId,
+                EventId = (await db.Events.SingleAsync(e => e.Token == token)).Id,
+                DisplayName = "Voter",
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
+        db.DateVotes.Add(
+            new DateVote
+            {
+                Id = Guid.CreateVersion7(),
+                ParticipantId = voterId,
+                DateOptionId = dateOptionIds[1],
+                Choice = VoteChoice.Yes,
+            }
+        );
+        await db.SaveChangesAsync();
+        db.ChangeTracker.Clear();
+        var before = broker.CurrentRevision(token);
+
+        // Act — dateOptionIds[1] now leads on Yes votes, but we try to lock dateOptionIds[0]
+        var result = await SelectFinalDateHandler.Handle(
+            token,
+            new SelectFinalDateRequest(dateOptionIds[0]),
+            UserWith(organizerId),
+            db,
+            broker,
+            CancellationToken.None
+        );
+
+        // Assert
+        var conflict = result.ShouldBeOfType<
+            Microsoft.AspNetCore.Http.HttpResults.Conflict<SelectFinalDateConflictResponse>
+        >();
+        conflict.Value!.CurrentBestDateOptionId.ShouldBe(dateOptionIds[1]);
+        var @event = await db.Events.SingleAsync(e => e.Token == token);
+        @event.ChosenDateOptionId.ShouldBeNull();
+        broker.CurrentRevision(token).ShouldBe(before);
+    }
+
+    [Fact]
+    public async Task LockingStaleDate_WithForce_Locks()
+    {
+        // Arrange
+        await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
+        var (token, eventId, organizerId, dateOptionIds) = await SeedEventAsync(db);
+        var voterId = Guid.NewGuid();
+        db.Participants.Add(
+            new Participant
+            {
+                Id = voterId,
+                EventId = eventId,
+                DisplayName = "Voter",
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
+        db.DateVotes.Add(
+            new DateVote
+            {
+                Id = Guid.CreateVersion7(),
+                ParticipantId = voterId,
+                DateOptionId = dateOptionIds[1],
+                Choice = VoteChoice.Yes,
+            }
+        );
+        await db.SaveChangesAsync();
+        db.ChangeTracker.Clear();
+        var before = broker.CurrentRevision(token);
+
+        // Act
+        var result = await SelectFinalDateHandler.Handle(
+            token,
+            new SelectFinalDateRequest(dateOptionIds[0], Force: true),
+            UserWith(organizerId),
+            db,
+            broker,
+            CancellationToken.None
+        );
+
+        // Assert
+        result.ShouldBeOfType<NoContent>();
+        var @event = await db.Events.SingleAsync(e => e.Id == eventId);
+        @event.ChosenDateOptionId.ShouldBe(dateOptionIds[0]);
+        broker.CurrentRevision(token).ShouldBeGreaterThan(before);
+    }
+
+    [Fact]
+    public async Task LockingUnchangedBest_Locks()
+    {
+        // Arrange
+        await using var db = TestDb.Create();
+        var broker = new EventStreamBroker();
+        var (token, eventId, organizerId, dateOptionIds) = await SeedEventAsync(db);
+
+        // Act — no votes cast, so the earliest date (dateOptionIds[0]) is the tie-break best
+        var result = await SelectFinalDateHandler.Handle(
+            token,
+            new SelectFinalDateRequest(dateOptionIds[0]),
+            UserWith(organizerId),
+            db,
+            broker,
+            CancellationToken.None
+        );
+
+        // Assert
+        result.ShouldBeOfType<NoContent>();
+        var @event = await db.Events.SingleAsync(e => e.Id == eventId);
+        @event.ChosenDateOptionId.ShouldBe(dateOptionIds[0]);
+    }
+
+    [Fact]
     public async Task WithNullDateOptionId_Unlocks()
     {
         // Arrange
