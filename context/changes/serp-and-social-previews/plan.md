@@ -557,10 +557,10 @@ stale empty card for days.
 
 #### Automated
 
-- [ ] 2.1 Unit tests pass
-- [ ] 2.2 Type checking passes
-- [ ] 2.3 Linting passes
-- [ ] 2.4 Lingui catalog extracts the new descriptors cleanly
+- [x] 2.1 Unit tests pass
+- [x] 2.2 Type checking passes
+- [x] 2.3 Linting passes
+- [x] 2.4 Lingui catalog extracts the new descriptors cleanly
 
 ### Phase 3: Site-Level Previews (SERP Entry and Brand Card)
 
