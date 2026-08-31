@@ -542,16 +542,16 @@ stale empty card for days.
 
 #### Automated
 
-- [x] 1.1 Card generates from source: `pnpm --dir frontend og:card` exits 0
-- [x] 1.2 Generated file is exactly 1200×630 and under 300KB
-- [x] 1.3 Type checking passes
-- [x] 1.4 Linting passes
+- [x] 1.1 Card generates from source: `pnpm --dir frontend og:card` exits 0 — 080582c
+- [x] 1.2 Generated file is exactly 1200×630 and under 300KB — 080582c
+- [x] 1.3 Type checking passes — 080582c
+- [x] 1.4 Linting passes — 080582c
 
 #### Manual
 
-- [x] 1.5 Card is legible at thumbnail size (~200px wide)
-- [x] 1.6 Brand colors match the running app side by side
-- [x] 1.7 Served `/robots.txt` contains no `Disallow` rule matching `/e/`
+- [x] 1.5 Card is legible at thumbnail size (~200px wide) — 080582c
+- [x] 1.6 Brand colors match the running app side by side — 080582c
+- [x] 1.7 Served `/robots.txt` contains no `Disallow` rule matching `/e/` — 080582c
 
 ### Phase 2: Shared SEO Metadata Module
 
