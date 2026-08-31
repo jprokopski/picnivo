@@ -5,6 +5,7 @@ import { routeTree } from "./routeTree.gen";
 
 export type RouterContext = {
   user: User | null;
+  origin: string;
 };
 
 export function getRouter() {
@@ -14,7 +15,7 @@ export function getRouter() {
     defaultPreload: "intent",
     defaultPreloadStaleTime: 0,
     defaultErrorComponent: ErrorFallback,
-    context: { user: null },
+    context: { user: null, origin: "" },
   });
 
   return router;

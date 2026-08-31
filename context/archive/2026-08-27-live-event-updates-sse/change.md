@@ -1,9 +1,10 @@
 ---
 change_id: live-event-updates-sse
 title: Live voting & item claiming via Server-Sent Events (with stale-lock guard)
-status: implementing
+status: archived
 created: 2026-08-27
-updated: 2026-08-28
+updated: 2026-08-31
+archived_at: 2026-08-31T15:59:33Z
 ---
 
 ## Notes

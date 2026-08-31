@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+      }
+
+      body {
+        background: #fbf4e9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
+      }
+
+      .card {
+        position: relative;
+        width: 1200px;
+        height: 630px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 28px;
+      }
+
+      .ground {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse 900px 560px at 50% 8%,
+          rgba(241, 90, 55, 0.22) 0%,
+          rgba(241, 90, 55, 0) 60%
+        );
+      }
+
+      .ground::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 18px;
+        background: #f15a37;
+      }
+
+      .basket {
+        position: relative;
+        width: 260px;
+        height: 260px;
+        display: block;
+      }
+
+      .wordmark {
+        position: relative;
+        font-family: "Bricolage Grotesque", Georgia, serif;
+        font-weight: 800;
+        font-size: 96px;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        color: #2b2018;
+      }
+
+      .tagline {
+        position: relative;
+        font-family: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
+        font-weight: 600;
+        font-size: 30px;
+        line-height: 1;
+        color: #f15a37;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="ground"></div>
+      <svg
+        class="basket"
+        viewBox="44 34 258 276"
+        preserveAspectRatio="xMidYMid meet"
+      >
+        <g shape-rendering="crispEdges">
+          <rect x="120" y="70" width="20" height="20" fill="#8a5420" />
+          <rect x="140" y="50" width="80" height="20" fill="#8a5420" />
+          <rect x="220" y="70" width="20" height="20" fill="#8a5420" />
+          <rect x="120" y="90" width="20" height="40" fill="#8a5420" />
+          <rect x="220" y="90" width="20" height="40" fill="#8a5420" />
+          <rect x="100" y="90" width="44" height="44" fill="#e8584c" />
+          <rect x="112" y="78" width="20" height="12" fill="#6ab058" />
+          <rect x="120" y="102" width="12" height="12" fill="#f47a6e" />
+          <rect x="230" y="96" width="56" height="34" fill="#e0a85c" />
+          <rect x="230" y="96" width="56" height="10" fill="#c98a3e" />
+          <rect x="80" y="130" width="200" height="20" fill="#f5f0e6" />
+          <rect x="100" y="130" width="20" height="20" fill="#e8584c" />
+          <rect x="160" y="130" width="20" height="20" fill="#e8584c" />
+          <rect x="220" y="130" width="20" height="20" fill="#e8584c" />
+          <rect x="60" y="150" width="240" height="24" fill="#8a5420" />
+          <rect x="80" y="174" width="200" height="120" fill="#b5742e" />
+          <rect x="80" y="174" width="200" height="16" fill="#8a5420" />
+          <rect x="80" y="278" width="200" height="16" fill="#8a5420" />
+          <rect x="96" y="202" width="20" height="20" fill="#d89a4f" />
+          <rect x="136" y="202" width="20" height="20" fill="#d89a4f" />
+          <rect x="176" y="202" width="20" height="20" fill="#d89a4f" />
+          <rect x="216" y="202" width="20" height="20" fill="#d89a4f" />
+          <rect x="256" y="202" width="20" height="20" fill="#d89a4f" />
+          <rect x="116" y="238" width="20" height="20" fill="#d89a4f" />
+          <rect x="156" y="238" width="20" height="20" fill="#d89a4f" />
+          <rect x="196" y="238" width="20" height="20" fill="#d89a4f" />
+          <rect x="236" y="238" width="20" height="20" fill="#d89a4f" />
+          <rect x="96" y="238" width="20" height="20" fill="#d89a4f" />
+        </g>
+      </svg>
+      <div class="wordmark">Picnivo</div>
+      <div class="tagline">Plan the hang — together.</div>
+    </div>
+  </body>
+</html>

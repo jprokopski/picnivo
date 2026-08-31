@@ -557,6 +557,16 @@ msgstr "Past"
 msgid "Pick a custom date"
 msgstr "Pick a custom date"
 
+#: src/lib/seo/constants.ts:21
+msgid "Pick a date together on Picnivo."
+msgstr "Pick a date together on Picnivo."
+
+#: src/lib/seo/constants.ts:12
+msgid "Pick a date together, split what to bring, and share one link with the "
+"group."
+msgstr "Pick a date together, split what to bring, and share one link with the "
+"group."
+
 #: src/features/events/create-event/components/date-picker.tsx:486
 msgid "Pick at least one day to continue."
 msgstr "Pick at least one day to continue."
@@ -564,6 +574,14 @@ msgstr "Pick at least one day to continue."
 #: src/features/events/create-event/components/create-event-form.tsx:166
 msgid "Pick some days"
 msgstr "Pick some days"
+
+#: src/lib/seo/constants.ts:19
+msgid "Picnivo — plan the hang, together"
+msgstr "Picnivo — plan the hang, together"
+
+#: src/lib/seo/constants.ts:14
+msgid "Picnivo — plan the hang, together."
+msgstr "Picnivo — plan the hang, together."
 
 #: src/components/footer.tsx:16
 msgid "Picnivo · prototype"
@@ -780,6 +798,10 @@ msgstr "Vote"
 #: src/features/events/join-event/components/join-bar.tsx:51
 msgid "Vote on dates and claim what you'll bring — no account needed."
 msgstr "Vote on dates and claim what you'll bring — no account needed."
+
+#: src/features/events/get-event-by-token/seo.ts:19
+msgid "Vote on dates and claim what you'll bring."
+msgstr "Vote on dates and claim what you'll bring."
 
 #: src/features/events/get-event-by-token/components/event-detail-view.tsx:167
 msgid "Vote on the dates"

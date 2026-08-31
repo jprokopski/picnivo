@@ -4,12 +4,32 @@ import {
   useSearch,
 } from "@tanstack/react-router";
 import { AuthPanel } from "../features/auth/components/auth-panel";
+import { i18n } from "../lib/i18n";
+import { buildMeta } from "../lib/seo/meta";
+import {
+  DEFAULT_DESCRIPTION,
+  OG_CARD_ALT,
+  PRODUCT_TITLE,
+} from "../lib/seo/constants";
 
 export const Route = createFileRoute("/login")({
   validateSearch: (search: Record<string, unknown>) => ({
     redirect: (search.redirect as string) || "",
     mode: search.mode === "signup" ? ("signup" as const) : ("signin" as const),
   }),
+  // Ignores `search` entirely — `?mode=signup` and `?redirect=...` are UI
+  // state, not distinct pages, so the canonical must stay a bare /login for
+  // every variant rather than fragmenting across query strings.
+  head: ({ match }) => {
+    const { origin } = match.context;
+    return buildMeta({
+      title: i18n._(PRODUCT_TITLE),
+      description: i18n._(DEFAULT_DESCRIPTION),
+      path: "/login",
+      origin,
+      imageAlt: i18n._(OG_CARD_ALT),
+    });
+  },
   component: LoginPage,
 });
 
