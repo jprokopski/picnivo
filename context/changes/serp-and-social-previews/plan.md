@@ -582,11 +582,11 @@ stale empty card for days.
 
 #### Automated
 
-- [x] 4.1 Unit tests pass
-- [x] 4.2 E2E suite passes
-- [x] 4.3 Type checking passes
-- [x] 4.4 Linting passes
-- [x] 4.5 Full monorepo check passes (`/verify`)
+- [x] 4.1 Unit tests pass — 7fc0f23
+- [x] 4.2 E2E suite passes — 7fc0f23
+- [x] 4.3 Type checking passes — 7fc0f23
+- [x] 4.4 Linting passes — 7fc0f23
+- [x] 4.5 Full monorepo check passes (`/verify`) — 7fc0f23
 
 #### Manual
 
