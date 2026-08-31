@@ -1,3 +1,10 @@
 # https://www.robotstxt.org/robotstxt.html
+#
+# Do NOT add a Disallow rule for /e/ — social scrapers (facebookexternalhit,
+# Twitterbot, LinkedInBot) obey robots.txt but ignore the <meta name="robots">
+# noindex tag on event pages. Blocking /e/ here would silently kill every
+# social link preview. Google is kept out via noindex instead.
 User-agent: *
-Disallow:
+Disallow: /events
+Disallow: /create
+Disallow: /auth/
