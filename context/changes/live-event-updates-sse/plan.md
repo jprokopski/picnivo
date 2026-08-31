@@ -532,9 +532,9 @@ inline logic). `best-hero` — a `changed` result opens the dialog; confirming r
 
 #### Automated
 
-- [x] 4.1 Backend builds and tests pass: `dotnet build` && `dotnet test`
-- [x] 4.2 Frontend type/lint/tests pass: `tsc --noEmit` && `pnpm lint` && `pnpm test`
-- [x] 4.3 `GetEventByToken` behavior unchanged by ranking extraction (existing tests green)
+- [x] 4.1 Backend builds and tests pass: `dotnet build` && `dotnet test` — 43a8320
+- [x] 4.2 Frontend type/lint/tests pass: `tsc --noEmit` && `pnpm lint` && `pnpm test` — 43a8320
+- [x] 4.3 `GetEventByToken` behavior unchanged by ranking extraction (existing tests green) — 43a8320
 
 #### Manual
 
