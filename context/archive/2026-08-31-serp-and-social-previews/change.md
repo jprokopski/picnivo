@@ -1,9 +1,10 @@
 ---
 change_id: serp-and-social-previews
 title: SERP entry and social link previews (Facebook, X/Twitter, LinkedIn)
-status: implementing
+status: archived
 created: 2026-08-31
 updated: 2026-08-31
+archived_at: 2026-08-31T15:59:33Z
 ---
 
 ## Notes
